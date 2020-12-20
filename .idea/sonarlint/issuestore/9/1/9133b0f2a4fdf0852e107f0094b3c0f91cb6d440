@@ -1,0 +1,19 @@
+
+T
+java:S1854!"7Remove this useless assignment to local variable "tag".(ÚÏšï8üš¬‚è.
+M
+java:S1068"+Remove this unused "REGULAR" private field.(œïÏÃøÿÿÿÿ8¡Üæè.
+o
+java:S1192"MDefine a constant instead of duplicating this literal "]+[\\s\\S]*?" 3 times.(ß¬³åúÿÿÿÿ8ïÊæè.
+y
+java:S1192"WDefine a constant instead of duplicating this literal "[\\s\\S]*?[^å­—\\w<*][" 3 times.(ß¬³åúÿÿÿÿ8ïÊæè.
+Y
+java:S1068"7Remove this unused "PARAGRAPH_SECONDARY" private field.(ÜïÃøÿÿÿÿ8šõèè.
+Z
+java:S1854""=Remove this useless assignment to local variable "paragraph".(šÑà–8Ü©®‚è.
+K
+java:S1481"".Remove this unused "paragraph" local variable.(šÑà–8Ü©®‚è.
+E
+java:S1481!"(Remove this unused "tag" local variable.(ÚÏšï8¨ÿ®‚è.
+O
+java:S1068"-Remove this unused "PARAGRAPH" private field.(ß¬³åúÿÿÿÿ8¡Üæè.

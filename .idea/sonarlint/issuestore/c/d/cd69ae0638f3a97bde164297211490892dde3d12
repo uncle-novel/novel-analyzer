@@ -1,0 +1,10 @@
+
+ƒ
+java:S1104"aMake UNICODE_LETTER_NUMBER a static final constant or non-public and provide accessors if needed.(„öäÅÿÿÿÿÿ8Ëõô€è.
+p
+java:S1104"SMake CHINESE a static final constant or non-public and provide accessors if needed.(ïÿúÊ8§×ô€è.
+|
+java:S1104"_Make CHINESE_PUNCTUATION a static final constant or non-public and provide accessors if needed.(Ï©…‚8È¾ù€è.
+n	java:S116"RRename this field "CHINESE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ïÿúÊ8È¾ù€è.
+	java:S116"`Rename this field "UNICODE_LETTER_NUMBER" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„öäÅÿÿÿÿÿ8È¾ù€è.
+z	java:S116"^Rename this field "CHINESE_PUNCTUATION" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ï©…‚8È¾ù€è.

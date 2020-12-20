@@ -1,0 +1,25 @@
+
+t
+java:S1192S"RDefine a constant instead of duplicating this literal "&[#\\w]{3,6}[;:]?" 3 times.(ÿσπλϋÿÿÿÿ8―ν¦€θ.
+
+java:S11496"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ο„΅ώÿÿÿÿ8―ν¦€θ.
+o
+java:S37765"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(–£–α8―ν¦€θ.
+N
+java:S1172"+Remove this unused method parameter "text".(½·Ρ‚ϊÿÿÿÿ8―ν¦€θ.
+\
+java:S2479a":Remove the non-escaped \u3000 character from this literal.(ΥΞƒήύÿÿÿÿ8―ν¦€θ.
+V
+java:S1144"3Remove this unused private "postProcessing" method.(½·Ρ‚ϊÿÿÿÿ8―ν¦€θ.
+J
+java:S5856("(Fix the syntax errors inside this regex.(ά¬ηκώÿÿÿÿ8―ν¦€θ.
+{
+java:S3008("YRename this field "CONTENT_RULE_1" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ά¬ηκώÿÿÿÿ8―ν¦€θ.
+{
+java:S3008,"YRename this field "CONTENT_RULE_2" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ΫρΤβϋÿÿÿÿ8―ν¦€θ.
+I
+java:S1168"+Return an empty collection instead of null.(¥Ήο8―ν¦€θ.
+¤
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(½·Ρ‚ϊÿÿÿÿ8―ν¦€θ.
+V
+java:S5857`"9Replace this use of a reluctant quantifier with "[^>]*+".(ΎνΝ°8―ν¦€θ.
