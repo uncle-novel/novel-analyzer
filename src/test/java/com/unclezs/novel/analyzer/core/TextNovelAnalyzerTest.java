@@ -70,7 +70,6 @@ public class TextNovelAnalyzerTest {
     List<Chapter> chapters = TextNovelAnalyzer.chapters(html, config);
     config.setRule(Rule.TEXT_TAG);
     String originalText = Http.get(chapters.get(111).getUrl());
-    System.out.println(originalText);
     System.out.println(TextNovelAnalyzer.content(originalText,config));
   }
 
