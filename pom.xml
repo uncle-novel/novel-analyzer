@@ -9,10 +9,13 @@
     <version>1.0</version>
 
     <properties>
-        <jsoup.version>1.13.1</jsoup.version>
+        <jsoup.version>1.10.3</jsoup.version>
         <lombok.version>1.18.16</lombok.version>
         <okhttp.version>4.9.0</okhttp.version>
         <slf4j.version>1.7.30</slf4j.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <jsoupxpath.version>2.4.3</jsoupxpath.version>
+        <jsonpath.version>2.5.0</jsonpath.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -40,10 +43,52 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.wanghaomiao</groupId>
+            <artifactId>JsoupXpath</artifactId>
+            <version>${jsoupxpath.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${jsonpath.version}</version>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <!--如果有用Lombok需要添加下面这个-->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
