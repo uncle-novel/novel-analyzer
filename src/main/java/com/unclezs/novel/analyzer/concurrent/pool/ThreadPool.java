@@ -1,7 +1,6 @@
 package com.unclezs.novel.analyzer.concurrent.pool;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author blog.unclezs.com

@@ -1,6 +1,8 @@
 package com.unclezs.novel.analyzer.matcher;
 
 import lombok.experimental.UtilityClass;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.seimicrawler.xpath.JXDocument;
 import org.seimicrawler.xpath.JXNode;
 
@@ -12,18 +14,29 @@ import java.util.Objects;
  */
 @UtilityClass
 public class XpathMatcher {
-  /**
-   * XPath匹配
-   *
-   * @param src  /
-   * @param rule /
-   * @return /
-   */
-  public String matching(String src, String rule) {
-    JXNode ret = JXDocument.create(src).selNOne(rule);
-    if (ret != null) {
-      return Objects.toString(ret);
+    /**
+     * XPath匹配
+     *
+     * @param src  /
+     * @param rule /
+     * @return /
+     */
+    public String matching(String src, String rule) {
+        return matching(Jsoup.parse(src), rule);
     }
-    return "";
-  }
+
+    /**
+     * XPath匹配
+     *
+     * @param src  /
+     * @param rule /
+     * @return /
+     */
+    public String matching(Document src, String rule) {
+        JXNode ret = JXDocument.create(src).selNOne(rule);
+        if (ret != null) {
+            return Objects.toString(ret);
+        }
+        return "";
+    }
 }

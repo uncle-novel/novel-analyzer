@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pair<K, V> {
-  private K left;
-  private V right;
+    private K left;
+    private V right;
 
-  public static <K, V> Pair<K, V> of(K left, V right) {
-    return new Pair<>(left, right);
-  }
+    public static <K, V> Pair<K, V> of(K left, V right) {
+        return new Pair<>(left, right);
+    }
 }

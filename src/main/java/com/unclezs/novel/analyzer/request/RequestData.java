@@ -19,32 +19,31 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class RequestData {
-  /**
-   * 请求链接
-   */
-  private String url;
-  /**
-   * 是否为post请求
-   */
-  @Builder.Default
-  private boolean post = false;
-  /**
-   * 网页编码
-   */
-  @Builder.Default
-  private String charset = StandardCharsets.UTF_8.toString();
-  /**
-   * 请求头
-   */
-  private Map<String, String> headers;
-  /**
-   * 请求方式
-   */
-  @Builder.Default
-  private String mediaType = MediaType.NONE.getMediaType();
-  /**
-   * 请求体
-   */
-  private String body;
-
+    /**
+     * 请求链接
+     */
+    private String url;
+    /**
+     * 是否为post请求
+     */
+    @Builder.Default
+    private boolean post = false;
+    /**
+     * 网页编码
+     */
+    @Builder.Default
+    private String charset = StandardCharsets.UTF_8.toString();
+    /**
+     * 请求头
+     */
+    private Map<String, String> headers;
+    /**
+     * 请求方式
+     */
+    @Builder.Default
+    private String mediaType = MediaType.NONE.getMediaType();
+    /**
+     * 请求体
+     */
+    private String body;
 }

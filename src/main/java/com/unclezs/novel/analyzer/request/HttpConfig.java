@@ -38,6 +38,7 @@ public class HttpConfig {
      * 代理
      */
     private Proxy proxy = Proxy.NO_PROXY;
+
     /**
      * 默认配置
      *

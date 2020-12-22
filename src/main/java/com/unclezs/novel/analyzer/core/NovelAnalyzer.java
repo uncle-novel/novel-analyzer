@@ -2,7 +2,6 @@ package com.unclezs.novel.analyzer.core;
 
 import com.unclezs.novel.analyzer.core.model.AnalyzerConfig;
 import com.unclezs.novel.analyzer.spider.model.Chapter;
-import com.unclezs.novel.analyzer.spider.rule.BaseRule;
 
 import java.util.List;
 

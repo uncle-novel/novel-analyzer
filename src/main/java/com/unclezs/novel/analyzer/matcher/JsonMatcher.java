@@ -9,18 +9,18 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class JsonMatcher {
-  /**
-   * JsonPath匹配
-   *
-   * @param src  /
-   * @param rule /
-   * @return /
-   */
-  public String matching(String src, String rule) {
-    Object ret = JsonPath.read(src, rule);
-    if (ret != null) {
-      return ret.toString();
+    /**
+     * JsonPath匹配
+     *
+     * @param src  /
+     * @param rule /
+     * @return /
+     */
+    public String matching(String src, String rule) {
+        Object ret = JsonPath.read(src, rule);
+        if (ret != null) {
+            return ret.toString();
+        }
+        return "";
     }
-    return "";
-  }
 }
