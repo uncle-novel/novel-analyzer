@@ -66,12 +66,15 @@ public class TextNovelAnalyzerTest {
 
     @Test
     public void testChapters() {
-        String html = Http.get("https://www.yqhy.org/read/0/269/");
+        String url = "";
+        String html = Http.get(url);
         TextAnalyzerConfig config = new TextAnalyzerConfig();
-        config.setBaseUri("https://www.yqhy.org/read/0/269/");
-        config.setChapterFilter(true);
+        config.setBaseUri(url);
+        config.setChapterFilter(false);
         List<Chapter> chapters = TextNovelAnalyzer.chapters(html, config);
         chapters.stream().forEach(System.out::println);
+        String content = TextNovelAnalyzer.content(Http.get(""), config);
+        System.out.println(content);
     }
 
 
@@ -90,7 +93,6 @@ public class TextNovelAnalyzerTest {
             .baseUri(url)
             .nextPageRule("xpath://a[contains(text(),'下一章')]/@href").build();
         TextNovelSpider spider = new TextNovelSpider(config);
-        System.out.println(
-            spider.content(RequestData.builder().url("https://www.yqhy.org/read/0/269/23411303.html").build()));
+        System.out.println(spider.content(RequestData.builder().url(url).build()));
     }
 }

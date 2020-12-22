@@ -36,6 +36,7 @@ public class TextNovelSpider {
             originalText = TextNovelAnalyzer.content(Http.content(requestData), config);
         } else {
             StringBuilder pages = new StringBuilder();
+            String rule = config.getNextPageRule();
             String nextPage = requestData.getUrl();
             while (UrlUtil.isHttpUrl(nextPage)) {
                 requestData.setUrl(nextPage);

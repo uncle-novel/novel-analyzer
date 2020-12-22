@@ -1,8 +1,8 @@
 package com.unclezs.novel.analyzer.core.comparator;
 
 import com.unclezs.novel.analyzer.spider.model.Chapter;
-import com.unclezs.novel.analyzer.utils.uri.UrlUtil;
 import com.unclezs.novel.analyzer.utils.regex.RegexUtil;
+import com.unclezs.novel.analyzer.utils.uri.UrlUtil;
 
 import java.math.BigInteger;
 import java.util.Comparator;
