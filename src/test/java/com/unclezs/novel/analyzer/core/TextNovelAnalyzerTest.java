@@ -3,12 +3,11 @@ package com.unclezs.novel.analyzer.core;
 import com.unclezs.novel.analyzer.core.model.Rule;
 import com.unclezs.novel.analyzer.core.model.TextAnalyzerConfig;
 import com.unclezs.novel.analyzer.core.text.TextNovelAnalyzer;
-import com.unclezs.novel.analyzer.matcher.Matcher;
-import com.unclezs.novel.analyzer.matcher.RegexMatcher;
+import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.request.RequestData;
 import com.unclezs.novel.analyzer.spider.TextNovelSpider;
-import com.unclezs.novel.analyzer.spider.model.Chapter;
+import com.unclezs.novel.analyzer.utils.regex.RegexUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,11 +21,13 @@ import java.util.List;
  */
 @Slf4j
 public class TextNovelAnalyzerTest {
+    /**
+     * 文本小说解析器
+     */
     private String originalText = "";
 
     public void initContent() {
-        String url =
-            "https://vipreader.qidian.com/ajax/chapter/chapterInfo?_csrfToken=omcSdg2IPa5AEfOc1xzW9ZQGTOMVHxysmTKlBCWT&bookId=1012284323&chapterId=421406437&authorId=402573440";
+        String url = "https://www.yqhy.org/read/0/269/23411325_3.html";
         RequestData requestData = RequestData.builder().url(url).build();
         try {
             originalText = Http.content(requestData);
@@ -39,18 +40,20 @@ public class TextNovelAnalyzerTest {
 
     @Test
     public void testContentTag() {
+        String url = "https://www.yqhy.org/read/0/269/23411325_3.html";
         TextAnalyzerConfig config = new TextAnalyzerConfig();
         config.setRule(Rule.TEXT_TAG);
-        String content = TextNovelAnalyzer.content(originalText, config);
+        String content = TextNovelAnalyzer.content(Http.get(url), config);
         Assert.assertFalse(content.isEmpty());
         System.out.println(content);
     }
 
     @Test
     public void testContentRegular() {
+        String url = "https://www.yqhy.org/read/0/269/23411325_3.html";
         TextAnalyzerConfig config = new TextAnalyzerConfig();
         config.setRule(Rule.TEXT_REGEX);
-        String content = TextNovelAnalyzer.content(originalText, config);
+        String content = TextNovelAnalyzer.content(Http.get(url), config);
         Assert.assertFalse(content.isEmpty());
         System.out.println(content);
     }
@@ -80,19 +83,56 @@ public class TextNovelAnalyzerTest {
 
     @Test
     public void nextPage() {
-        String content = Http.get("https://www.yqhy.org/read/0/269/23411303.html");
-        System.out.println(RegexMatcher.matcher(content, "<a href=\"/read/0/269/\">目录</a>\n"
-            + "\t\t\t<a href=\"(.+?)\">下一章</a>@@$1"));
-        System.out.println(Matcher.matching(content, "xpath://a[contains(text(),'下一章')]/@href"));
+        String url = "https://m.175wx.com/chapters/269/";
+        String content = Http.get(url);
+        String ruleXpath = "xpath://a[text()~='下一页|下页|下节|下一节']/@href";
+        TextAnalyzerConfig config = TextAnalyzerConfig.defaultBuilder().baseUri(url).nextPageRule(ruleXpath).build();
+        System.out.println(AnalyzerHelper.nextPage(content, config.getNextPageRule(), config.getBaseUri()));
+    }
+
+    /**
+     * 测试抓取内容 多页
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testSpiderContent() throws IOException {
+        String url = "https://www.175wx.com/0/269/23411303.html";
+        TextAnalyzerConfig config = TextAnalyzerConfig.defaultBuilder()
+            .baseUri(url)
+            .rule(Rule.TEXT_TAG)
+            .enableContentNextPage(true)
+            .build();
+        TextNovelSpider spider = new TextNovelSpider(config);
+        System.out.println(spider.content(RequestData.builder().url(url).build()));
+    }
+
+    /**
+     * 测试抓取章节 多页
+     *
+     * @throws IOException /
+     */
+    @Test
+    public void testSpiderChapter() throws IOException {
+        String url = "https://m.175wx.com/chapters/269/";
+        TextAnalyzerConfig config = TextAnalyzerConfig.defaultBuilder()
+            .baseUri(url)
+            .rule(Rule.TEXT_TAG)
+            .enableChapterNextPage(true)
+            .build();
+        TextNovelSpider spider = new TextNovelSpider(config);
+        System.out.println(spider.chapters(RequestData.builder().url(url).build()));
     }
 
     @Test
-    public void testSpiderContent() throws IOException {
+    public void testRegex() {
+        String text = "第一章 金汤匙中的战斗机（1 / 2）";
+        String s = text.replaceAll("([^" + RegexUtil.CHINESE + "]|[一二三四五六七八九十])", "");
         String url = "https://www.yqhy.org/read/0/269/23411303.html";
-        TextAnalyzerConfig config = TextAnalyzerConfig.defaultBuilder()
-            .baseUri(url)
-            .nextPageRule("xpath://a[contains(text(),'下一章')]/@href").build();
-        TextNovelSpider spider = new TextNovelSpider(config);
-        System.out.println(spider.content(RequestData.builder().url(url).build()));
+        String html = Http.get(url);
+        long start = System.currentTimeMillis();
+        TextAnalyzerConfig config = TextAnalyzerConfig.defaultConfig();
+        System.out.println(AnalyzerHelper.nextPage(html, config.getNextPageRule(), config.getBaseUri()));
+        System.out.println(System.currentTimeMillis() - start);
     }
 }

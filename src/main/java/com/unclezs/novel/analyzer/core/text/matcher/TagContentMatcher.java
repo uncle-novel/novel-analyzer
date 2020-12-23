@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
  */
 public class TagContentMatcher {
     private static final String[] WHITELIST =
-            {"br", "Br", "bR", "BR", "p", "P", "div", "Div", "dIv", "diV", "DIv", "DiV", "dIV", "DIV"};
+        {"br", "Br", "bR", "BR", "p", "P", "div", "Div", "dIv", "diV", "DIv", "DiV", "dIV", "DIV"};
     private static final String NEW_LINE = "♥";
     public static final String BLANK = "\u3000";
     private static final String P_BR_TAG = "<.*?(p|br).*?>";

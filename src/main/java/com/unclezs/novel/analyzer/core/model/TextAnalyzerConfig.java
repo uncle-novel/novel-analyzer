@@ -3,19 +3,25 @@ package com.unclezs.novel.analyzer.core.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
+ * 文本小说解析配置类
+ *
  * @author blog.unclezs.com
  * @date 2020/12/20 6:49 下午
  */
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TextAnalyzerConfig {
+@EqualsAndHashCode(callSuper = false)
+public class TextAnalyzerConfig implements AnalyzerConfig {
+    public static final String NEXT_PAGE_RULE = "xpath://a[text()~='下一页|下页|下节|下一节']/@href";
     /**
      * BaseUrI
      */
@@ -41,12 +47,14 @@ public class TextAnalyzerConfig {
      */
     @Builder.Default
     private Rule rule = Rule.TEXT_TAG;
-
     /**
      * 下一页规则（存在则会匹配下一页）
      */
-    private String nextPageRule;
-
+    private String nextPageRule = NEXT_PAGE_RULE;
+    /**
+     * 正文翻页
+     */
+    private boolean enableContentNextPage = true;
     /**
      * 章节乱序重排
      */
@@ -56,6 +64,10 @@ public class TextAnalyzerConfig {
      */
     @Builder.Default
     private boolean chapterFilter = true;
+    /**
+     * 章节翻页
+     */
+    private boolean enableChapterNextPage = true;
 
     /**
      * 默认配置
@@ -71,7 +83,7 @@ public class TextAnalyzerConfig {
      *
      * @return TextAnalyzerConfig
      */
-    public static TextAnalyzerConfig.TextAnalyzerConfigBuilder defaultBuilder() {
-        return builder().rule(Rule.TEXT_TAG).chapterFilter(true).baseUri("");
+    public static TextAnalyzerConfigBuilder defaultBuilder() {
+        return builder().rule(Rule.TEXT_TAG).chapterFilter(true).nextPageRule(NEXT_PAGE_RULE).baseUri("");
     }
 }

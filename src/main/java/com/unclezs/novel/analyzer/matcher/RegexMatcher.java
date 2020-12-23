@@ -10,6 +10,7 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class RegexMatcher {
+    private static final String TITLE_REGEX = "<title>([\\s\\S]+?)</title>@@$1";
     /**
      * 分组模板分隔符
      */
@@ -59,5 +60,25 @@ public class RegexMatcher {
             pair.setRight(ret[1]);
         }
         return pair;
+    }
+
+    /**
+     * 获取Html中的标题
+     *
+     * @param content /
+     * @return /
+     */
+    public String title(String content) {
+        return matcher(content, TITLE_REGEX);
+    }
+
+    /**
+     * 获取标题没有 零到十的只包含中文的
+     *
+     * @param content /
+     * @return /
+     */
+    public String titleWithNotNumber(String content) {
+        return RegexUtil.removeNotChineseAndNotNumber(title(content));
     }
 }

@@ -5,7 +5,12 @@ import com.unclezs.novel.analyzer.utils.CollectionUtil;
 import com.unclezs.novel.analyzer.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +31,7 @@ public class RegexUtil {
      */
     public final String CHINESE = "\\u4E00-\\u9FFF";
     public final Pattern CHINESE_REG = Pattern.compile("[\\u4E00-\\u9FFF]");
+    public final Pattern NOT_CHINESE_AND_NOT_NUMBER = Pattern.compile("([^" + CHINESE + "]|[一二三四五六七八九十零])");
     /**
      * unicode符号
      */
@@ -72,6 +78,16 @@ public class RegexUtil {
      */
     public boolean isWord(String src) {
         return WORD.matcher(src).matches();
+    }
+
+    /**
+     * 移除非中文且非中文数字的字符
+     *
+     * @param content /
+     * @return /
+     */
+    public String removeNotChineseAndNotNumber(String content) {
+        return NOT_CHINESE_AND_NOT_NUMBER.matcher(content).replaceAll("");
     }
 
     /**
@@ -236,7 +252,7 @@ public class RegexUtil {
      * @return 结果集
      */
     public static <T extends Collection<String>> T findAll(Pattern pattern, CharSequence content, int group,
-                                                           T collection) {
+        T collection) {
         if (null == pattern || null == content) {
             return null;
         }

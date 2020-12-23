@@ -1,4 +1,4 @@
-package com.unclezs.novel.analyzer.spider.model;
+package com.unclezs.novel.analyzer.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +24,15 @@ public class Chapter {
      * 章节url
      */
     private String url;
+    /**
+     * 正文
+     */
+    private String content;
+
+    public Chapter(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
     /**
      * 只根据URL分别唯一

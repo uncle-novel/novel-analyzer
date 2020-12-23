@@ -4,18 +4,25 @@ import com.unclezs.novel.analyzer.request.ssl.SslTrustAllCerts;
 import com.unclezs.novel.analyzer.utils.CollectionUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Call;
+import okhttp3.ConnectionPool;
 import okhttp3.MediaType;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * okHttp请求工具
@@ -73,7 +80,7 @@ public class Http {
         SSLSocketFactory ssfFactory = null;
         try {
             SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, new TrustManager[]{manager}, new SecureRandom());
+            sc.init(null, new TrustManager[] {manager}, new SecureRandom());
             ssfFactory = sc.getSocketFactory();
         } catch (Exception ignored) {
         }

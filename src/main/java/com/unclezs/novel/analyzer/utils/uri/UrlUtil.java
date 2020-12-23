@@ -82,7 +82,6 @@ public class UrlUtil {
         if (StringUtil.isBlank(baseUrl)) {
             return relativePath;
         }
-
         try {
             final URL absoluteUrl = new URL(baseUrl);
             final URL parseUrl = new URL(absoluteUrl, relativePath);
