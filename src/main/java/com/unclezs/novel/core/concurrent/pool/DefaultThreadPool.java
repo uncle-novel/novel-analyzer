@@ -1,0 +1,8 @@
+package com.unclezs.novel.core.concurrent.pool;
+
+/**
+ * @author blog.unclezs.com
+ * @date 2020/12/20 5:17 下午
+ */
+public class DefaultThreadPool {
+}
