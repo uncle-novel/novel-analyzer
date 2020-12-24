@@ -1,5 +1,6 @@
 package com.unclezs.novel.core.analyzer.text.matcher;
 
+import com.unclezs.novel.core.utils.StringUtil;
 import com.unclezs.novel.core.utils.regex.RegexUtil;
 
 import java.util.regex.Matcher;
@@ -39,7 +40,7 @@ public class RegexContentMatcher {
         while (m.find()) {
             String paragraph = m.group(1);
             if (!paragraph.isEmpty()) {
-                content.append(paragraph).append("StringUtil.NEW_LINE");
+                content.append(paragraph).append(StringUtil.NEW_LINE);
             }
         }
         return content.toString();

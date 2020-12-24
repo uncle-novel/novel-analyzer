@@ -19,7 +19,10 @@ import org.jsoup.select.Elements;
 public class TagContentMatcher {
     private static final String[] WHITELIST =
         {"br", "Br", "bR", "BR", "p", "P", "div", "Div", "dIv", "diV", "DIv", "DiV", "dIV", "DIV"};
-    private static final String NEW_LINE = "♥";
+    /**
+     * 特殊标记换行，解决jsoup自动清除换行标记（虽然可以配置，但是这样更简单，而且Clean方法配置比较繁琐）
+     */
+    private static final String NEW_LINE_SYMBOL = "♥";
     public static final String BLANK = "\u3000";
     private static final String P_BR_TAG = "<.*?(p|br).*?>";
 
@@ -37,8 +40,8 @@ public class TagContentMatcher {
         String cleanHtml = Jsoup.clean(originalText, Whitelist.none().addTags(WHITELIST));
         // p、br替换为换行，移除特殊空格
         String divHtml = StringUtil.remove(cleanHtml, BLANK);
-        divHtml = StringUtil.replace(divHtml, "StringUtil.NEW_LINE", "\n", NEW_LINE);
-        divHtml = StringUtil.replaceAllCaseInsensitive(divHtml, NEW_LINE, P_BR_TAG);
+        divHtml = StringUtil.replace(divHtml, StringUtil.NEW_LINE, "\n", NEW_LINE_SYMBOL);
+        divHtml = StringUtil.replaceAllCaseInsensitive(divHtml, NEW_LINE_SYMBOL, P_BR_TAG);
         // 解析 忽略标签大小写
         Parser parser = Parser.htmlParser();
         parser.settings(ParseSettings.preserveCase);
@@ -53,6 +56,6 @@ public class TagContentMatcher {
                 maxLen = ownText.length();
             }
         }
-        return text.replace(NEW_LINE, "StringUtil.NEW_LINE");
+        return text.replace(NEW_LINE_SYMBOL, StringUtil.NEW_LINE);
     }
 }

@@ -9,6 +9,7 @@ import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.spider.NovelSpider;
 import com.unclezs.novel.core.spider.TextNovelSpider;
 import com.unclezs.novel.core.spider.pipline.FilePipeline;
+import com.unclezs.novel.core.utils.StringUtil;
 import com.unclezs.novel.core.utils.regex.PatternPool;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;

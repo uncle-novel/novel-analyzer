@@ -1,6 +1,7 @@
 package com.unclezs.novel.core.analyzer;
 
-import com.unclezs.novel.core.request.PhantomJs;
+import com.unclezs.novel.core.request.Http;
+import com.unclezs.novel.core.request.spi.PhantomJsClient;
 import com.unclezs.novel.core.utils.StringUtil;
 import org.junit.Test;
 
@@ -14,18 +15,18 @@ import java.net.URISyntaxException;
  * @author blog.unclezs.com
  * @since 2020/12/24 11:35
  */
-public class PhantomJsTest {
+public class PhantomJsClientTest {
     private static String exePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/phantomjs";
     private static String jsBasePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/%s.js";
     public static final String URL = "http://httpbin.org/get";
 
     @Test
     public void testArguments() throws IOException, URISyntaxException {
-        System.out.println(PhantomJs.content(URL));
+        System.out.println(Http.get(URL, true));
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        System.out.println(PhantomJs.class.getResource("/script/spider.js").toURI().toString());
+        System.out.println(PhantomJsClient.class.getResource("/script/spider.js").toURI().toString());
     }
 
     // 调用phantomjs程序，并传入js文件，并通过流拿回需要的数据。
@@ -42,9 +43,9 @@ public class PhantomJsTest {
     public static String executePhantomJs(String script, String... args) throws IOException {
         String scriptPath = String.format(jsBasePath, script);
         StringBuilder command = new StringBuilder();
-        command.append(exePath).append(StringUtil.EMPTY).append(scriptPath);
+        command.append(exePath).append(StringUtil.BLANK).append(scriptPath);
         for (String arg : args) {
-            command.append(StringUtil.EMPTY).append(arg);
+            command.append(StringUtil.BLANK).append(arg);
         }
         System.out.println(command);
         Process process = Runtime.getRuntime().exec(command.toString());

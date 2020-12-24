@@ -1,10 +1,10 @@
-package com.unclezs.novel.core.request;
+package com.unclezs.novel.core.request.spi;
 
+import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.utils.CollectionUtil;
 import com.unclezs.novel.core.utils.FileUtil;
 import com.unclezs.novel.core.utils.StringUtil;
 import com.unclezs.novel.core.utils.SystemUtil;
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -21,8 +21,7 @@ import java.io.InputStreamReader;
  * @since 2020/12/24 17:30
  */
 @Slf4j
-@UtilityClass
-public class PhantomJs {
+public class PhantomJsClient implements HttpProvider {
     /**
      * PhantomJs执行文件的位置
      */
@@ -36,7 +35,8 @@ public class PhantomJs {
         FileUtil.USER_DIR + "/script/phantomjs" + SystemUtil.getExecuteSuffix();
     public static final String FAILED_TAG = "failed";
 
-    public static String content(RequestData data) {
+    @Override
+    public String content(RequestData data) throws IOException {
         String userAgent = StringUtil.EMPTY;
         String cookie = StringUtil.EMPTY;
         String referer = StringUtil.EMPTY;
@@ -48,7 +48,17 @@ public class PhantomJs {
         return executePhantomJs(data.getUrl(), referer, cookie, userAgent);
     }
 
-    public static String content(String url) {
+    @Override
+    public InputStream stream(RequestData requestData) throws IOException {
+        return null;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
+
+    public String content(String url) throws IOException {
         return content(RequestData.defaultRequestData(url));
     }
 
@@ -61,28 +71,23 @@ public class PhantomJs {
      * @param userAgent /
      * @return /
      */
-    public static String executePhantomJs(String url, String referer, String cookie, String userAgent) {
+    public String executePhantomJs(String url, String referer, String cookie, String userAgent) throws IOException {
         StringBuilder command = new StringBuilder();
-        command.append(System.getProperty(PHANTOMJS_PATH, DEFAULT_PHANTOMJS_PATH)).append(StringUtil.EMPTY).append(
+        command.append(System.getProperty(PHANTOMJS_PATH, DEFAULT_PHANTOMJS_PATH)).append(StringUtil.BLANK).append(
             System.getProperty(PHANTOMJS_SCRIPT, DEFAULT_PHANTOMJS_SCRIPT));
-        command.append(StringUtil.EMPTY).append(url);
-        command.append(StringUtil.EMPTY).append(referer);
-        command.append(StringUtil.EMPTY).append(cookie);
-        command.append(StringUtil.EMPTY).append(userAgent);
+        command.append(StringUtil.BLANK).append(url);
+        command.append(StringUtil.BLANK).append(referer);
+        command.append(StringUtil.BLANK).append(cookie);
+        command.append(StringUtil.BLANK).append(userAgent);
         Process process;
         StringBuilder buffer = new StringBuilder();
         log.trace("PhantomJs抓取网页：执行命令：{}", command);
-        try {
-            process = Runtime.getRuntime().exec(command.toString());
-            InputStream is = process.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String tmp;
-            while ((tmp = br.readLine()) != null) {
-                buffer.append(tmp).append(StringUtil.NEW_LINE);
-            }
-        } catch (IOException e) {
-            log.warn("PhantomJs抓取网页失败：执行命令：{}", command.toString());
-            return StringUtil.EMPTY;
+        process = Runtime.getRuntime().exec(command.toString());
+        InputStream is = process.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String tmp;
+        while ((tmp = br.readLine()) != null) {
+            buffer.append(tmp).append(StringUtil.NEW_LINE);
         }
         String html = buffer.toString();
         // 处理失败了的情况

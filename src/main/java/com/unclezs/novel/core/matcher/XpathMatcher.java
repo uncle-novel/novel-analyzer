@@ -1,5 +1,6 @@
 package com.unclezs.novel.core.matcher;
 
+import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

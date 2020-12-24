@@ -1,5 +1,6 @@
 package com.unclezs.novel.core.utils.uri;
 
+import com.unclezs.novel.core.utils.StringUtil;
 import com.unclezs.novel.core.utils.regex.RegexUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -68,7 +69,7 @@ public class UrlEncoder {
                     tmp.append(src.substring(lastPos));
                     lastPos = src.length();
                 } else {
-                    tmp.append(src.substring(lastPos, pos));
+                    tmp.append(src, lastPos, pos);
                     lastPos = pos;
                 }
             }

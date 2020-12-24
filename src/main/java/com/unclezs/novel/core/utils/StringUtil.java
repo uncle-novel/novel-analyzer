@@ -16,8 +16,12 @@ public class StringUtil {
     /**
      * 字符串常量：空字符串 {@code StringUtil.EMPTY}
      */
-    public static final String EMPTY = StringUtil.EMPTY;
-    public static final String NEW_LINE = "StringUtil.NEW_LINE";
+    public static final String EMPTY = "";
+    /**
+     * 空格
+     */
+    public static final String BLANK = " ";
+    public static final String NEW_LINE = "\r\n";
     /**
      * HTML的空白标签
      */
@@ -123,9 +127,9 @@ public class StringUtil {
         for (int i = 0; i < lines.length; i++) {
             if (StringUtil.isNotBlank(lines[i])) {
                 if (i < 3) {
-                    sb.append(lines[i].replace(remove(target, StringUtil.EMPTY), StringUtil.EMPTY)).append("StringUtil.NEW_LINE");
+                    sb.append(lines[i].replace(remove(target, StringUtil.EMPTY), StringUtil.EMPTY)).append(StringUtil.NEW_LINE);
                 } else {
-                    sb.append(lines[i]).append("StringUtil.NEW_LINE");
+                    sb.append(lines[i]).append(StringUtil.NEW_LINE);
                 }
             }
         }
@@ -228,12 +232,12 @@ public class StringUtil {
      */
     public String ncr2Chinese(String src) {
         // 换行符处理
-        src = src.replace("StringUtil.NEW_LINE", "&#92;&#114;&#92;&#110;");
+        src = src.replace(StringUtil.NEW_LINE, "&#92;&#114;&#92;&#110;");
         Matcher m = ncrReg.matcher(src);
         while (m.find()) {
             src = src.replace(m.group(0), (char) Integer.parseInt(m.group(1)) + StringUtil.EMPTY);
         }
-        return src.replace("\\r\\n", "StringUtil.NEW_LINE");
+        return src.replace("\\r\\n", StringUtil.NEW_LINE);
     }
 
     /**
@@ -243,7 +247,7 @@ public class StringUtil {
      * @return /
      */
     public String htmlBlank(String html) {
-        return replaceHtmlBlank(html, StringUtil.EMPTY);
+        return replaceHtmlBlank(html, StringUtil.BLANK);
     }
 
     /**

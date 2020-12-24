@@ -1,10 +1,7 @@
 package com.unclezs.novel.core.analyzer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.unclezs.novel.core.utils.StringUtil;
+import lombok.*;
 
 import java.util.List;
 
@@ -50,10 +47,12 @@ public class TextAnalyzerConfig implements AnalyzerConfig {
     /**
      * 下一页规则（存在则会匹配下一页）
      */
+    @Builder.Default
     private String nextPageRule = NEXT_PAGE_RULE;
     /**
      * 正文翻页
      */
+    @Builder.Default
     private boolean enableContentNextPage = true;
     /**
      * 章节乱序重排
@@ -62,6 +61,7 @@ public class TextAnalyzerConfig implements AnalyzerConfig {
     /**
      * 下一页规则（存在则会匹配下一页）
      */
+    @Builder.Default
     private String nextChapterPageRule = NEXT_PAGE_RULE;
     /**
      * 章节过滤
@@ -71,6 +71,7 @@ public class TextAnalyzerConfig implements AnalyzerConfig {
     /**
      * 章节翻页
      */
+    @Builder.Default
     private boolean enableChapterNextPage = true;
 
     /**

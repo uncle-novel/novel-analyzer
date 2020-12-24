@@ -1,6 +1,7 @@
 package com.unclezs.novel.core.matcher;
 
 import com.unclezs.novel.core.model.Pair;
+import com.unclezs.novel.core.utils.StringUtil;
 import com.unclezs.novel.core.utils.regex.RegexUtil;
 import lombok.experimental.UtilityClass;
 

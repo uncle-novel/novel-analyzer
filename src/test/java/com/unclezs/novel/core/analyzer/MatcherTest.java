@@ -3,6 +3,7 @@ package com.unclezs.novel.core.analyzer;
 import com.unclezs.novel.core.matcher.Matcher;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
+import com.unclezs.novel.core.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;

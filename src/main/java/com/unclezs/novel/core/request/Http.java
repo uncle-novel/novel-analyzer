@@ -1,29 +1,14 @@
 package com.unclezs.novel.core.request;
 
-import com.unclezs.novel.core.request.ssl.SslTrustAllCerts;
-import com.unclezs.novel.core.utils.CollectionUtil;
+import com.unclezs.novel.core.request.spi.HttpProvider;
+import com.unclezs.novel.core.request.spi.PhantomJsClient;
 import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Call;
-import okhttp3.ConnectionPool;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.SecureRandom;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import java.util.ServiceLoader;
 
 /**
  * okHttp请求工具
@@ -35,99 +20,45 @@ import javax.net.ssl.X509TrustManager;
 @UtilityClass
 public class Http {
     /**
-     * OkHttp客户端
+     * 动态网页Http客户端
      */
-    private OkHttpClient client;
+    private static HttpProvider dynamicHttpClient;
+    /**
+     * 静态网页Http客户端
+     */
+    private HttpProvider staticHttpClient;
 
     static {
-        configuration(HttpConfig.defaultConfig());
-    }
-
-    /**
-     * 配置OkHttpClient
-     *
-     * @param config 配置信息
-     */
-    public void configuration(HttpConfig config) {
-        // SSL配置
-        SslTrustAllCerts sslTrustAllCerts = new SslTrustAllCerts();
-        SSLSocketFactory sslSocketFactory = createSslSocketFactory(sslTrustAllCerts);
-        client = new OkHttpClient.Builder()
-            // 连接池
-            .connectionPool(
-                new ConnectionPool(config.getMaxIdleConnections(), config.getKeepAliveDuration(), TimeUnit.SECONDS))
-            // 超时
-            .connectTimeout(config.getConnectionTimeout(), TimeUnit.SECONDS)
-            .readTimeout(config.getReadTimeout(), TimeUnit.SECONDS)
-            // 代理
-            .proxy(config.getProxy())
-            // 信任所有SSL
-            .sslSocketFactory(sslSocketFactory, sslTrustAllCerts)
-            .hostnameVerifier((s, sslSession) -> true)
-            // 自动跟随重定向
-            .followRedirects(config.isFollowRedirect())
-            // 连接失败自动重试
-            .retryOnConnectionFailure(config.isRetryOnFailed())
-            .build();
-    }
-
-    /**
-     * 创建SSL factory工厂
-     *
-     * @param manager X509TrustManager
-     * @return /
-     */
-    private static SSLSocketFactory createSslSocketFactory(X509TrustManager manager) {
-        SSLSocketFactory ssfFactory = null;
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, new TrustManager[] {manager}, new SecureRandom());
-            ssfFactory = sc.getSocketFactory();
-        } catch (Exception ignored) {
-        }
-        return ssfFactory;
-    }
-
-    /**
-     * 发起HTTP请求
-     *
-     * @param requestData 请求数据
-     * @return /
-     * @throws IOException 请求失败
-     */
-    public Call init(RequestData requestData) throws IOException {
-        Request.Builder request = new Request.Builder().url(requestData.getUrl());
-        // 请求方法
-        if (requestData.isPost()) {
-            request.post(RequestBody.create(requestData.getBody(), MediaType.get(requestData.getMediaType())));
-        } else {
-            request.get();
-        }
-        // 请求头
-        if (CollectionUtil.isNotEmpty(requestData.getHeaders())) {
-            for (Map.Entry<String, String> entry : requestData.getHeaders().entrySet()) {
-                request.header(entry.getKey(), entry.getValue());
+        // 加载自定义的 动态网页Http客户端
+        ServiceLoader<HttpProvider> httpProviders = ServiceLoader.load(HttpProvider.class);
+        for (HttpProvider provider : httpProviders) {
+            if (provider.isDynamic()) {
+                dynamicHttpClient = provider;
+            } else {
+                staticHttpClient = provider;
             }
         }
-        return client.newCall(request.build());
+        if (dynamicHttpClient == null) {
+            dynamicHttpClient = new PhantomJsClient();
+        }
+        if (staticHttpClient == null) {
+            staticHttpClient = new com.unclezs.novel.core.request.spi.OkHttpClient();
+        }
+
+        // 加载自定义的Http
     }
 
     /**
      * 获取http请求内容
      *
      * @param requestData /
-     * @return
+     * @return /
      */
     public String content(RequestData requestData) throws IOException {
-        Call request = init(requestData);
-        try (Response response = request.execute()) {
-            handleFailed(response);
-            ResponseBody body = response.body();
-            if (body == null) {
-                return StringUtil.EMPTY;
-            } else {
-                return body.string();
-            }
+        if (requestData.isDynamic()) {
+            return dynamicHttpClient.content(requestData);
+        } else {
+            return staticHttpClient.content(requestData);
         }
     }
 
@@ -137,14 +68,24 @@ public class Http {
      * @param url /
      * @return null if error.
      */
-    public String get(String url) {
-        RequestData requestData = RequestData.builder().url(url).build();
+    public String get(String url, boolean dynamic) {
+        RequestData requestData = RequestData.builder().dynamic(dynamic).url(url).build();
         try {
             return content(requestData);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return StringUtil.EMPTY;
+    }
+
+    /**
+     * 获取 get http请求内容 静态网页
+     *
+     * @param url /
+     * @return null if error.
+     */
+    public String get(String url) {
+        return get(url, false);
     }
 
     /**
@@ -155,27 +96,10 @@ public class Http {
      * @throws IOException 请求失败
      */
     public InputStream stream(RequestData requestData) throws IOException {
-        Call request = init(requestData);
-        try (Response response = request.execute()) {
-            handleFailed(response);
-            ResponseBody body = response.body();
-            if (body == null) {
-                return null;
-            } else {
-                return body.byteStream();
-            }
-        }
-    }
-
-    /**
-     * 处理失败
-     *
-     * @param response 响应
-     * @throws IOException 失败
-     */
-    private void handleFailed(Response response) throws IOException {
-        if (!response.isSuccessful()) {
-            throw new IOException("错误的状态码，非200-299 ：" + response);
+        if (requestData.isDynamic()) {
+            return dynamicHttpClient.stream(requestData);
+        } else {
+            return staticHttpClient.stream(requestData);
         }
     }
 }

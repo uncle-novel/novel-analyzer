@@ -1,6 +1,7 @@
 package com.unclezs.novel.core.matcher;
 
 import com.jayway.jsonpath.JsonPath;
+import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 
 /**
