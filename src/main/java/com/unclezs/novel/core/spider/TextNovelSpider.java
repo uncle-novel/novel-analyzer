@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 public class TextNovelSpider extends NovelSpider {
     /**
-     * 配置信息
+     * 解析配置信息
      */
     private TextAnalyzerConfig config;
 
@@ -73,7 +73,7 @@ public class TextNovelSpider extends NovelSpider {
             requestData.setUrl(AnalyzerHelper.nextPage(page, config.getNextPageRule(), requestData.getUrl()));
             // 如果下一页存在并且没有被抓取过（防止重复抓取的情况）
             if (UrlUtil.isHttpUrl(requestData.getUrl())) {
-                multiPage(requestData, pageLinks, title, config.getNextPageRule(), requestData.getUrl(),
+                multiPage(requestData, pageLinks, title, config.getNextPageRule(),
                     pageHtml -> pages.append(TextNovelAnalyzer.content(pageHtml, config)));
             }
             log.trace("文本小说抓取多页正文完成 - 共{}页 : {}.", pageLinks.size(), requestData.getUrl());
@@ -96,10 +96,10 @@ public class TextNovelSpider extends NovelSpider {
             String title = RegexMatcher.titleWithNotNumber(page);
             List<Chapter> chapterList = new ArrayList<>(TextNovelAnalyzer.chapters(page, config));
             // 如果有下一页
-            requestData.setUrl(AnalyzerHelper.nextPage(page, config.getNextPageRule(), config.getBaseUri()));
+            requestData.setUrl(AnalyzerHelper.nextPage(page, config.getNextChapterPageRule(), config.getBaseUri()));
             // 如果下一页存在并且没有被抓取过（防止重复抓取的情况）
             if (UrlUtil.isHttpUrl(requestData.getUrl())) {
-                multiPage(requestData, pageLinks, title, config.getNextPageRule(), config.getBaseUri(),
+                multiPage(requestData, pageLinks, title, config.getNextChapterPageRule(),
                     pageHtml -> chapterList.addAll(TextNovelAnalyzer.chapters(pageHtml, config)));
             }
             // 多页去重 首页可能不带 chapters/123/  但是最后一页后会跳回 chapters/123/_1 的情况

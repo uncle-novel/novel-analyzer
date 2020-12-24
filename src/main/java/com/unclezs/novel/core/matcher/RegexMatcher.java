@@ -5,7 +5,7 @@ import com.unclezs.novel.core.utils.regex.RegexUtil;
 import lombok.experimental.UtilityClass;
 
 /**
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 11:39
  */
 @UtilityClass
@@ -26,7 +26,7 @@ public class RegexMatcher {
      */
     public String matcher(String src, String regex, int index) {
         String ret = RegexUtil.get(regex, src, index);
-        return ret == null ? "" : ret;
+        return ret == null ? StringUtil.EMPTY : ret;
     }
 
     /**
@@ -44,7 +44,7 @@ public class RegexMatcher {
     public String matcher(String src, String regex) {
         Pair<String, String> pair = getTemplate(regex);
         String ret = RegexUtil.extractMulti(pair.getLeft(), src, pair.getRight());
-        return ret == null ? "" : ret;
+        return ret == null ? StringUtil.EMPTY : ret;
     }
 
     /**

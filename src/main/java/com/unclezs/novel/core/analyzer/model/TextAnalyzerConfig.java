@@ -1,6 +1,10 @@
 package com.unclezs.novel.core.analyzer.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -56,6 +60,10 @@ public class TextAnalyzerConfig implements AnalyzerConfig {
      */
     private boolean chapterSort;
     /**
+     * 下一页规则（存在则会匹配下一页）
+     */
+    private String nextChapterPageRule = NEXT_PAGE_RULE;
+    /**
      * 章节过滤
      */
     @Builder.Default
@@ -80,6 +88,7 @@ public class TextAnalyzerConfig implements AnalyzerConfig {
      * @return TextAnalyzerConfig
      */
     public static TextAnalyzerConfigBuilder defaultBuilder() {
-        return builder().rule(Rule.TEXT_TAG).enableChapterNextPage(true).enableContentNextPage(true).chapterFilter(true).nextPageRule(NEXT_PAGE_RULE).baseUri("");
+        return builder().rule(Rule.TEXT_TAG).enableChapterNextPage(true).enableContentNextPage(true).chapterFilter(
+            true).nextPageRule(NEXT_PAGE_RULE).baseUri(StringUtil.EMPTY);
     }
 }

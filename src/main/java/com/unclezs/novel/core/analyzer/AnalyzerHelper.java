@@ -25,7 +25,7 @@ public class AnalyzerHelper {
      * 获取下一页
      *
      * @param content      原文本
-     * @param nextPageRule nextPage必须得有，不然返回""
+     * @param nextPageRule nextPage必须得有，不然返回StringUtil.EMPTY
      * @param baseUri      baseUri用于拼接完整路径
      * @return 下一页URL
      */
@@ -39,7 +39,7 @@ public class AnalyzerHelper {
             // 获得完整的URL
             return UrlUtil.completeUrl(baseUri, next);
         }
-        return "";
+        return StringUtil.EMPTY;
     }
 
     /**

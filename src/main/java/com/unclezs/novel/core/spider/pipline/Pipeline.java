@@ -3,7 +3,7 @@ package com.unclezs.novel.core.spider.pipline;
 /**
  * 数据处理管道 用户爬取完成之后的数据处理
  *
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/23 15:51
  */
 public interface Pipeline<T> {

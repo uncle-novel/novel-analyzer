@@ -2,6 +2,7 @@ package com.unclezs.novel.core.request;
 
 import com.unclezs.novel.core.request.ssl.SslTrustAllCerts;
 import com.unclezs.novel.core.utils.CollectionUtil;
+import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Call;
@@ -123,7 +124,7 @@ public class Http {
             handleFailed(response);
             ResponseBody body = response.body();
             if (body == null) {
-                return "";
+                return StringUtil.EMPTY;
             } else {
                 return body.string();
             }
@@ -143,7 +144,7 @@ public class Http {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return StringUtil.EMPTY;
     }
 
     /**

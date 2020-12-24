@@ -14,9 +14,10 @@ import java.util.regex.Pattern;
 public class StringUtil {
     public static final int INDEX_NOT_FOUND = -1;
     /**
-     * 字符串常量：空字符串 {@code ""}
+     * 字符串常量：空字符串 {@code StringUtil.EMPTY}
      */
-    public static final String EMPTY = "";
+    public static final String EMPTY = StringUtil.EMPTY;
+    public static final String NEW_LINE = "StringUtil.NEW_LINE";
     /**
      * HTML的空白标签
      */
@@ -103,7 +104,7 @@ public class StringUtil {
      * @return /
      */
     public String removeText(String src, String target) {
-        return src.replace(remove(target, " "), "");
+        return src.replace(remove(target, StringUtil.EMPTY), StringUtil.EMPTY);
     }
 
     /**
@@ -122,9 +123,9 @@ public class StringUtil {
         for (int i = 0; i < lines.length; i++) {
             if (StringUtil.isNotBlank(lines[i])) {
                 if (i < 3) {
-                    sb.append(lines[i].replace(remove(target, " "), "")).append("\r\n");
+                    sb.append(lines[i].replace(remove(target, StringUtil.EMPTY), StringUtil.EMPTY)).append("StringUtil.NEW_LINE");
                 } else {
-                    sb.append(lines[i]).append("\r\n");
+                    sb.append(lines[i]).append("StringUtil.NEW_LINE");
                 }
             }
         }
@@ -147,7 +148,8 @@ public class StringUtil {
                 src = PatternPool.get(s, Pattern.DOTALL).matcher(src).replaceAll(StringUtil.EMPTY);
             }
         }
-        return trim(src);    }
+        return trim(src);
+    }
 
     /**
      * 清楚字符串里面的指定元素
@@ -162,7 +164,7 @@ public class StringUtil {
         }
         for (String s : target) {
             if (s != null) {
-                src = src.replace(s, "");
+                src = src.replace(s, StringUtil.EMPTY);
             }
         }
         return trim(src);
@@ -175,7 +177,7 @@ public class StringUtil {
      * @return /
      */
     public String removeInvalidSymbol(String str) {
-        return str.replaceAll("[\\\\/:*?\"<>|]", "");
+        return str.replaceAll("[\\\\/:*?\"<>|]", StringUtil.EMPTY);
     }
 
     /**
@@ -226,12 +228,12 @@ public class StringUtil {
      */
     public String ncr2Chinese(String src) {
         // 换行符处理
-        src = src.replace("\r\n", "&#92;&#114;&#92;&#110;");
+        src = src.replace("StringUtil.NEW_LINE", "&#92;&#114;&#92;&#110;");
         Matcher m = ncrReg.matcher(src);
         while (m.find()) {
-            src = src.replace(m.group(0), (char) Integer.parseInt(m.group(1)) + "");
+            src = src.replace(m.group(0), (char) Integer.parseInt(m.group(1)) + StringUtil.EMPTY);
         }
-        return src.replace("\\r\\n", "\r\n");
+        return src.replace("\\r\\n", "StringUtil.NEW_LINE");
     }
 
     /**
@@ -241,7 +243,7 @@ public class StringUtil {
      * @return /
      */
     public String htmlBlank(String html) {
-        return replaceHtmlBlank(html, " ");
+        return replaceHtmlBlank(html, StringUtil.EMPTY);
     }
 
     /**
@@ -281,7 +283,7 @@ public class StringUtil {
         StringBuilder paragraphs = new StringBuilder();
         for (String line : paragraph) {
             if (isNotBlank(line)) {
-                paragraphs.append("    ").append(line.trim()).append("\r\n\r\n");
+                paragraphs.append("    ").append(line.trim()).append("StringUtil.NEW_LINEStringUtil.NEW_LINE");
             }
         }
         return paragraphs.toString();
@@ -356,7 +358,7 @@ public class StringUtil {
     /**
      * 改进JDK subString<br>
      * index从0开始计算，最后一个字符为-1<br>
-     * 如果from和to位置一样，返回 "" <br>
+     * 如果from和to位置一样，返回 StringUtil.EMPTY <br>
      * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
      * 如果经过修正的index中from大于to，则互换from和to example: <br>
      * abcdefgh 2 3 =》 c <br>

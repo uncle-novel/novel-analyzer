@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 匹配规则
  *
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 17:15
  */
 @Data

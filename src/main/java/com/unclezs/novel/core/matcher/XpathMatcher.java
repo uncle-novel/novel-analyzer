@@ -12,7 +12,7 @@ import java.util.Objects;
  * 开源地址：https://github.com/zhegexiaohuozi/JsoupXpath
  * 在线测试：浏览器插件 xpath helper
  *
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 16:20
  */
 @UtilityClass
@@ -40,6 +40,6 @@ public class XpathMatcher {
         if (ret != null) {
             return Objects.toString(ret);
         }
-        return "";
+        return StringUtil.EMPTY;
     }
 }

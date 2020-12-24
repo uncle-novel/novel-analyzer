@@ -120,12 +120,10 @@ public abstract class NovelSpider {
      * @param pageLinks    已经爬取了的页面链接
      * @param title        页面标题
      * @param nextPageRule 下一页规则
-     * @param baseUri      用于拼接完整URI
      * @param consumer     处理下一页html的处理器
      * @throws IOException /
      */
-    public void multiPage(RequestData requestData, Set<String> pageLinks, String title, String nextPageRule,
-                          String baseUri, Consumer<String> consumer)
+    public void multiPage(RequestData requestData, Set<String> pageLinks, String title, String nextPageRule, Consumer<String> consumer)
         throws IOException {
         String page;
         // 如果下一页存在并且没有被抓取过（防止重复抓取的情况）
@@ -143,7 +141,7 @@ public abstract class NovelSpider {
             }
             consumer.accept(page);
             // 继续翻页
-            requestData.setUrl(AnalyzerHelper.nextPage(page, nextPageRule, baseUri));
+            requestData.setUrl(AnalyzerHelper.nextPage(page, nextPageRule, requestData.getUrl()));
         }
     }
 

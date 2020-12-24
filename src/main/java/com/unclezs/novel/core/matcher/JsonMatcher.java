@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
  * 开源地址：https://github.com/json-path/JsonPath
  * 在线测试：http://jsonpath.herokuapp.com/
  *
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 16:20
  */
 @UtilityClass
@@ -24,6 +24,6 @@ public class JsonMatcher {
         if (ret != null) {
             return ret.toString();
         }
-        return "";
+        return StringUtil.EMPTY;
     }
 }

@@ -6,6 +6,7 @@
 
     <groupId>com.unclezs</groupId>
     <artifactId>novel-analyzer</artifactId>
+    <packaging>jar</packaging>
     <version>1.0</version>
 
     <properties>
@@ -13,6 +14,7 @@
         <lombok.version>1.18.16</lombok.version>
         <okhttp.version>4.9.0</okhttp.version>
         <slf4j.version>1.7.30</slf4j.version>
+        <selenium.version>3.4.0</selenium.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <jsoupxpath.version>2.4.3</jsoupxpath.version>
         <jsonpath.version>2.5.0</jsonpath.version>

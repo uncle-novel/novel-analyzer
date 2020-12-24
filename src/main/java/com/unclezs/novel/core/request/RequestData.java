@@ -19,6 +19,9 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class RequestData {
+    public static final String REFERER = "Referer";
+    public static final String COOKIE = "Cookie";
+    public static final String USER_AGENT = "User-Agent";
     /**
      * 请求链接
      */
@@ -48,6 +51,12 @@ public class RequestData {
     private String body;
 
     /**
+     * 是否为动态网页
+     */
+    @Builder.Default
+    private boolean dynamic = false;
+
+    /**
      * 默认请求配置
      *
      * @param url url
@@ -65,6 +74,6 @@ public class RequestData {
      */
     public static RequestDataBuilder defaultBuilder(String url) {
         return builder().charset(StandardCharsets.UTF_8.toString())
-            .mediaType(MediaType.NONE.getMediaType()).post(false).url(url);
+            .mediaType(MediaType.NONE.getMediaType()).dynamic(false).post(false).url(url);
     }
 }

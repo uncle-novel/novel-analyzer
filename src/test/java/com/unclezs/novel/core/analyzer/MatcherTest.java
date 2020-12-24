@@ -10,12 +10,12 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 15:48
  */
 @Slf4j
 public class MatcherTest {
-    private String originalText = "";
+    private String originalText = StringUtil.EMPTY;
 
     public void initContent(String url) {
         RequestData requestData = new RequestData();

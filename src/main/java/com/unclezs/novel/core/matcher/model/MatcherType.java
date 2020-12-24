@@ -1,7 +1,7 @@
 package com.unclezs.novel.core.matcher.model;
 
 /**
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 12:05
  */
 public enum MatcherType {

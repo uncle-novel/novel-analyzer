@@ -37,14 +37,14 @@ public class TagContentMatcher {
         String cleanHtml = Jsoup.clean(originalText, Whitelist.none().addTags(WHITELIST));
         // p、br替换为换行，移除特殊空格
         String divHtml = StringUtil.remove(cleanHtml, BLANK);
-        divHtml = StringUtil.replace(divHtml, "\r\n", "\n", NEW_LINE);
+        divHtml = StringUtil.replace(divHtml, "StringUtil.NEW_LINE", "\n", NEW_LINE);
         divHtml = StringUtil.replaceAllCaseInsensitive(divHtml, NEW_LINE, P_BR_TAG);
         // 解析 忽略标签大小写
         Parser parser = Parser.htmlParser();
         parser.settings(ParseSettings.preserveCase);
-        Document document = parser.parseInput(divHtml, "");
+        Document document = parser.parseInput(divHtml, StringUtil.EMPTY);
         Elements divs = document.select("div");
-        String text = "";
+        String text = StringUtil.EMPTY;
         int maxLen = 0;
         for (Element div : divs) {
             String ownText = div.ownText();
@@ -53,6 +53,6 @@ public class TagContentMatcher {
                 maxLen = ownText.length();
             }
         }
-        return text.replace(NEW_LINE, "\r\n");
+        return text.replace(NEW_LINE, "StringUtil.NEW_LINE");
     }
 }

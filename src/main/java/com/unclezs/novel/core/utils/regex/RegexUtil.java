@@ -87,7 +87,7 @@ public class RegexUtil {
      * @return /
      */
     public String removeNotChineseAndNotNumber(String content) {
-        return NOT_CHINESE_AND_NOT_NUMBER.matcher(content).replaceAll("");
+        return NOT_CHINESE_AND_NOT_NUMBER.matcher(content).replaceAll(StringUtil.EMPTY);
     }
 
     /**
@@ -157,7 +157,7 @@ public class RegexUtil {
      *
      * @param regex   正则
      * @param content 内容
-     * @return 正则为null或者""则不检查，返回true，内容为null返回false
+     * @return 正则为null或者StringUtil.EMPTY则不检查，返回true，内容为null返回false
      */
     public static boolean isMatch(String regex, CharSequence content) {
         if (content == null) {
@@ -179,7 +179,7 @@ public class RegexUtil {
      *
      * @param pattern 模式
      * @param content 内容
-     * @return 正则为null或者""则不检查，返回true，内容为null返回false
+     * @return 正则为null或者StringUtil.EMPTY则不检查，返回true，内容为null返回false
      */
     public static boolean isMatch(Pattern pattern, CharSequence content) {
         if (content == null || pattern == null) {
@@ -307,7 +307,7 @@ public class RegexUtil {
         }
         final Matcher matcher = pattern.matcher(content);
         if (replacementTemplate == null) {
-            replacementTemplate = "";
+            replacementTemplate = StringUtil.EMPTY;
         }
         boolean result = matcher.find();
         if (result) {

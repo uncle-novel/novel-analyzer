@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 支持 @text @ownText  等其他attr
  *
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 14:08
  */
 @UtilityClass
@@ -60,12 +60,12 @@ public class CssMatcher {
     public String matcher(Element document, String cssQuery, String attr) {
         Element element = selectFirst(document, cssQuery);
         if (element == null) {
-            return "";
+            return StringUtil.EMPTY;
         }
         if (StringUtil.isEmpty(attr)) {
             Element first = selectFirst(element, cssQuery);
             if (first == null) {
-                return "";
+                return StringUtil.EMPTY;
             } else {
                 return first.text();
             }

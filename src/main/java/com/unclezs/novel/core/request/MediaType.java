@@ -1,5 +1,7 @@
 package com.unclezs.novel.core.request;
 
+import com.unclezs.novel.core.utils.StringUtil;
+
 /**
  * @author blog.unclezs.com
  * @date 2020/12/21 1:37 上午
@@ -12,7 +14,7 @@ public enum MediaType {
     /**
      * GET请求使用
      */
-    NONE(""),
+    NONE(StringUtil.EMPTY),
     /**
      * JSON
      */

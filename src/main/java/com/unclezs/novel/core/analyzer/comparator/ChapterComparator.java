@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.Comparator;
 
 /**
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 17:54
  */
 public class ChapterComparator implements Comparator<Chapter> {

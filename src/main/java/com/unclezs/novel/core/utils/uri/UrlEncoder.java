@@ -49,7 +49,7 @@ public class UrlEncoder {
         int lastPos = 0;
         int pos;
         char ch;
-        src = src.replace("&#x", "%u").replace(";", "");
+        src = src.replace("&#x", "%u").replace(";", StringUtil.EMPTY);
         while (lastPos < src.length()) {
             pos = src.indexOf("%", lastPos);
             if (pos == lastPos) {

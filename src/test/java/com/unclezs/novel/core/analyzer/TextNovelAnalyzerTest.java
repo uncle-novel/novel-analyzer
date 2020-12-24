@@ -28,7 +28,7 @@ public class TextNovelAnalyzerTest {
     /**
      * 文本小说解析器
      */
-    private String originalText = "";
+    private String originalText = StringUtil.EMPTY;
 
     public void initContent() {
         String url = "https://www.yqhy.org/read/0/269/23411325_3.html";
@@ -73,14 +73,14 @@ public class TextNovelAnalyzerTest {
 
     @Test
     public void testChapters() {
-        String url = "";
+        String url = StringUtil.EMPTY;
         String html = Http.get(url);
         TextAnalyzerConfig config = new TextAnalyzerConfig();
         config.setBaseUri(url);
         config.setChapterFilter(false);
         List<Chapter> chapters = TextNovelAnalyzer.chapters(html, config);
         chapters.stream().forEach(System.out::println);
-        String content = TextNovelAnalyzer.content(Http.get(""), config);
+        String content = TextNovelAnalyzer.content(Http.get(StringUtil.EMPTY), config);
         System.out.println(content);
     }
 
@@ -139,7 +139,7 @@ public class TextNovelAnalyzerTest {
             "\n" +
             "    下一章\n" +
             "2020-12-23";
-        System.out.println(PatternPool.get("上一页.+?下一章", Pattern.DOTALL).matcher(text).replaceAll(""));
+        System.out.println(PatternPool.get("上一页.+?下一章", Pattern.DOTALL).matcher(text).replaceAll(StringUtil.EMPTY));
     }
 
     /**

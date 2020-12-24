@@ -53,7 +53,7 @@ public class UrlUtil {
      * @return /
      */
     public static String getUrlLastPathNotSuffix(String url) {
-        String str = url.replaceAll("\\.htm.*", "");
+        String str = url.replaceAll("\\.htm.*", StringUtil.EMPTY);
         int i = str.lastIndexOf("/");
         return str.substring(i + 1);
     }

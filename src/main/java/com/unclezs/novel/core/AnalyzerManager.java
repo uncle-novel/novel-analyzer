@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class AnalyzerManager {
+
     private static final int sysMaxTaskCount = 3;
     private static final int sysMaxThreadNum = 32;
     /**

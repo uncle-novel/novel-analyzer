@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 匹配器  正则,xpath,jsonpath,css
  *
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/21 11:24
  */
 @Slf4j
@@ -25,7 +25,7 @@ public class Matcher {
         MatcherRule matcherRule = MatcherRule.of(rule);
         if (matcherRule.getMatcherType() == null) {
             log.trace("不支持的解析器类型：{}", matcherRule.getMatcherType());
-            return "";
+            return StringUtil.EMPTY;
         }
         return matching(matcherRule, src);
     }

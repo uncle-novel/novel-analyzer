@@ -39,7 +39,7 @@ public class RegexContentMatcher {
         while (m.find()) {
             String paragraph = m.group(1);
             if (!paragraph.isEmpty()) {
-                content.append(paragraph).append("\r\n");
+                content.append(paragraph).append("StringUtil.NEW_LINE");
             }
         }
         return content.toString();

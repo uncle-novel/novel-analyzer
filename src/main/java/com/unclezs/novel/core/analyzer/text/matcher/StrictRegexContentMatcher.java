@@ -50,7 +50,7 @@ public class StrictRegexContentMatcher {
             boolean valid =
                 StringUtil.isNotBlank(paragraph) && isParagraph(paragraph) && StringUtil.endWith(tag, EFFECTIVE_TAG);
             if (valid) {
-                content.append(paragraph).append("\r\n");
+                content.append(paragraph).append("StringUtil.NEW_LINE");
             }
         }
         return content.toString();

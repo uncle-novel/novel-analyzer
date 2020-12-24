@@ -4,7 +4,7 @@ import com.unclezs.novel.core.utils.uri.UrlUtil;
 import org.junit.Test;
 
 /**
- * @author zhanghongguo@sensorsdata.cn
+ * @author blog.unclezs.com
  * @since 2020/12/22 15:05
  */
 public class AppTest {
