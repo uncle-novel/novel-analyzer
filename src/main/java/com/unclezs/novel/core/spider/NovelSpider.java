@@ -4,9 +4,9 @@ import com.unclezs.novel.core.analyzer.AnalyzerHelper;
 import com.unclezs.novel.core.analyzer.model.AnalyzerConfig;
 import com.unclezs.novel.core.matcher.RegexMatcher;
 import com.unclezs.novel.core.model.Chapter;
+import com.unclezs.novel.core.model.Novel;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.spider.model.BaseNovelInfo;
 import com.unclezs.novel.core.spider.pipline.Pipeline;
 import com.unclezs.novel.core.utils.uri.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public abstract class NovelSpider {
      * @param requestData /
      * @return 结果列表
      */
-    public abstract List<BaseNovelInfo> search(RequestData requestData);
+    public abstract List<Novel> search(RequestData requestData);
 
     /**
      * 获取小说正文

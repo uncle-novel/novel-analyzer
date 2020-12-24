@@ -20,8 +20,10 @@ public class SimpleCache<K, V> implements Iterable<Map.Entry<K, V>>, Serializabl
     /**
      * 池
      */
-    private final Map<K, V> cache;
-    // 乐观读写锁
+    private final transient Map<K, V> cache;
+    /**
+     * 乐观读写锁
+     */
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**

@@ -5,9 +5,9 @@ import com.unclezs.novel.core.analyzer.model.TextAnalyzerConfig;
 import com.unclezs.novel.core.analyzer.text.TextNovelAnalyzer;
 import com.unclezs.novel.core.matcher.RegexMatcher;
 import com.unclezs.novel.core.model.Chapter;
+import com.unclezs.novel.core.model.Novel;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.spider.model.BaseNovelInfo;
 import com.unclezs.novel.core.utils.uri.UrlUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,7 +46,7 @@ public class TextNovelSpider extends NovelSpider {
 
 
     @Override
-    public List<BaseNovelInfo> search(RequestData requestData) {
+    public List<Novel> search(RequestData requestData) {
         return null;
     }
 
