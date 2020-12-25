@@ -1,7 +1,8 @@
 package com.unclezs.novel.core.request;
 
+import com.unclezs.novel.core.request.okhttp.OkHttpClient;
 import com.unclezs.novel.core.request.spi.HttpProvider;
-import com.unclezs.novel.core.request.spi.PhantomJsClient;
+import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
 import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class Http {
     private HttpProvider staticHttpClient;
 
     static {
-        // 加载自定义的 动态网页Http客户端
+        // 加载自定义的 动态/静态网页Http客户端
         ServiceLoader<HttpProvider> httpProviders = ServiceLoader.load(HttpProvider.class);
         for (HttpProvider provider : httpProviders) {
             if (provider.isDynamic()) {
@@ -38,14 +39,14 @@ public class Http {
                 staticHttpClient = provider;
             }
         }
+        // 没有提供则使用默认
         if (dynamicHttpClient == null) {
             dynamicHttpClient = new PhantomJsClient();
         }
         if (staticHttpClient == null) {
-            staticHttpClient = new com.unclezs.novel.core.request.spi.OkHttpClient();
+            staticHttpClient = new OkHttpClient();
         }
 
-        // 加载自定义的Http
     }
 
     /**

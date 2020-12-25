@@ -1,17 +1,25 @@
+/**
+ * phantomjs 解析动态网页
+ * 支持传入referer、cookie、useragent
+ *
+ * @author blog.unclezs.com
+ * @date   2020-12-24
+ * @see    https://phantomjs.org/api/
+ */
 var page = require('webpage').create();
 var system = require('system');
+
+// 只传入脚本名称 不传入参数不执行
 if (system.args.length === 1) {
-    console.log('run args must be provide!');
-    //这行代码很重要。凡是结束必须调用。否则phantomjs不会停止
     phantom.exit();
 }
-//为了提升加载速度，不加载图片
+// 为了提升加载速度，不加载图片
 page.settings.loadImages = false;
-//超过10秒放弃加载
+// 超过10秒放弃加载
 page.settings.resourceTimeout = 10000;
+// 忽略SSL错误
 
-// 参数
-
+// 参数 需要按照顺序
 var url = system.args[1];
 var referer = system.args[2];
 var cookie = system.args[3];
@@ -31,9 +39,7 @@ if (userAgent) {
 }
 page.customHeaders = customHeaders;
 page.open(url, function (status) {
-    if (status !== 'success') {
-        console.log('failed');
-    } else {
+    if (status === 'success') {
         console.log(page.content);
     }
     phantom.exit();

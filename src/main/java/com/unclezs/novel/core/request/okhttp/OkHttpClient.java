@@ -1,22 +1,32 @@
-package com.unclezs.novel.core.request.spi;
+package com.unclezs.novel.core.request.okhttp;
 
 import com.unclezs.novel.core.request.HttpConfig;
 import com.unclezs.novel.core.request.RequestData;
+import com.unclezs.novel.core.request.spi.HttpProvider;
 import com.unclezs.novel.core.request.ssl.SslTrustAllCerts;
 import com.unclezs.novel.core.utils.CollectionUtil;
 import com.unclezs.novel.core.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.ConnectionPool;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.security.SecureRandom;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.SecureRandom;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * okHttp请求工具
@@ -55,7 +65,8 @@ public class OkHttpClient implements HttpProvider {
             .proxy(config.getProxy())
             // 信任所有SSL
             .sslSocketFactory(sslSocketFactory, sslTrustAllCerts)
-            .hostnameVerifier((requestedHost, remoteServerSession) -> requestedHost.equalsIgnoreCase(remoteServerSession.getPeerHost()))
+            .hostnameVerifier((requestedHost, remoteServerSession) -> requestedHost.equalsIgnoreCase(
+                remoteServerSession.getPeerHost()))
             // 自动跟随重定向
             .followRedirects(config.isFollowRedirect())
             // 连接失败自动重试
@@ -72,7 +83,7 @@ public class OkHttpClient implements HttpProvider {
     private SSLSocketFactory createSslSocketFactory(X509TrustManager manager) {
         try {
             SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, new TrustManager[]{manager}, new SecureRandom());
+            sc.init(null, new TrustManager[] {manager}, new SecureRandom());
             return sc.getSocketFactory();
         } catch (Exception ignored) {
             log.warn("SSL Factory 创建失败，使用默认的SSL Factory");
@@ -85,10 +96,15 @@ public class OkHttpClient implements HttpProvider {
      *
      * @param requestData 请求数据
      * @return /
-     * @throws IOException 请求失败
      */
-    public Call init(RequestData requestData) throws IOException {
+    public Call init(RequestData requestData) {
         Request.Builder request = new Request.Builder().url(requestData.getUrl());
+        // 请求头
+        if (CollectionUtil.isNotEmpty(requestData.getHeaders())) {
+            for (Map.Entry<String, String> header : requestData.getHeaders().entrySet()) {
+                request.addHeader(header.getKey(), header.getValue());
+            }
+        }
         // 请求方法
         if (requestData.isPost()) {
             request.post(RequestBody.create(requestData.getBody(), MediaType.get(requestData.getMediaType())));
@@ -100,6 +116,16 @@ public class OkHttpClient implements HttpProvider {
             for (Map.Entry<String, String> entry : requestData.getHeaders().entrySet()) {
                 request.header(entry.getKey(), entry.getValue());
             }
+        }
+        // 如果是代理
+        if (requestData.isEnableProxy()) {
+            // 创建代理
+            InetSocketAddress inetSocketAddress =
+                new InetSocketAddress(requestData.getProxyHost(), requestData.getProxyPort());
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, inetSocketAddress);
+            // 复用client线程池与连接池及配置 使用代理
+            okhttp3.OkHttpClient client = staticHttpClient.newBuilder().proxy(proxy).build();
+            return client.newCall(request.build());
         }
         return staticHttpClient.newCall(request.build());
     }

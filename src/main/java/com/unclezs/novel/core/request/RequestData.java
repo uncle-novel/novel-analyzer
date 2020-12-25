@@ -1,5 +1,7 @@
 package com.unclezs.novel.core.request;
 
+import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.utils.regex.PatternPool;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -57,6 +59,20 @@ public class RequestData {
     private boolean dynamic = false;
 
     /**
+     * HTTP代理端口
+     */
+    private Integer proxyPort;
+    /**
+     * HTTP代理HOST
+     */
+    private String proxyHost;
+    /**
+     * 启用HTTP代理
+     */
+    @Builder.Default
+    private boolean enableProxy = false;
+
+    /**
      * 默认请求配置
      *
      * @param url url
@@ -74,6 +90,16 @@ public class RequestData {
      */
     public static RequestDataBuilder defaultBuilder(String url) {
         return builder().charset(StandardCharsets.UTF_8.toString())
-            .mediaType(MediaType.NONE.getMediaType()).dynamic(false).post(false).url(url);
+            .mediaType(MediaType.NONE.getMediaType()).enableProxy(false).dynamic(false).post(false).url(url);
+    }
+
+    /**
+     * 代理是否合法
+     *
+     * @return true 合法
+     */
+    public boolean proxyValid() {
+        return StringUtil.isNotEmpty(proxyHost) && PatternPool.IPV4.matcher(this.proxyHost).matches()
+            && proxyPort != null && proxyPort > 0;
     }
 }

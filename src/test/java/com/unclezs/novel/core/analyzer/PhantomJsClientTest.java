@@ -1,7 +1,8 @@
 package com.unclezs.novel.core.analyzer;
 
 import com.unclezs.novel.core.request.Http;
-import com.unclezs.novel.core.request.spi.PhantomJsClient;
+import com.unclezs.novel.core.request.RequestData;
+import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
 import com.unclezs.novel.core.utils.StringUtil;
 import org.junit.Test;
 
@@ -19,10 +20,21 @@ public class PhantomJsClientTest {
     private static String exePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/phantomjs";
     private static String jsBasePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/%s.js";
     public static final String URL = "http://httpbin.org/get";
+    private static String proxyUrl = "http://myip.ipip.net/";
 
     @Test
-    public void testArguments() throws IOException, URISyntaxException {
-        System.out.println(Http.get(URL, true));
+    public void testArguments() {
+        System.out.println(Http.get(proxyUrl, true));
+    }
+
+
+    @Test
+    public void testProxy() throws IOException {
+        RequestData requestData =
+            RequestData.defaultBuilder(proxyUrl).dynamic(true).enableProxy(true).proxyHost("116.117.134.134").proxyPort(
+                82).build();
+        String content = Http.content(requestData);
+        System.out.println(content);
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
