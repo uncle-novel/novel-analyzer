@@ -117,7 +117,7 @@ public class OkHttpClient implements HttpProvider {
                 request.header(entry.getKey(), entry.getValue());
             }
         }
-        // 如果是代理
+        // 如果要使用代理
         if (requestData.isEnableProxy()) {
             // 创建代理
             InetSocketAddress inetSocketAddress =
