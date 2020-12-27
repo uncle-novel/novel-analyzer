@@ -3,6 +3,7 @@ package com.unclezs.novel.core.analyzer;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
+import com.unclezs.novel.core.request.proxy.HttpProxy;
 import com.unclezs.novel.core.utils.StringUtil;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ import java.net.URISyntaxException;
 public class PhantomJsClientTest {
     private static String exePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/phantomjs";
     private static String jsBasePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/%s.js";
-    public static final String URL = "http://httpbin.org/get";
+    public static final String URL = "http://httpbin.org/get?sb=1";
     private static String proxyUrl = "http://myip.ipip.net/";
 
     @Test
@@ -30,9 +31,9 @@ public class PhantomJsClientTest {
 
     @Test
     public void testProxy() throws IOException {
+        HttpProxy proxy = new HttpProxy("116.117.134.134", 82);
         RequestData requestData =
-            RequestData.defaultBuilder(proxyUrl).dynamic(true).enableProxy(true).proxyHost("116.117.134.134").proxyPort(
-                82).build();
+            RequestData.defaultBuilder(proxyUrl).dynamic(true).enableProxy(true).proxy(proxy).build();
         String content = Http.content(requestData);
         System.out.println(content);
     }

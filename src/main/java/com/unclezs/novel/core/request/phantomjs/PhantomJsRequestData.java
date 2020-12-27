@@ -61,8 +61,8 @@ public class PhantomJsRequestData {
             data.setReferer(requestData.getHeaders().getOrDefault(RequestData.REFERER, StringUtil.EMPTY));
         }
         // 代理
-        if (requestData.proxyValid() && requestData.isEnableProxy()) {
-            data.setProxy(String.format("%s:%d", requestData.getProxyHost(), requestData.getProxyPort()));
+        if (requestData.isEnableProxy()) {
+            data.setProxy(String.format("%s:%d", requestData.getProxy().getHost(), requestData.getProxy().getPort()));
         }
         return data;
     }

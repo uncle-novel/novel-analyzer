@@ -1,14 +1,18 @@
 package com.unclezs.novel.core.request;
 
+import com.unclezs.novel.core.AnalyzerManager;
 import com.unclezs.novel.core.request.okhttp.OkHttpClient;
-import com.unclezs.novel.core.request.spi.HttpProvider;
 import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
+import com.unclezs.novel.core.request.proxy.DefaultProxyProvider;
+import com.unclezs.novel.core.request.spi.HttpProvider;
+import com.unclezs.novel.core.request.spi.ProxyProvider;
 import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -27,7 +31,8 @@ public class Http {
     /**
      * 静态网页Http客户端
      */
-    private HttpProvider staticHttpClient;
+    private static HttpProvider staticHttpClient;
+    private static ProxyProvider proxyProvider;
 
     static {
         // 加载自定义的 动态/静态网页Http客户端
@@ -47,7 +52,16 @@ public class Http {
             staticHttpClient = new OkHttpClient();
         }
 
+        // 初始化ProxyProvider 没有就使用默认的
+        ServiceLoader<ProxyProvider> proxyProviders = ServiceLoader.load(ProxyProvider.class);
+        Iterator<ProxyProvider> proxyProviderIterator = proxyProviders.iterator();
+        if (proxyProviderIterator.hasNext()) {
+            proxyProvider = proxyProviderIterator.next();
+        } else {
+            proxyProvider = new DefaultProxyProvider();
+        }
     }
+
 
     /**
      * 获取http请求内容
@@ -56,10 +70,16 @@ public class Http {
      * @return /
      */
     public String content(RequestData requestData) throws IOException {
-        if (requestData.isDynamic()) {
-            return dynamicHttpClient.content(requestData);
-        } else {
-            return staticHttpClient.content(requestData);
+        autoProxy(requestData);
+        try {
+            if (requestData.isDynamic()) {
+                return dynamicHttpClient.content(requestData);
+            } else {
+                return staticHttpClient.content(requestData);
+            }
+        } catch (IOException e) {
+            proxyFailed(requestData);
+            throw new IOException(e);
         }
     }
 
@@ -97,10 +117,41 @@ public class Http {
      * @throws IOException 请求失败
      */
     public InputStream stream(RequestData requestData) throws IOException {
-        if (requestData.isDynamic()) {
-            return dynamicHttpClient.stream(requestData);
-        } else {
-            return staticHttpClient.stream(requestData);
+        autoProxy(requestData);
+        try {
+            if (requestData.isDynamic()) {
+                return dynamicHttpClient.stream(requestData);
+            } else {
+                return staticHttpClient.stream(requestData);
+            }
+        } catch (IOException e) {
+            proxyFailed(requestData);
+            throw new IOException(e);
+        }
+    }
+
+    /**
+     * 自动代理 如果配置之后自动从代理池中获取代理，每个请求随机代理
+     *
+     * @param requestData /
+     */
+    private void autoProxy(RequestData requestData) {
+        if (AnalyzerManager.me().isAutoProxy()) {
+            requestData.setAutoProxy(true);
+            // 运行代理
+            requestData.setEnableProxy(true);
+            requestData.setProxy(proxyProvider.getProxy());
+        }
+    }
+
+    /**
+     * 请求失败移除代理
+     *
+     * @param requestData /
+     */
+    private void proxyFailed(RequestData requestData) {
+        if (requestData.isAutoProxy()) {
+            proxyProvider.removeProxy(requestData.getProxy());
         }
     }
 }

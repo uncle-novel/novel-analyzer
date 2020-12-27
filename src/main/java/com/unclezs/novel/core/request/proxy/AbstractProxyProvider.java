@@ -1,0 +1,150 @@
+package com.unclezs.novel.core.request.proxy;
+
+import com.unclezs.novel.core.request.Http;
+import com.unclezs.novel.core.request.RequestData;
+import com.unclezs.novel.core.request.spi.ProxyProvider;
+import com.unclezs.novel.core.utils.RandomUtil;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * 默认代理提供抽象类
+ * <p>
+ * 1.提供一个代理缓存池<br/>
+ * 2.提供校验代理的方法<br/>
+ * 3.getProxy方法每次都随机返回一个代理<br/>
+ * 4.
+ *
+ * @author blog.unclezs.com
+ * @date 2020/12/27 12:24 下午
+ */
+@Slf4j
+public abstract class AbstractProxyProvider implements ProxyProvider {
+    private static final HttpProxy NO_PROXY = new HttpProxy("127.0.0.1", 80);
+    private static final String VERIFY_URL = "http://httpbin.org/ip";
+    /**
+     * 代理池, 采用双向队列 key:host  value:port
+     */
+    private final Map<String, Integer> proxyPool = new HashMap<>();
+    /**
+     * 索引，用于随机定位一个proxy，存proxy host，链表实现快速删除
+     */
+    private final LinkedList<String> index = new LinkedList<>();
+    /**
+     * 是否启用获取代理的时候自动校验，会影响速度
+     */
+    private boolean verify = false;
+
+    /**
+     * 设置是否校验Proxy
+     *
+     * @param verify 是否开启校验代理是否有效
+     */
+    public void setVerify(boolean verify) {
+        this.verify = verify;
+    }
+
+    /**
+     * 校验IP是否有效
+     *
+     * @param proxy /
+     * @return true则失效
+     */
+    public boolean verifyFailed(HttpProxy proxy) {
+        RequestData requestData = RequestData.defaultBuilder(VERIFY_URL).autoProxy(false).enableProxy(true).proxy(proxy).build();
+        try {
+            return !Http.content(requestData).contains(proxy.getHost());
+        } catch (IOException e) {
+            log.trace("代理IP无效,Host:{} - Port:{}", proxy.getHost(), proxy.getPort());
+            return true;
+        }
+    }
+
+    /**
+     * 重置代理池
+     */
+    public void reset() {
+        proxyPool.clear();
+        index.clear();
+    }
+
+    @Override
+    public HttpProxy getProxy() {
+        return verify ? randomProxy() : randomVerifiedProxy();
+    }
+
+    /**
+     * 随机获取代理，如果没有代理则不使用代理
+     *
+     * @return proxy
+     */
+    public HttpProxy randomProxy() {
+        if (proxyPool.isEmpty()) {
+            return NO_PROXY;
+        }
+        // 随机位置
+        int randomInt = RandomUtil.randomInt(index.size());
+        // 获取host
+        String host = index.get(randomInt);
+        // 生成proxy
+        return new HttpProxy(host, proxyPool.get(host));
+    }
+
+    /**
+     * 随机获取一个校验后的代理
+     *
+     * @return verifiedProxy
+     */
+    public HttpProxy randomVerifiedProxy() {
+        HttpProxy verifiedProxy = randomProxy();
+        while (verifyFailed(verifiedProxy)) {
+            // 校验失败直接移除代理
+            removeProxy(verifiedProxy.getHost());
+            verifiedProxy = randomProxy();
+        }
+        return verifiedProxy;
+    }
+
+    /**
+     * 校验是否有效，如果有效则不清理
+     *
+     * @param proxy 代理
+     */
+    @Override
+    public void removeProxy(HttpProxy proxy) {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        if (verifyFailed(proxy)) {
+            removeProxy(proxy.getHost());
+        }
+    }
+
+    /**
+     * 直接移除代理
+     *
+     * @param host 代理
+     */
+    public void removeProxy(String host) {
+        index.remove(host);
+        proxyPool.remove(host);
+    }
+
+    /**
+     * 添加代理
+     *
+     * @param host 代理Host
+     * @param port 代理端口
+     */
+    public void addProxy(String host, Integer port) {
+        // 防止重复添加
+        if (!proxyPool.containsKey(host)) {
+            proxyPool.put(host, port);
+            index.add(host);
+        }
+    }
+}

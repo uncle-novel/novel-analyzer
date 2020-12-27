@@ -7,14 +7,12 @@ import com.unclezs.novel.core.request.ssl.SslTrustAllCerts;
 import com.unclezs.novel.core.utils.CollectionUtil;
 import com.unclezs.novel.core.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Call;
-import okhttp3.ConnectionPool;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -22,11 +20,6 @@ import java.net.Proxy;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * okHttp请求工具
@@ -121,7 +114,7 @@ public class OkHttpClient implements HttpProvider {
         if (requestData.isEnableProxy()) {
             // 创建代理
             InetSocketAddress inetSocketAddress =
-                new InetSocketAddress(requestData.getProxyHost(), requestData.getProxyPort());
+                new InetSocketAddress(requestData.getProxy().getHost(), requestData.getProxy().getPort());
             Proxy proxy = new Proxy(Proxy.Type.HTTP, inetSocketAddress);
             // 复用client线程池与连接池及配置 使用代理
             okhttp3.OkHttpClient client = staticHttpClient.newBuilder().proxy(proxy).build();

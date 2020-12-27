@@ -1,13 +1,24 @@
 package com.unclezs.novel.core;
 
-import lombok.experimental.UtilityClass;
+import lombok.Data;
 
 /**
+ * 解析器配置类 单例
+ *
  * @author blog.unclezs.com
  * @date 2020/12/20 3:04 下午
  */
-@UtilityClass
+@Data
 public class AnalyzerManager {
+    private static final AnalyzerManager ANALYZER_MANAGER = new AnalyzerManager();
+
+    private AnalyzerManager() {
+    }
+
+    public static AnalyzerManager me() {
+        return ANALYZER_MANAGER;
+    }
+
     /**
      * 系统最多允许 同时运行多少个任务
      */
@@ -19,13 +30,19 @@ public class AnalyzerManager {
     /**
      * 最大线程数量
      */
-    public static int threadNum = 1;
+    private int threadNum = 1;
     /**
      * 每个章节下载后延迟
      */
-    public static int delaySecond = 0;
+    private int delaySecond = 0;
     /**
      * 最大任务数量
      */
-    public static int maxTaskCount;
+    private int maxTaskCount;
+    /**
+     * 是否启用自动代理
+     */
+    private boolean autoProxy;
+
+
 }
