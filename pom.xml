@@ -18,12 +18,18 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <jsoupxpath.version>2.4.3</jsoupxpath.version>
         <jsonpath.version>2.5.0</jsonpath.version>
+        <fastjson.version>1.2.75</fastjson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

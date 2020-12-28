@@ -1,8 +1,11 @@
 package com.unclezs.novel.core.matcher;
 
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.unclezs.novel.core.utils.StringUtil;
 import lombok.experimental.UtilityClass;
+
+import java.util.List;
 
 /**
  * 开源地址：https://github.com/json-path/JsonPath
@@ -26,5 +29,17 @@ public class JsonMatcher {
             return ret.toString();
         }
         return StringUtil.EMPTY;
+    }
+
+    /**
+     * 匹配一个列表
+     *
+     * @param src  /
+     * @param rule /
+     * @return /
+     */
+    public List<String> macheList(String src, String rule) {
+        DocumentContext context = JsonPath.parse(src);
+        return null;
     }
 }

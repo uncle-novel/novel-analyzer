@@ -15,7 +15,7 @@ public class AppTest {
 
     @Test
     public void test() throws InterruptedException {
-        ExecutorService service = ThreadPoolUtil.newSingleThreadExecutor("ass");
+        ExecutorService service = ThreadPoolUtil.newBlockCallThreadPool(2, "ass");
         for (int i = 0; i < 10; i++) {
             service.submit(new Runnable() {
                 @SneakyThrows

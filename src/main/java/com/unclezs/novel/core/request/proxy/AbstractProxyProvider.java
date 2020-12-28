@@ -1,5 +1,6 @@
 package com.unclezs.novel.core.request.proxy;
 
+import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.request.spi.ProxyProvider;
@@ -11,15 +12,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 默认代理提供抽象类
  * <p>
  * 1.提供一个代理缓存池<br/>
- * 2.提供校验代理的方法<br/>
+ * 2.代理池的CRUD方法<br/>
  * 3.getProxy方法每次都随机返回一个代理<br/>
- * 4.
+ * 4.可以限制代理池的最大容量<br/>
+ * 5.可以控制是否在获取代理时校验代理是否有效<br/>
+ * <p>
+ * 并非线程安全的类，但是高效
  *
  * @author blog.unclezs.com
  * @date 2020/12/27 12:24 下午
@@ -40,6 +43,21 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
      * 是否启用获取代理的时候自动校验，会影响速度
      */
     private boolean verify = false;
+    /**
+     * 最多容纳多少个代理 -1代表无限
+     */
+    private int maxProxyNumber = Integer.MAX_VALUE;
+
+    /**
+     * 不允许直接创建，需要用子类实现新增代理的逻辑
+     */
+    protected AbstractProxyProvider() {
+    }
+
+    protected AbstractProxyProvider(boolean verify, int maxProxyNumber) {
+        this.verify = verify;
+        this.maxProxyNumber = maxProxyNumber;
+    }
 
     /**
      * 设置是否校验Proxy
@@ -70,7 +88,9 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
      * 重置代理池
      */
     public void reset() {
+        // 清空代理池
         proxyPool.clear();
+        // 清空代理池索引
         index.clear();
     }
 
@@ -112,16 +132,32 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
     }
 
     /**
-     * 校验是否有效，如果有效则不清理
+     * 校验是否有效，如果有效则不清理(异步执行)
      *
      * @param proxy 代理
      */
     @Override
     public void removeProxy(HttpProxy proxy) {
-        ExecutorService service = Executors.newSingleThreadExecutor();
-        if (verifyFailed(proxy)) {
-            removeProxy(proxy.getHost());
+        if (index.isEmpty()) {
+            return;
         }
+        // 异步移除
+        CleanThreadPoolHolder.EXECUTOR.execute(() -> {
+            if (verifyFailed(proxy)) {
+                removeProxy(proxy.getHost());
+            }
+        });
+    }
+
+    /**
+     * 清理无效线程池的 静态内部类懒加载 不清理则不创建此线程池
+     * 单线程池，队列无限长
+     */
+    static class CleanThreadPoolHolder {
+        private CleanThreadPoolHolder() {
+        }
+
+        public static final ExecutorService EXECUTOR = ThreadPoolUtil.newSingleThreadExecutor("clean_proxy");
     }
 
     /**
@@ -130,8 +166,20 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
      * @param host 代理
      */
     public void removeProxy(String host) {
+        if (index.isEmpty()) {
+            return;
+        }
         index.remove(host);
         proxyPool.remove(host);
+    }
+
+    /**
+     * 获取当前代理数量
+     *
+     * @return 代理数量
+     */
+    public int proxyNum() {
+        return index.size();
     }
 
     /**
@@ -141,8 +189,8 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
      * @param port 代理端口
      */
     public void addProxy(String host, Integer port) {
-        // 防止重复添加
-        if (!proxyPool.containsKey(host)) {
+        // 线程不安全的控制代理池最大容量与重复添加，不需要线程安全，不重要，高效就完事儿
+        if (index.size() < maxProxyNumber && !proxyPool.containsKey(host)) {
             proxyPool.put(host, port);
             index.add(host);
         }

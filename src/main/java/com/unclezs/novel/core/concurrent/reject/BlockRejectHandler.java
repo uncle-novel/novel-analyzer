@@ -6,7 +6,7 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * 添加线程之后阻塞住添加的线程，直到添加成功
+ * 添加线程之后阻塞住调用添加的线程，直到添加成功
  *
  * @author blog.unclezs.com
  * @date 2020/12/27 7:01 下午

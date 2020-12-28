@@ -1,12 +1,10 @@
 package com.unclezs.novel.core.concurrent.reject;
 
-import lombok.SneakyThrows;
-
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * 添加线程之后阻塞住添加的线程，直到添加成功
+ * 队列无限长
  *
  * @author blog.unclezs.com
  * @date 2020/12/27 7:01 下午
@@ -19,8 +17,7 @@ public class QueueBlockRejectHandler implements RejectedExecutionHandler {
     }
 
     @Override
-    @SneakyThrows
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        executor.getQueue().put(r);
+        executor.getQueue().add(r);
     }
 }
