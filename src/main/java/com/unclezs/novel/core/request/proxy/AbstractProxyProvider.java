@@ -187,12 +187,14 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
      *
      * @param host 代理Host
      * @param port 代理端口
+     * @return true已经满了
      */
-    public void addProxy(String host, Integer port) {
+    public boolean addProxy(String host, Integer port) {
         // 线程不安全的控制代理池最大容量与重复添加，不需要线程安全，不重要，高效就完事儿
         if (index.size() < maxProxyNumber && !proxyPool.containsKey(host)) {
             proxyPool.put(host, port);
             index.add(host);
         }
+        return index.size() >= maxProxyNumber;
     }
 }

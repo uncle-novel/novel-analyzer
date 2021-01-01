@@ -25,7 +25,7 @@ public class PhantomJsClientTest {
 
     @Test
     public void testArguments() {
-        System.out.println(Http.get(proxyUrl, true));
+        System.out.println(Http.get(URL, true));
     }
 
 

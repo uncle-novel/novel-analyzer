@@ -31,8 +31,10 @@
         <!--立即刷新到流-->
         <immediateFlush>true</immediateFlush>
     </appender>
-
-    <root level="trace">
+    <logger level="trace" name="com.unclezs">
         <appender-ref ref="console"/>
+    </logger>
+    <root level="off">
+
     </root>
 </configuration>

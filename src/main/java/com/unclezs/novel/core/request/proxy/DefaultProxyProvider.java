@@ -18,9 +18,10 @@ import java.util.List;
 @Slf4j
 public class DefaultProxyProvider extends AbstractProxyProvider {
     private static final String PROXY_SITE = "https://ip.jiangxianli.com/api/proxy_ips?page=1";
+    public static final int MAX_PROXY_NUMBER = 30;
 
     public DefaultProxyProvider() {
-        super(false, 30);
+        super(false, MAX_PROXY_NUMBER);
         init();
     }
 
@@ -33,7 +34,11 @@ public class DefaultProxyProvider extends AbstractProxyProvider {
             for (int i = 0; i < ips.size(); i++) {
                 String host = ips.get(i);
                 int port = Integer.parseInt(ports.get(i));
-                super.addProxy(host, port);
+                boolean full = super.addProxy(host, port);
+                if (full) {
+                    log.debug("抓取代理数量达到上限：{}/{}", super.proxyNum(), MAX_PROXY_NUMBER);
+                    return;
+                }
                 log.debug("新抓取代理：{}:{}", host, port);
             }
             url = JsonPath.read(json, "$.data.next_page_url");
