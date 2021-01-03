@@ -22,10 +22,10 @@ public class DefaultProxyProvider extends AbstractProxyProvider {
 
     public DefaultProxyProvider() {
         super(false, MAX_PROXY_NUMBER);
-        init();
     }
 
-    public void init() {
+    @Override
+    public void loadProxy() {
         String url = PROXY_SITE;
         do {
             String json = Http.get(url);

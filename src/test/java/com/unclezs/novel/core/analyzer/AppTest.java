@@ -1,10 +1,12 @@
 package com.unclezs.novel.core.analyzer;
 
+import com.unclezs.novel.core.concurrent.pool.ThreadPool;
 import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
 import lombok.SneakyThrows;
 import org.junit.Test;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author blog.unclezs.com
@@ -15,7 +17,7 @@ public class AppTest {
 
     @Test
     public void test() throws InterruptedException {
-        ExecutorService service = ThreadPoolUtil.newBlockCallThreadPool(2, "ass");
+        ThreadPool service = ThreadPoolUtil.newFixedThreadPoolExecutor(2, "ass");
         for (int i = 0; i < 10; i++) {
             service.submit(new Runnable() {
                 @SneakyThrows
@@ -26,7 +28,9 @@ public class AppTest {
                 }
             });
         }
+        service.shutdown();
         System.out.println(666);
-        Thread.sleep(100000);
+        boolean b = service.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
+
     }
 }

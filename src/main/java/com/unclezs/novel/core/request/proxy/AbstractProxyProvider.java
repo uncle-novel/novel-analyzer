@@ -85,7 +85,12 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
     }
 
     /**
-     * 重置代理池
+     * 加载代理,用于代理池中没有代理的时候调用
+     */
+    public abstract void loadProxy();
+
+    /**
+     * 重置代理池,清空数据
      */
     public void reset() {
         // 清空代理池
@@ -96,6 +101,10 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
 
     @Override
     public HttpProxy getProxy() {
+        // 没有代理则进行加载
+        if (index.isEmpty()) {
+            loadProxy();
+        }
         return verify ? randomProxy() : randomVerifiedProxy();
     }
 

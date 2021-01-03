@@ -16,7 +16,8 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
- * okHttp请求工具
+ * Http请求工具，支持动态与静态网页
+ * 兼容SPI机制加载自定义HTTP客户端与代理提供商
  *
  * @author blog.unclezs.com
  * @date 2020/12/21 12:31 上午
@@ -32,7 +33,7 @@ public class Http {
      * 静态网页Http客户端
      */
     private static HttpProvider staticHttpClient;
-    private static ProxyProvider proxyProvider;
+    private static final ProxyProvider PROXY_PROVIDER;
 
     static {
         // 加载自定义的 动态/静态网页Http客户端
@@ -56,9 +57,9 @@ public class Http {
         ServiceLoader<ProxyProvider> proxyProviders = ServiceLoader.load(ProxyProvider.class);
         Iterator<ProxyProvider> proxyProviderIterator = proxyProviders.iterator();
         if (proxyProviderIterator.hasNext()) {
-            proxyProvider = proxyProviderIterator.next();
+            PROXY_PROVIDER = proxyProviderIterator.next();
         } else {
-            proxyProvider = new DefaultProxyProvider();
+            PROXY_PROVIDER = new DefaultProxyProvider();
         }
     }
 
@@ -140,7 +141,7 @@ public class Http {
             requestData.setAutoProxy(true);
             // 运行代理
             requestData.setEnableProxy(true);
-            requestData.setProxy(proxyProvider.getProxy());
+            requestData.setProxy(PROXY_PROVIDER.getProxy());
         }
     }
 
@@ -151,7 +152,7 @@ public class Http {
      */
     private void proxyFailed(RequestData requestData) {
         if (requestData.isAutoProxy()) {
-            proxyProvider.removeProxy(requestData.getProxy());
+            PROXY_PROVIDER.removeProxy(requestData.getProxy());
         }
     }
 }

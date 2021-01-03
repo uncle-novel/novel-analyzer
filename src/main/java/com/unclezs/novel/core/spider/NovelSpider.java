@@ -1,7 +1,8 @@
 package com.unclezs.novel.core.spider;
 
+import com.unclezs.novel.core.AnalyzerManager;
 import com.unclezs.novel.core.analyzer.AnalyzerHelper;
-import com.unclezs.novel.core.analyzer.model.AnalyzerConfig;
+import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
 import com.unclezs.novel.core.matcher.RegexMatcher;
 import com.unclezs.novel.core.model.Chapter;
 import com.unclezs.novel.core.model.Novel;
@@ -14,16 +15,21 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
+ * 小说爬虫
+ *
  * @author blog.unclezs.com
  * @date 2020/12/20 6:15 下午
  */
 @Slf4j
 public abstract class NovelSpider {
-    protected AnalyzerConfig analyzerConfig;
-
     /**
      * 搜索小说
      *
@@ -94,22 +100,27 @@ public abstract class NovelSpider {
     /**
      * 爬取一本小说
      *
-     * @param pipeline 数据处理管道
+     * @param pipeline 数据处理管道，传入爬取的每一个章节
      */
     public void crawling(List<Chapter> chapters, Pipeline<Chapter> pipeline) {
+        ThreadPoolExecutor service = ThreadPoolUtil.newFixedThreadPoolExecutor(AnalyzerManager.me().getThreadNum(), "chapter-spider");
         log.debug("开始爬取小说：共{}章", chapters.size());
-        int order = 1;
+        AtomicInteger order = new AtomicInteger(1);
         for (Chapter chapter : chapters) {
-            String content = null;
-            try {
-                content = content(RequestData.defaultRequestData(chapter.getUrl()));
-            } catch (IOException e) {
-                log.warn("小说正文爬取失败：order:{} - {} - {}", order, chapter.getName(), chapter.getName(), e);
-            }
-            chapter.setContent(content);
-            pipeline.process(chapter);
-            order++;
+            Future<?> future = service.submit(() -> {
+                String content = null;
+                try {
+                    content = content(RequestData.defaultRequestData(chapter.getUrl()));
+                } catch (IOException e) {
+                    log.warn("小说正文爬取失败：order:{} - {} - {}", order.get(), chapter.getName(), chapter.getName(), e);
+                }
+                chapter.setContent(content);
+                chapter.setOrder(order.getAndIncrement());
+                pipeline.process(chapter);
+                return chapter;
+            });
         }
+        service.shutdown();
         log.debug("爬取小说完成：共{}章", chapters.size());
     }
 
