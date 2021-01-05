@@ -6,7 +6,7 @@ import com.unclezs.novel.core.analyzer.text.TextNovelAnalyzer;
 import com.unclezs.novel.core.model.Chapter;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.spider.NovelSpider;
+import com.unclezs.novel.core.spider.AbstractNovelSpider;
 import com.unclezs.novel.core.spider.TextNovelSpider;
 import com.unclezs.novel.core.spider.pipline.FilePipeline;
 import com.unclezs.novel.core.utils.StringUtil;
@@ -80,7 +80,7 @@ public class TextNovelAnalyzerTest {
         config.setBaseUri(url);
         config.setChapterFilter(false);
         List<Chapter> chapters = TextNovelAnalyzer.chapters(html, config);
-        chapters.stream().forEach(System.out::println);
+        chapters.forEach(System.out::println);
         String content = TextNovelAnalyzer.content(Http.get(StringUtil.EMPTY), config);
         System.out.println(content);
     }
@@ -98,7 +98,7 @@ public class TextNovelAnalyzerTest {
     /**
      * 测试抓取内容 多页
      *
-     * @throws IOException
+     * @throws IOException /
      */
     @Test
     public void testSpiderContent() throws IOException {
@@ -119,13 +119,13 @@ public class TextNovelAnalyzerTest {
      */
     @Test
     public void testSpiderChapter() throws IOException {
-        String url = "https://m.175wx.com/chapters/269/";
+        String url = "http://www.dmbj.cc/daomubiji1/";
         TextAnalyzerConfig config = TextAnalyzerConfig.defaultBuilder()
             .baseUri(url)
             .rule(Rule.TEXT_TAG)
             .enableChapterNextPage(true)
             .build();
-        NovelSpider spider = new TextNovelSpider(config);
+        AbstractNovelSpider spider = new TextNovelSpider(config);
         System.out.println(spider.chapters(RequestData.builder().url(url).build()));
     }
 
@@ -155,7 +155,7 @@ public class TextNovelAnalyzerTest {
             .baseUri(url).enableContentNextPage(true).enableChapterNextPage(false)
             .advertisements(Collections.singletonList("上一页[\\s\\S]+?下一."))
             .build();
-        NovelSpider spider = new TextNovelSpider(config);
+        AbstractNovelSpider spider = new TextNovelSpider(config);
         spider.crawling(RequestData.builder().url(url).build(), new FilePipeline());
     }
 }

@@ -1,7 +1,5 @@
-package com.unclezs.novel.core.analyzer;
+package com.unclezs.novel.core.request;
 
-import com.unclezs.novel.core.request.Http;
-import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
 import com.unclezs.novel.core.request.proxy.HttpProxy;
 import com.unclezs.novel.core.utils.StringUtil;
@@ -18,10 +16,10 @@ import java.net.URISyntaxException;
  * @since 2020/12/24 11:35
  */
 public class PhantomJsClientTest {
-    private static String exePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/phantomjs";
-    private static String jsBasePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/%s.js";
+    private static final String exePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/phantomjs";
+    private static final String jsBasePath = "/Users/zhanghongguo/coder/uncle-novel/novel-analyzer/lib/%s.js";
     public static final String URL = "http://httpbin.org/get?sb=1";
-    private static String proxyUrl = "http://myip.ipip.net/";
+    private static final String proxyUrl = "http://myip.ipip.net/";
 
     @Test
     public void testArguments() {
@@ -38,7 +36,7 @@ public class PhantomJsClientTest {
         System.out.println(content);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException {
         System.out.println(PhantomJsClient.class.getResource("/script/spider.js").toURI().toString());
     }
 

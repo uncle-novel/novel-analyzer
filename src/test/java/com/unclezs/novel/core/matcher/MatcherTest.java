@@ -1,6 +1,5 @@
-package com.unclezs.novel.core.analyzer;
+package com.unclezs.novel.core.matcher;
 
-import com.unclezs.novel.core.matcher.Matcher;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.utils.StringUtil;

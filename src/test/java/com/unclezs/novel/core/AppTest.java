@@ -1,12 +1,8 @@
-package com.unclezs.novel.core.analyzer;
+package com.unclezs.novel.core;
 
 import com.unclezs.novel.core.concurrent.pool.ThreadPool;
 import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
-import lombok.SneakyThrows;
 import org.junit.Test;
-
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author blog.unclezs.com
@@ -16,21 +12,19 @@ public class AppTest {
     public int cnt = 1;
 
     @Test
-    public void test() throws InterruptedException {
+    public void test() {
         ThreadPool service = ThreadPoolUtil.newFixedThreadPoolExecutor(2, "ass");
         for (int i = 0; i < 10; i++) {
-            service.submit(new Runnable() {
-                @SneakyThrows
-                @Override
-                public void run() {
-                    System.out.println(cnt++);
+            service.submit(() -> {
+                System.out.println(cnt++);
+                try {
                     Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             });
         }
         service.shutdown();
         System.out.println(666);
-        boolean b = service.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
-
     }
 }

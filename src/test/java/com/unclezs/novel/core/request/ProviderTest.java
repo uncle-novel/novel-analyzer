@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.analyzer;
+package com.unclezs.novel.core.request;
 
 import com.unclezs.novel.core.request.spi.HttpProvider;
 import org.junit.Test;

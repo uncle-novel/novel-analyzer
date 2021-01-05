@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.analyzer;
+package com.unclezs.novel.core.matcher;
 
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2020/12/28 10:43 下午
  */
 public class JsonPathTest {
-    private String json = "{\n" +
+    private final String json = "{\n" +
         "    \"code\":0,\n" +
         "    \"msg\":\"成功\",\n" +
         "    \"data\":{\n" +
