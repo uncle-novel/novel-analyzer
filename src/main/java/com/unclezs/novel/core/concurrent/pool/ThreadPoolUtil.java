@@ -24,8 +24,8 @@ public class ThreadPoolUtil {
      * @param name 线程池名称
      * @return /
      */
-    public static ThreadPool newSingleThreadExecutor(String name) {
-        return new ThreadPool(1, 1,
+    public static ThreadPoolExecutor newSingleThreadExecutor(String name) {
+        return new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(), new AnalyzerThreadFactory(name));
     }
@@ -40,8 +40,8 @@ public class ThreadPoolUtil {
      * @param threadNum 线程数量
      * @return /
      */
-    public static ThreadPool newFixedThreadPoolExecutor(int threadNum, String name) {
-        return new ThreadPool(threadNum, threadNum,
+    public static ThreadPoolExecutor newFixedThreadPoolExecutor(int threadNum, String name) {
+        return new ThreadPoolExecutor(threadNum, threadNum,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(), new AnalyzerThreadFactory(name));
     }
@@ -53,15 +53,9 @@ public class ThreadPoolUtil {
      * @param threadNum 线程数量
      * @return /
      */
-    public static ThreadPool newBlockCallThreadPool(int threadNum, String name) {
-        return new ThreadPool(threadNum, threadNum,
+    public static ThreadPoolExecutor newBlockCallThreadPool(int threadNum, String name) {
+        return new ThreadPoolExecutor(threadNum, threadNum,
             5L, TimeUnit.SECONDS,
             new SynchronousQueue<>(), new AnalyzerThreadFactory(name), BlockRejectHandler.me());
-    }
-
-    public static void waitForTaskCom(ThreadPoolExecutor poolExecutor, int taskCount) {
-        while (poolExecutor.getCompletedTaskCount() == taskCount) {
-
-        }
     }
 }

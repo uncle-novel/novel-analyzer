@@ -32,6 +32,14 @@ public class Chapter {
      * 正文
      */
     private String content;
+    /**
+     * 一些信息 比如错误信息
+     */
+    private String msg;
+    /**
+     * 书籍ID
+     */
+    private String id;
 
     public Chapter(String name, String url) {
         this.name = name;

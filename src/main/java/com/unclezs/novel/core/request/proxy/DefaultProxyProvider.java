@@ -2,9 +2,11 @@ package com.unclezs.novel.core.request.proxy;
 
 import com.jayway.jsonpath.JsonPath;
 import com.unclezs.novel.core.request.Http;
+import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,7 +30,14 @@ public class DefaultProxyProvider extends AbstractProxyProvider {
     public void loadProxy() {
         String url = PROXY_SITE;
         do {
-            String json = Http.get(url);
+            RequestData requestData = RequestData.defaultBuilder(url).autoProxy(false).enableProxy(false).build();
+            String json;
+            try {
+                json = Http.content(requestData);
+            } catch (IOException e) {
+                log.debug("代理站点抓取失败:{} 停止抓取代理", url, e);
+                return;
+            }
             List<String> ips = JsonPath.read(json, "$.data.data[*].ip");
             List<String> ports = JsonPath.read(json, "$.data.data[*].port");
             for (int i = 0; i < ips.size(); i++) {
@@ -43,6 +52,7 @@ public class DefaultProxyProvider extends AbstractProxyProvider {
             }
             url = JsonPath.read(json, "$.data.next_page_url");
         } while (StringUtils.isNotEmpty(url));
+        log.info("当前代理池中代理总数：{}", proxyNum());
     }
 
     public static void main(String[] args) {

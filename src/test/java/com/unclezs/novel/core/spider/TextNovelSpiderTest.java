@@ -1,7 +1,9 @@
 package com.unclezs.novel.core.spider;
 
+import com.unclezs.novel.core.AnalyzerManager;
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.util.Console;
+import com.unclezs.novel.core.spider.pipline.StoreTextFilePipeline;
+import com.unclezs.novel.core.util.RandomUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,19 +16,8 @@ public class TextNovelSpiderTest {
     @Test
     public void testConcurrentSpider() throws IOException {
         TextNovelSpider novelSpider = new TextNovelSpider();
-        RequestData requestData = RequestData.defaultRequestData("http://www.dmbj.cc/daomubiji1/");
-        RequestData contentRequestData = RequestData.defaultRequestData("http://www.dmbj.cc/daomubiji1/1.html");
-        novelSpider.crawling(requestData, chapter -> {
-            Console.println("{}.《{}》 章节URL：{}", chapter.getOrder(), chapter.getName(), chapter.getUrl());
-            String content = null;
-            try {
-                content = novelSpider.content(RequestData.defaultRequestData(chapter.getUrl()));
-                chapter.setContent(content);
-                Console.println(content);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-//        System.out.println(novelSpider.content(contentRequestData));
+        AnalyzerManager.autoProxy(true);
+        RequestData requestData = RequestData.defaultBuilder("http://www.dmbj.cc/daomubiji1/").enableProxy(AnalyzerManager.enableAutoProxy()).build();
+        novelSpider.crawling(requestData, new StoreTextFilePipeline(RandomUtils.randomInt(1000) + ""), 3);
     }
 }

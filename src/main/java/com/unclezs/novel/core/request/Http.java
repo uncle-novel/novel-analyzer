@@ -71,7 +71,10 @@ public class Http {
      * @return /
      */
     public String content(RequestData requestData) throws IOException {
-        autoProxy(requestData);
+        // 是否使用自动获取代理 需要全局配置中也要打开 不然不会进行代理控制
+        if (requestData.isAutoProxy()) {
+            autoProxy(requestData);
+        }
         try {
             if (requestData.isDynamic()) {
                 return dynamicHttpClient.content(requestData);
@@ -87,7 +90,8 @@ public class Http {
     /**
      * 获取 get http请求内容
      *
-     * @param url /
+     * @param url     /
+     * @param dynamic 动态网页
      * @return null if error.
      */
     public String get(String url, boolean dynamic) {
@@ -137,7 +141,8 @@ public class Http {
      * @param requestData /
      */
     private void autoProxy(RequestData requestData) {
-        if (AnalyzerManager.me().isAutoProxy()) {
+        // 如果全局开启了自动抓取代理
+        if (AnalyzerManager.enableAutoProxy()) {
             requestData.setAutoProxy(true);
             // 运行代理
             requestData.setEnableProxy(true);

@@ -8,7 +8,7 @@ import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.spider.AbstractNovelSpider;
 import com.unclezs.novel.core.spider.TextNovelSpider;
-import com.unclezs.novel.core.spider.pipline.FilePipeline;
+import com.unclezs.novel.core.spider.pipline.ConsolePipeline;
 import com.unclezs.novel.core.util.StringUtils;
 import com.unclezs.novel.core.util.regex.PatternPool;
 import lombok.extern.slf4j.Slf4j;
@@ -156,6 +156,6 @@ public class TextNovelAnalyzerTest {
             .advertisements(Collections.singletonList("上一页[\\s\\S]+?下一."))
             .build();
         AbstractNovelSpider spider = new TextNovelSpider(config);
-        spider.crawling(RequestData.builder().url(url).build(), new FilePipeline());
+        spider.crawling(RequestData.builder().url(url).build(), new ConsolePipeline<>());
     }
 }

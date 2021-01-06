@@ -33,8 +33,7 @@ public class PhantomJsClient implements HttpProvider {
      */
     public static final String PHANTOMJS_SCRIPT = "PHANTOMJS_SCRIPT_PATH";
     public static final String DEFAULT_PHANTOMJS_SCRIPT = FileUtils.USER_DIR + "/script/spider.js";
-    public static final String DEFAULT_PHANTOMJS_PATH =
-        FileUtils.USER_DIR + "/script/phantomjs" + SystemUtils.getExecuteSuffix();
+    public static final String DEFAULT_PHANTOMJS_PATH = FileUtils.USER_DIR + "/script/phantomjs" + SystemUtils.getExecuteSuffix();
 
     /**
      * 获取网页内容
@@ -45,6 +44,7 @@ public class PhantomJsClient implements HttpProvider {
      */
     @Override
     public String content(RequestData data) throws IOException {
+        // 请求数据转化
         return executePhantomJs(PhantomJsRequestData.from(data));
     }
 
@@ -65,6 +65,7 @@ public class PhantomJsClient implements HttpProvider {
     /**
      * 执行PhantomJs脚本抓取动态网页
      * phantomjs [options] script.js [arg1 [arg2 [...]]]
+     *
      * @param data 请求数据
      * @return /
      */

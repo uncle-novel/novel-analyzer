@@ -62,16 +62,19 @@ public class RequestData {
      */
     private HttpProxy proxy;
     /**
-     * 启用HTTP代理
+     * 启用HTTP代理 标记允许代理 如果开发了全局代理配置这个字段将会自动设置为true
      */
     @Builder.Default
     private boolean enableProxy = false;
 
     /**
      * 自动代理
+     * 请在全局代理中开启自动代理配置 并且设置此字段为true 才会真正启用全局代理
+     * 这么做是为了方便全局控制代理的热拔插
+     * 优先级 先判断此此字段为true 再判断全局AnalyzerManager.enableAutoProxy是否开启
      */
     @Builder.Default
-    private boolean autoProxy = false;
+    private boolean autoProxy = true;
 
     /**
      * 默认请求配置
@@ -91,6 +94,6 @@ public class RequestData {
      */
     public static RequestDataBuilder defaultBuilder(String url) {
         return builder().charset(StandardCharsets.UTF_8.toString())
-            .mediaType(MediaType.NONE.getMediaType()).autoProxy(false).enableProxy(false).dynamic(false).post(false).url(url);
+            .mediaType(MediaType.NONE.getMediaType()).autoProxy(true).enableProxy(false).dynamic(false).post(false).url(url);
     }
 }

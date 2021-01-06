@@ -3,7 +3,11 @@ package com.unclezs.novel.core.request.spi;
 import com.unclezs.novel.core.request.proxy.HttpProxy;
 
 /**
- * 代理提供类
+ * HTTP代理提供类
+ * <p>
+ * 请在全局代理中开启自动代理配置 并且RequestData中设置autoProxy为true
+ * 这么做是为了方便全局控制代理的热拔插
+ * 优先级 先判断此此字段为true 再判断全局AnalyzerManager.enableAutoProxy是否开启
  *
  * @author blog.unclezs.com
  * @date 2020/12/27 12:18 下午

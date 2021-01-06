@@ -1,8 +1,9 @@
 package com.unclezs.novel.core;
 
-import com.unclezs.novel.core.concurrent.pool.ThreadPool;
 import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
 import org.junit.Test;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author blog.unclezs.com
@@ -13,7 +14,7 @@ public class AppTest {
 
     @Test
     public void test() {
-        ThreadPool service = ThreadPoolUtil.newFixedThreadPoolExecutor(2, "ass");
+        ThreadPoolExecutor service = ThreadPoolUtil.newFixedThreadPoolExecutor(2, "ass");
         for (int i = 0; i < 10; i++) {
             service.submit(() -> {
                 System.out.println(cnt++);
