@@ -2,6 +2,7 @@ package com.unclezs.novel.core.spider;
 
 import com.unclezs.novel.core.AnalyzerManager;
 import com.unclezs.novel.core.analyzer.AnalyzerHelper;
+import com.unclezs.novel.core.concurrent.pool.ThreadPool;
 import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
 import com.unclezs.novel.core.matcher.RegexMatcher;
 import com.unclezs.novel.core.model.Chapter;
@@ -15,10 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -29,7 +26,7 @@ import java.util.function.Consumer;
  * @date 2020/12/20 6:15 下午
  */
 @Slf4j
-public abstract class NovelSpider {
+public abstract class AbstractNovelSpider {
     /**
      * 搜索小说
      *
@@ -103,11 +100,12 @@ public abstract class NovelSpider {
      * @param pipeline 数据处理管道，传入爬取的每一个章节
      */
     public void crawling(List<Chapter> chapters, Pipeline<Chapter> pipeline) {
-        ThreadPoolExecutor service = ThreadPoolUtil.newFixedThreadPoolExecutor(AnalyzerManager.me().getThreadNum(), "chapter-spider");
+        ThreadPool threadPool =
+            ThreadPoolUtil.newFixedThreadPoolExecutor(AnalyzerManager.me().getThreadNum(), "chapter-spider");
         log.debug("开始爬取小说：共{}章", chapters.size());
         AtomicInteger order = new AtomicInteger(1);
         for (Chapter chapter : chapters) {
-            Future<?> future = service.submit(() -> {
+            threadPool.execute(() -> {
                 String content = null;
                 try {
                     content = content(RequestData.defaultRequestData(chapter.getUrl()));
@@ -117,10 +115,9 @@ public abstract class NovelSpider {
                 chapter.setContent(content);
                 chapter.setOrder(order.getAndIncrement());
                 pipeline.process(chapter);
-                return chapter;
             });
         }
-        service.shutdown();
+        threadPool.waitCompeted(chapters.size(), true);
         log.debug("爬取小说完成：共{}章", chapters.size());
     }
 
