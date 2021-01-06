@@ -9,8 +9,8 @@ import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.spider.AbstractNovelSpider;
 import com.unclezs.novel.core.spider.TextNovelSpider;
 import com.unclezs.novel.core.spider.pipline.FilePipeline;
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.PatternPool;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.PatternPool;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class TextNovelAnalyzerTest {
     /**
      * 文本小说解析器
      */
-    private String originalText = StringUtil.EMPTY;
+    private String originalText = StringUtils.EMPTY;
 
     public void initContent() {
         String url = "https://www.yqhy.org/read/0/269/23411325_3.html";
@@ -74,14 +74,14 @@ public class TextNovelAnalyzerTest {
 
     @Test
     public void testChapters() {
-        String url = StringUtil.EMPTY;
+        String url = StringUtils.EMPTY;
         String html = Http.get(url);
         TextAnalyzerConfig config = new TextAnalyzerConfig();
         config.setBaseUri(url);
         config.setChapterFilter(false);
         List<Chapter> chapters = TextNovelAnalyzer.chapters(html, config);
         chapters.forEach(System.out::println);
-        String content = TextNovelAnalyzer.content(Http.get(StringUtil.EMPTY), config);
+        String content = TextNovelAnalyzer.content(Http.get(StringUtils.EMPTY), config);
         System.out.println(content);
     }
 
@@ -140,7 +140,7 @@ public class TextNovelAnalyzerTest {
             "\n" +
             "    下一章\n" +
             "2020-12-23";
-        System.out.println(PatternPool.get("上一页.+?下一章", Pattern.DOTALL).matcher(text).replaceAll(StringUtil.EMPTY));
+        System.out.println(PatternPool.get("上一页.+?下一章", Pattern.DOTALL).matcher(text).replaceAll(StringUtils.EMPTY));
     }
 
     /**

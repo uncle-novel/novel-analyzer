@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.utils;
+package com.unclezs.novel.core.util;
 
 import lombok.experimental.UtilityClass;
 
@@ -16,7 +16,7 @@ import java.util.Set;
  * @date 2020/12/20 7:21 下午
  */
 @UtilityClass
-public class CollectionUtil {
+public class CollectionUtils {
     /**
      * 集合是否为空
      *

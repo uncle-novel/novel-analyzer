@@ -2,7 +2,7 @@ package com.unclezs.novel.core.matcher;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class JsonMatcher {
         if (ret != null) {
             return ret.toString();
         }
-        return StringUtil.EMPTY;
+        return StringUtils.EMPTY;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.unclezs.novel.core.analyzer.text.matcher;
 
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.RegexUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,8 +18,8 @@ public class RegexContentMatcher {
      * 全文正则
      */
     private static final String
-        REGEX = "[pvri\\-/\"]>([^字<*][\\pP\\w\\pN\\pL\\pM" + RegexUtil.CHINESE + RegexUtil.UNICODE_LETTER_NUMBER
-        + RegexUtil.CHINESE_PUNCTUATION + "]{3,}[^字\\w>]{0,2})(<br|</p|</d|<p|<!|<d|</li)";
+        REGEX = "[pvri\\-/\"]>([^字<*][\\pP\\w\\pN\\pL\\pM" + RegexUtils.CHINESE + RegexUtils.UNICODE_LETTER_NUMBER
+        + RegexUtils.CHINESE_PUNCTUATION + "]{3,}[^字\\w>]{0,2})(<br|</p|</d|<p|<!|<d|</li)";
     /**
      * 预编译
      */
@@ -40,7 +40,7 @@ public class RegexContentMatcher {
         while (m.find()) {
             String paragraph = m.group(1);
             if (!paragraph.isEmpty()) {
-                content.append(paragraph).append(StringUtil.NEW_LINE);
+                content.append(paragraph).append(StringUtils.NEW_LINE);
             }
         }
         return content.toString();

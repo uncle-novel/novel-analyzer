@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.utils;
+package com.unclezs.novel.core.util;
 
 import lombok.experimental.UtilityClass;
 
@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
  * @since 2020/12/24 18:42
  */
 @UtilityClass
-public class SystemUtil {
+public class SystemUtils {
     private static final String OS_NAME = System.getProperty("os.name", "Windows");
     private static final boolean IS_OS_MAC = getOsMatches("Mac");
     private static final boolean IS_OS_WINDOWS = getOsMatches("Windows");
@@ -75,6 +75,6 @@ public class SystemUtil {
         if (isWindows()) {
             return ".exe";
         }
-        return StringUtil.EMPTY;
+        return StringUtils.EMPTY;
     }
 }

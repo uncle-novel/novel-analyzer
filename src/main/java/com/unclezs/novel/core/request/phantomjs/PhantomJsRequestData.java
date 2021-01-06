@@ -1,8 +1,8 @@
 package com.unclezs.novel.core.request.phantomjs;
 
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.utils.CollectionUtil;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.CollectionUtils;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.Data;
 
 /**
@@ -20,19 +20,19 @@ public class PhantomJsRequestData {
     /**
      * 代理 127.0.0.1:80
      */
-    private String proxy = StringUtil.EMPTY;
+    private String proxy = StringUtils.EMPTY;
     /**
      * User-Agent 为空则使用默认
      */
-    private String userAgent = StringUtil.EMPTY;
+    private String userAgent = StringUtils.EMPTY;
     /**
      * 防盗链 为空则默认URL
      */
-    private String referer = StringUtil.EMPTY;
+    private String referer = StringUtils.EMPTY;
     /**
      * Cookie
      */
-    private String cookie = StringUtil.EMPTY;
+    private String cookie = StringUtils.EMPTY;
     /**
      * 是否加载图片 默认false 提高速度
      */
@@ -55,10 +55,10 @@ public class PhantomJsRequestData {
     public static PhantomJsRequestData from(RequestData requestData) {
         PhantomJsRequestData data = new PhantomJsRequestData(requestData.getUrl());
         // 请求头
-        if (CollectionUtil.isNotEmpty(requestData.getHeaders())) {
-            data.setUserAgent(requestData.getHeaders().getOrDefault(RequestData.USER_AGENT, StringUtil.EMPTY));
-            data.setCookie(requestData.getHeaders().getOrDefault(RequestData.COOKIE, StringUtil.EMPTY));
-            data.setReferer(requestData.getHeaders().getOrDefault(RequestData.REFERER, StringUtil.EMPTY));
+        if (CollectionUtils.isNotEmpty(requestData.getHeaders())) {
+            data.setUserAgent(requestData.getHeaders().getOrDefault(RequestData.USER_AGENT, StringUtils.EMPTY));
+            data.setCookie(requestData.getHeaders().getOrDefault(RequestData.COOKIE, StringUtils.EMPTY));
+            data.setReferer(requestData.getHeaders().getOrDefault(RequestData.REFERER, StringUtils.EMPTY));
         }
         // 代理
         if (requestData.isEnableProxy()) {

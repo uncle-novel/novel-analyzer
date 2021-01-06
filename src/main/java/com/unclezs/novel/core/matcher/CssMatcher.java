@@ -1,9 +1,9 @@
 package com.unclezs.novel.core.matcher;
 
 import com.unclezs.novel.core.model.Pair;
-import com.unclezs.novel.core.utils.CollectionUtil;
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
+import com.unclezs.novel.core.util.CollectionUtils;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.RegexUtils;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +24,7 @@ public class CssMatcher {
      * 绝对路径  eg. abs:href   abs:src
      */
     private final String ABS_URL = "abs:";
-    Set<String> supportAttr = CollectionUtil.newSet("href", "src", "text", "ownText");
+    Set<String> supportAttr = CollectionUtils.newSet("href", "src", "text", "ownText");
 
 
     /**
@@ -60,12 +60,12 @@ public class CssMatcher {
     public String matcher(Element document, String cssQuery, String attr) {
         Element element = selectFirst(document, cssQuery);
         if (element == null) {
-            return StringUtil.EMPTY;
+            return StringUtils.EMPTY;
         }
-        if (StringUtil.isEmpty(attr)) {
+        if (StringUtils.isEmpty(attr)) {
             Element first = selectFirst(element, cssQuery);
             if (first == null) {
-                return StringUtil.EMPTY;
+                return StringUtils.EMPTY;
             } else {
                 return first.text();
             }
@@ -92,7 +92,7 @@ public class CssMatcher {
      * @return /
      */
     private boolean support(String attr) {
-        return supportAttr.contains(attr) || attr.startsWith(ABS_URL) || RegexUtil.isWord(attr);
+        return supportAttr.contains(attr) || attr.startsWith(ABS_URL) || RegexUtils.isWord(attr);
     }
 
     /**

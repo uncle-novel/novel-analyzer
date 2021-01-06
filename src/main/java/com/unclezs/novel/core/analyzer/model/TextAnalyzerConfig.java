@@ -1,7 +1,11 @@
 package com.unclezs.novel.core.analyzer.model;
 
-import com.unclezs.novel.core.utils.StringUtil;
-import lombok.*;
+import com.unclezs.novel.core.util.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -90,6 +94,6 @@ public class TextAnalyzerConfig implements AnalyzerConfig {
      */
     public static TextAnalyzerConfigBuilder defaultBuilder() {
         return builder().rule(Rule.TEXT_TAG).enableChapterNextPage(true).enableContentNextPage(true).chapterFilter(
-            true).nextPageRule(NEXT_PAGE_RULE).baseUri(StringUtil.EMPTY);
+            true).nextPageRule(NEXT_PAGE_RULE).baseUri(StringUtils.EMPTY);
     }
 }

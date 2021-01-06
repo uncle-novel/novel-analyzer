@@ -4,10 +4,16 @@ import com.unclezs.novel.core.request.HttpConfig;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.request.spi.HttpProvider;
 import com.unclezs.novel.core.request.ssl.SslTrustAllCerts;
-import com.unclezs.novel.core.utils.CollectionUtil;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.CollectionUtils;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.ConnectionPool;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -93,7 +99,7 @@ public class OkHttpClient implements HttpProvider {
     public Call init(RequestData requestData) {
         Request.Builder request = new Request.Builder().url(requestData.getUrl());
         // 请求头
-        if (CollectionUtil.isNotEmpty(requestData.getHeaders())) {
+        if (CollectionUtils.isNotEmpty(requestData.getHeaders())) {
             for (Map.Entry<String, String> header : requestData.getHeaders().entrySet()) {
                 request.addHeader(header.getKey(), header.getValue());
             }
@@ -105,7 +111,7 @@ public class OkHttpClient implements HttpProvider {
             request.get();
         }
         // 请求头
-        if (CollectionUtil.isNotEmpty(requestData.getHeaders())) {
+        if (CollectionUtils.isNotEmpty(requestData.getHeaders())) {
             for (Map.Entry<String, String> entry : requestData.getHeaders().entrySet()) {
                 request.header(entry.getKey(), entry.getValue());
             }
@@ -136,7 +142,7 @@ public class OkHttpClient implements HttpProvider {
             handleFailed(response);
             ResponseBody body = response.body();
             if (body == null) {
-                return StringUtil.EMPTY;
+                return StringUtils.EMPTY;
             } else {
                 return body.string();
             }
@@ -156,7 +162,7 @@ public class OkHttpClient implements HttpProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return StringUtil.EMPTY;
+        return StringUtils.EMPTY;
     }
 
     /**

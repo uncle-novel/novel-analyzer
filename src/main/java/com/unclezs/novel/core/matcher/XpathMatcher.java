@@ -1,6 +1,6 @@
 package com.unclezs.novel.core.matcher;
 
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,6 +41,6 @@ public class XpathMatcher {
         if (ret != null) {
             return Objects.toString(ret);
         }
-        return StringUtil.EMPTY;
+        return StringUtils.EMPTY;
     }
 }

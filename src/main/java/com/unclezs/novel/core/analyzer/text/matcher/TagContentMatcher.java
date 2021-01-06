@@ -1,6 +1,6 @@
 package com.unclezs.novel.core.analyzer.text.matcher;
 
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,15 +39,15 @@ public class TagContentMatcher {
         // 只包含白名单中的标签（只是删除了标签，没有删除标签内容）
         String cleanHtml = Jsoup.clean(originalText, Whitelist.none().addTags(WHITELIST));
         // p、br替换为换行，移除特殊空格
-        String divHtml = StringUtil.remove(cleanHtml, BLANK);
-        divHtml = StringUtil.replace(divHtml, StringUtil.NEW_LINE, "\n", NEW_LINE_SYMBOL);
-        divHtml = StringUtil.replaceAllCaseInsensitive(divHtml, NEW_LINE_SYMBOL, P_BR_TAG);
+        String divHtml = StringUtils.remove(cleanHtml, BLANK);
+        divHtml = StringUtils.replace(divHtml, StringUtils.NEW_LINE, "\n", NEW_LINE_SYMBOL);
+        divHtml = StringUtils.replaceAllCaseInsensitive(divHtml, NEW_LINE_SYMBOL, P_BR_TAG);
         // 解析 忽略标签大小写
         Parser parser = Parser.htmlParser();
         parser.settings(ParseSettings.preserveCase);
-        Document document = parser.parseInput(divHtml, StringUtil.EMPTY);
+        Document document = parser.parseInput(divHtml, StringUtils.EMPTY);
         Elements divs = document.select("div");
-        String text = StringUtil.EMPTY;
+        String text = StringUtils.EMPTY;
         int maxLen = 0;
         for (Element div : divs) {
             String ownText = div.ownText();
@@ -56,6 +56,6 @@ public class TagContentMatcher {
                 maxLen = ownText.length();
             }
         }
-        return text.replace(NEW_LINE_SYMBOL, StringUtil.NEW_LINE);
+        return text.replace(NEW_LINE_SYMBOL, StringUtils.NEW_LINE);
     }
 }

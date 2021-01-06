@@ -1,8 +1,8 @@
-package com.unclezs.novel.core.utils.regex;
+package com.unclezs.novel.core.util.regex;
 
 import com.unclezs.novel.core.exception.UtilException;
-import com.unclezs.novel.core.utils.CollectionUtil;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.CollectionUtils;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * @date 2020/12/20 7:24 下午
  */
 @UtilityClass
-public class RegexUtil {
+public class RegexUtils {
     /**
      * 数字
      */
@@ -48,7 +48,7 @@ public class RegexUtil {
      * 正则中需要被转义的关键字
      */
     public final Set<Character> RE_KEYS =
-        CollectionUtil.newSet('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
+        CollectionUtils.newSet('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
 
     /**
      * 是否为数字
@@ -87,7 +87,7 @@ public class RegexUtil {
      * @return /
      */
     public String removeNotChineseAndNotNumber(String content) {
-        return NOT_CHINESE_AND_NOT_NUMBER.matcher(content).replaceAll(StringUtil.EMPTY);
+        return NOT_CHINESE_AND_NOT_NUMBER.matcher(content).replaceAll(StringUtils.EMPTY);
     }
 
     /**
@@ -165,7 +165,7 @@ public class RegexUtil {
             return false;
         }
 
-        if (StringUtil.isEmpty(regex)) {
+        if (StringUtils.isEmpty(regex)) {
             // 正则不存在则为全匹配
             return true;
         }
@@ -302,12 +302,12 @@ public class RegexUtil {
      * @since 3.0.4
      */
     public static String replaceAll(CharSequence content, Pattern pattern, String replacementTemplate) {
-        if (StringUtil.isEmpty(content)) {
-            return StringUtil.str(content);
+        if (StringUtils.isEmpty(content)) {
+            return StringUtils.str(content);
         }
         final Matcher matcher = pattern.matcher(content);
         if (replacementTemplate == null) {
-            replacementTemplate = StringUtil.EMPTY;
+            replacementTemplate = StringUtils.EMPTY;
         }
         boolean result = matcher.find();
         if (result) {
@@ -325,7 +325,7 @@ public class RegexUtil {
             matcher.appendTail(sb);
             return sb.toString();
         }
-        return StringUtil.str(content);
+        return StringUtils.str(content);
     }
 
     /**
@@ -351,8 +351,8 @@ public class RegexUtil {
      * @since 4.2.2
      */
     public static String replaceAll(CharSequence str, Pattern pattern, Function<Matcher, String> replaceFun) {
-        if (StringUtil.isEmpty(str)) {
-            return StringUtil.str(str);
+        if (StringUtils.isEmpty(str)) {
+            return StringUtils.str(str);
         }
 
         final Matcher matcher = pattern.matcher(str);
@@ -390,8 +390,8 @@ public class RegexUtil {
      * @return 转义后的文本
      */
     public static String escape(CharSequence content) {
-        if (StringUtil.isBlank(content)) {
-            return StringUtil.str(content);
+        if (StringUtils.isBlank(content)) {
+            return StringUtils.str(content);
         }
 
         final StringBuilder builder = new StringBuilder();

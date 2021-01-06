@@ -1,7 +1,7 @@
 package com.unclezs.novel.core.analyzer.text.matcher;
 
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.RegexUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,11 +22,11 @@ public class StrictRegexContentMatcher {
     /**
      * 段落正则
      */
-    private static final String PARAGRAPH = "[\\s\\S]*?[^字\\w<*][" + RegexUtil.CHINESE + "]+[\\s\\S]*?";
+    private static final String PARAGRAPH = "[\\s\\S]*?[^字\\w<*][" + RegexUtils.CHINESE + "]+[\\s\\S]*?";
     /**
      * 段落正则
      */
-    private static final String PARAGRAPH_SECONDARY = "[\\s\\S]*?[^字\\w<*][" + RegexUtil.CHINESE + "]+[\\s\\S]*?";
+    private static final String PARAGRAPH_SECONDARY = "[\\s\\S]*?[^字\\w<*][" + RegexUtils.CHINESE + "]+[\\s\\S]*?";
     /**
      * 规则
      */
@@ -46,11 +46,11 @@ public class StrictRegexContentMatcher {
         Matcher matcher = PATTERN.matcher(originalText);
         while (matcher.find()) {
             String tag = matcher.group(1);
-            String paragraph = StringUtil.htmlBlank(matcher.group(2));
+            String paragraph = StringUtils.htmlBlank(matcher.group(2));
             boolean valid =
-                StringUtil.isNotBlank(paragraph) && isParagraph(paragraph) && StringUtil.endWith(tag, EFFECTIVE_TAG);
+                StringUtils.isNotBlank(paragraph) && isParagraph(paragraph) && StringUtils.endWith(tag, EFFECTIVE_TAG);
             if (valid) {
-                content.append(paragraph).append(StringUtil.NEW_LINE);
+                content.append(paragraph).append(StringUtils.NEW_LINE);
             }
         }
         return content.toString();

@@ -1,6 +1,6 @@
-package com.unclezs.novel.core.utils;
+package com.unclezs.novel.core.util;
 
-import com.unclezs.novel.core.utils.regex.PatternPool;
+import com.unclezs.novel.core.util.regex.PatternPool;
 import lombok.experimental.UtilityClass;
 
 import java.util.regex.Matcher;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @date 2020/12/20 6:58 下午
  */
 @UtilityClass
-public class StringUtil {
+public class StringUtils {
     public static final int INDEX_NOT_FOUND = -1;
     /**
      * 字符串常量：空字符串 {@code StringUtil.EMPTY}
@@ -90,10 +90,10 @@ public class StringUtil {
      * @return 删减后的文本
      */
     public String removeHeaderAndTail(String header, String tail, String src) {
-        if (StringUtil.isNotEmpty(header) && src.contains(header)) {
+        if (StringUtils.isNotEmpty(header) && src.contains(header)) {
             src = src.substring(header.length());
         }
-        if (StringUtil.isNotEmpty(tail) && src.contains(tail)) {
+        if (StringUtils.isNotEmpty(tail) && src.contains(tail)) {
             src = src.substring(0, src.indexOf(tail));
         }
         return src;
@@ -108,7 +108,7 @@ public class StringUtil {
      * @return /
      */
     public String removeText(String src, String target) {
-        return src.replace(remove(target, StringUtil.EMPTY), StringUtil.EMPTY);
+        return src.replace(remove(target, StringUtils.EMPTY), StringUtils.EMPTY);
     }
 
     /**
@@ -125,11 +125,11 @@ public class StringUtil {
         String[] lines = src.split("\n");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < lines.length; i++) {
-            if (StringUtil.isNotBlank(lines[i])) {
+            if (StringUtils.isNotBlank(lines[i])) {
                 if (i < 3) {
-                    sb.append(lines[i].replace(remove(target, StringUtil.EMPTY), StringUtil.EMPTY)).append(StringUtil.NEW_LINE);
+                    sb.append(lines[i].replace(remove(target, StringUtils.EMPTY), StringUtils.EMPTY)).append(StringUtils.NEW_LINE);
                 } else {
-                    sb.append(lines[i]).append(StringUtil.NEW_LINE);
+                    sb.append(lines[i]).append(StringUtils.NEW_LINE);
                 }
             }
         }
@@ -144,12 +144,12 @@ public class StringUtil {
      * @return 清除后的
      */
     public String remove(String src, String... target) {
-        if (StringUtil.isBlank(src)) {
+        if (StringUtils.isBlank(src)) {
             return src;
         }
         for (String s : target) {
             if (s != null) {
-                src = PatternPool.get(s, Pattern.DOTALL).matcher(src).replaceAll(StringUtil.EMPTY);
+                src = PatternPool.get(s, Pattern.DOTALL).matcher(src).replaceAll(StringUtils.EMPTY);
             }
         }
         return trim(src);
@@ -163,12 +163,12 @@ public class StringUtil {
      * @return 清除后的
      */
     public String removePlain(String src, String... target) {
-        if (StringUtil.isBlank(src)) {
+        if (StringUtils.isBlank(src)) {
             return src;
         }
         for (String s : target) {
             if (s != null) {
-                src = src.replace(s, StringUtil.EMPTY);
+                src = src.replace(s, StringUtils.EMPTY);
             }
         }
         return trim(src);
@@ -181,7 +181,7 @@ public class StringUtil {
      * @return /
      */
     public String removeInvalidSymbol(String str) {
-        return str.replaceAll("[\\\\/:*?\"<>|]", StringUtil.EMPTY);
+        return str.replaceAll("[\\\\/:*?\"<>|]", StringUtils.EMPTY);
     }
 
     /**
@@ -232,12 +232,12 @@ public class StringUtil {
      */
     public String ncr2Chinese(String src) {
         // 换行符处理
-        src = src.replace(StringUtil.NEW_LINE, "&#92;&#114;&#92;&#110;");
+        src = src.replace(StringUtils.NEW_LINE, "&#92;&#114;&#92;&#110;");
         Matcher m = ncrReg.matcher(src);
         while (m.find()) {
-            src = src.replace(m.group(0), (char) Integer.parseInt(m.group(1)) + StringUtil.EMPTY);
+            src = src.replace(m.group(0), (char) Integer.parseInt(m.group(1)) + StringUtils.EMPTY);
         }
-        return src.replace("\\r\\n", StringUtil.NEW_LINE);
+        return src.replace("\\r\\n", StringUtils.NEW_LINE);
     }
 
     /**
@@ -247,7 +247,7 @@ public class StringUtil {
      * @return /
      */
     public String htmlBlank(String html) {
-        return replaceHtmlBlank(html, StringUtil.BLANK);
+        return replaceHtmlBlank(html, StringUtils.BLANK);
     }
 
     /**
@@ -287,7 +287,7 @@ public class StringUtil {
         StringBuilder paragraphs = new StringBuilder();
         for (String line : paragraph) {
             if (isNotBlank(line)) {
-                paragraphs.append("    ").append(line.trim()).append(StringUtil.NEW_LINE).append(StringUtil.NEW_LINE);
+                paragraphs.append("    ").append(line.trim()).append(StringUtils.NEW_LINE).append(StringUtils.NEW_LINE);
             }
         }
         return paragraphs.toString();

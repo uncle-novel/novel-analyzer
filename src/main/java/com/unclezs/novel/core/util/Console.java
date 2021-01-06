@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.utils;
+package com.unclezs.novel.core.util;
 
 import lombok.experimental.UtilityClass;
 import org.slf4j.helpers.MessageFormatter;

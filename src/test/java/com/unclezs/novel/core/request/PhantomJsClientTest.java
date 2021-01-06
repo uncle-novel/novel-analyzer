@@ -2,7 +2,7 @@ package com.unclezs.novel.core.request;
 
 import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
 import com.unclezs.novel.core.request.proxy.HttpProxy;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -54,9 +54,9 @@ public class PhantomJsClientTest {
     public static String executePhantomJs(String script, String... args) throws IOException {
         String scriptPath = String.format(jsBasePath, script);
         StringBuilder command = new StringBuilder();
-        command.append(exePath).append(StringUtil.BLANK).append(scriptPath);
+        command.append(exePath).append(StringUtils.BLANK).append(scriptPath);
         for (String arg : args) {
-            command.append(StringUtil.BLANK).append(arg);
+            command.append(StringUtils.BLANK).append(arg);
         }
         System.out.println(command);
         Process process = Runtime.getRuntime().exec(command.toString());
@@ -65,7 +65,7 @@ public class PhantomJsClientTest {
         StringBuilder buffer = new StringBuilder();
         String tmp;
         while ((tmp = br.readLine()) != null) {
-            buffer.append(tmp).append(StringUtil.NEW_LINE);
+            buffer.append(tmp).append(StringUtils.NEW_LINE);
         }
         return buffer.toString();
     }

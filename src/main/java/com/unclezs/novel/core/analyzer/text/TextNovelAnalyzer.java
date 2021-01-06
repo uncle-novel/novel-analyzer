@@ -5,8 +5,8 @@ import com.unclezs.novel.core.analyzer.comparator.ChapterComparator;
 import com.unclezs.novel.core.analyzer.model.Rule;
 import com.unclezs.novel.core.analyzer.model.TextAnalyzerConfig;
 import com.unclezs.novel.core.model.Chapter;
-import com.unclezs.novel.core.utils.CollectionUtil;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.CollectionUtils;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,21 +37,21 @@ public class TextNovelAnalyzer {
         Rule rule = config.getRule();
         // 支持范围匹配 则进行范围截取
         if (rule.isSupportRange()) {
-            originalText = StringUtil.getRange(config.getRangeHeader(), config.getRangeTail(), originalText);
+            originalText = StringUtils.getRange(config.getRangeHeader(), config.getRangeTail(), originalText);
         }
         // 匹配正文
         String content = rule.matching(originalText);
         // 缩进处理 每段缩进4个空格
-        content = StringUtil.indentation(content);
+        content = StringUtils.indentation(content);
         // html空格处理
-        content = StringUtil.htmlBlank(content);
+        content = StringUtils.htmlBlank(content);
         // ncr转中文
         if (config.isNcr()) {
-            content = StringUtil.ncr2Chinese(content);
+            content = StringUtils.ncr2Chinese(content);
         }
         // 去广告
-        if (CollectionUtil.isNotEmpty(config.getAdvertisements())) {
-            content = StringUtil.remove(content, config.getAdvertisements().toArray(new String[0]));
+        if (CollectionUtils.isNotEmpty(config.getAdvertisements())) {
+            content = StringUtils.remove(content, config.getAdvertisements().toArray(new String[0]));
         }
         return content;
     }
@@ -66,7 +66,7 @@ public class TextNovelAnalyzer {
     public List<Chapter> chapters(String originalText, TextAnalyzerConfig config) {
         // 支持范围匹配 则进行范围截取
         if (config.getRule().isSupportRange()) {
-            originalText = StringUtil.getRange(config.getRangeHeader(), config.getRangeTail(), originalText);
+            originalText = StringUtils.getRange(config.getRangeHeader(), config.getRangeTail(), originalText);
         }
         Document document = Jsoup.parse(originalText, config.getBaseUri());
         List<Element> elements = document.body().select("a");

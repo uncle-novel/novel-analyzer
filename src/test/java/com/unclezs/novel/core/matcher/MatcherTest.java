@@ -2,7 +2,7 @@ package com.unclezs.novel.core.matcher;
 
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 @Slf4j
 public class MatcherTest {
-    private String originalText = StringUtil.EMPTY;
+    private String originalText = StringUtils.EMPTY;
 
     public void initContent(String url) {
         RequestData requestData = new RequestData();

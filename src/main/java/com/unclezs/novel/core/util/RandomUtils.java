@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.utils;
+package com.unclezs.novel.core.util;
 
 import lombok.experimental.UtilityClass;
 
@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @date 2020/12/27 2:04 下午
  */
 @UtilityClass
-public class RandomUtil {
+public class RandomUtils {
     /**
      * 获取随机数生成器对象<br>
      * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。

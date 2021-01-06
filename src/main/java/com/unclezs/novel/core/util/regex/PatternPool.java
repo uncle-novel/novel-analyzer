@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.utils.regex;
+package com.unclezs.novel.core.util.regex;
 
 import com.unclezs.novel.core.cache.SimpleCache;
 

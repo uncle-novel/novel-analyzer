@@ -1,8 +1,8 @@
 package com.unclezs.novel.core.analyzer.comparator;
 
 import com.unclezs.novel.core.model.Chapter;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
-import com.unclezs.novel.core.utils.uri.UrlUtil;
+import com.unclezs.novel.core.util.regex.RegexUtils;
+import com.unclezs.novel.core.util.uri.UrlUtils;
 
 import java.math.BigInteger;
 import java.util.Comparator;
@@ -14,9 +14,9 @@ import java.util.Comparator;
 public class ChapterComparator implements Comparator<Chapter> {
     @Override
     public int compare(Chapter o1, Chapter o2) {
-        String one = UrlUtil.getUrlLastPathNotSuffix(o1.getUrl());
-        String two = UrlUtil.getUrlLastPathNotSuffix(o2.getUrl());
-        if (RegexUtil.isNumber(one) && RegexUtil.isNumber(two)) {
+        String one = UrlUtils.getUrlLastPathNotSuffix(o1.getUrl());
+        String two = UrlUtils.getUrlLastPathNotSuffix(o2.getUrl());
+        if (RegexUtils.isNumber(one) && RegexUtils.isNumber(two)) {
             BigInteger v1 = new BigInteger(one);
             BigInteger v2 = new BigInteger(two);
             return v1.compareTo(v2);

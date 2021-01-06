@@ -1,8 +1,8 @@
 package com.unclezs.novel.core.analyzer;
 
 import com.unclezs.novel.core.matcher.Matcher;
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.uri.UrlUtil;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.uri.UrlUtils;
 import lombok.experimental.UtilityClass;
 import org.jsoup.nodes.Element;
 
@@ -30,16 +30,16 @@ public class AnalyzerHelper {
      * @return 下一页URL
      */
     public String nextPage(String content, String nextPageRule, String baseUri) {
-        if (StringUtil.isNotEmpty(nextPageRule)) {
+        if (StringUtils.isNotEmpty(nextPageRule)) {
             String next = Matcher.matching(content, nextPageRule);
             // 已经是完整的URL了
-            if (UrlUtil.isHttpUrl(next)) {
+            if (UrlUtils.isHttpUrl(next)) {
                 return next;
             }
             // 获得完整的URL
-            return UrlUtil.completeUrl(baseUri, next);
+            return UrlUtils.completeUrl(baseUri, next);
         }
-        return StringUtil.EMPTY;
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -53,7 +53,7 @@ public class AnalyzerHelper {
         final int part = maxTimesKey(aTags, aTag -> aTag.absUrl("href").split("/").length);
         return aTags.stream().filter(tag -> {
             String href = tag.absUrl("href");
-            return tag.parents().size() == depth && UrlUtil.notAnchor(href) && part == href.split("/").length
+            return tag.parents().size() == depth && UrlUtils.notAnchor(href) && part == href.split("/").length
                 && tag.hasText();
         }).collect(Collectors.toList());
     }

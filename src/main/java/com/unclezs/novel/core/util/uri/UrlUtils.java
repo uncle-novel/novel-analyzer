@@ -1,8 +1,8 @@
-package com.unclezs.novel.core.utils.uri;
+package com.unclezs.novel.core.util.uri;
 
 import com.unclezs.novel.core.exception.UtilException;
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.RegexUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,8 +15,8 @@ import java.nio.charset.StandardCharsets;
  * @author uncle
  * @date 2020/3/25 21:11
  */
-public class UrlUtil {
-    private UrlUtil() {
+public class UrlUtils {
+    private UrlUtils() {
     }
 
     /**
@@ -26,7 +26,7 @@ public class UrlUtil {
      * @return 域名
      */
     public static String getHost(String url) {
-        return RegexUtil.get("http[s]{0,1}://(.+?)/", url, 1);
+        return RegexUtils.get("http[s]{0,1}://(.+?)/", url, 1);
     }
 
     /**
@@ -36,7 +36,7 @@ public class UrlUtil {
      * @return /
      */
     public static String getSite(String url) {
-        String host = RegexUtil.get("http[s]{0,1}://(.+?)/", url + "/", 1);
+        String host = RegexUtils.get("http[s]{0,1}://(.+?)/", url + "/", 1);
         String[] str = host.split("\\.");
         if (str.length == 3) {
             return str[1];
@@ -53,7 +53,7 @@ public class UrlUtil {
      * @return /
      */
     public static String getUrlLastPathNotSuffix(String url) {
-        String str = url.replaceAll("\\.htm.*", StringUtil.EMPTY);
+        String str = url.replaceAll("\\.htm.*", StringUtils.EMPTY);
         int i = str.lastIndexOf("/");
         return str.substring(i + 1);
     }
@@ -66,7 +66,7 @@ public class UrlUtil {
      * @return /
      */
     public static boolean isHttpUrl(String url) {
-        return StringUtil.isNotEmpty(url) && url.toLowerCase().startsWith("http");
+        return StringUtils.isNotEmpty(url) && url.toLowerCase().startsWith("http");
     }
 
     /**
@@ -79,7 +79,7 @@ public class UrlUtil {
      */
     public static String completeUrl(String baseUrl, String relativePath) {
         baseUrl = normalize(baseUrl, false);
-        if (StringUtil.isBlank(baseUrl)) {
+        if (StringUtils.isBlank(baseUrl)) {
             return relativePath;
         }
         try {
@@ -104,47 +104,47 @@ public class UrlUtil {
      * @since 4.4.1
      */
     public static String normalize(String url, boolean isEncodePath) {
-        if (StringUtil.isBlank(url)) {
+        if (StringUtils.isBlank(url)) {
             return url;
         }
         final int sepIndex = url.indexOf("://");
         String protocol;
         String body;
         if (sepIndex > 0) {
-            protocol = StringUtil.subPre(url, sepIndex + 3);
-            body = StringUtil.subSuf(url, sepIndex + 3);
+            protocol = StringUtils.subPre(url, sepIndex + 3);
+            body = StringUtils.subSuf(url, sepIndex + 3);
         } else {
             protocol = "http://";
             body = url;
         }
 
-        final int paramsSepIndex = StringUtil.indexOf(body, '?');
+        final int paramsSepIndex = StringUtils.indexOf(body, '?');
         String params = null;
         if (paramsSepIndex > 0) {
-            params = StringUtil.subSuf(body, paramsSepIndex);
-            body = StringUtil.subPre(body, paramsSepIndex);
+            params = StringUtils.subSuf(body, paramsSepIndex);
+            body = StringUtils.subPre(body, paramsSepIndex);
         }
 
-        if (StringUtil.isNotEmpty(body)) {
+        if (StringUtils.isNotEmpty(body)) {
             // 去除开头的\或者/
             //noinspection ConstantConditions
-            body = body.replaceAll("^[\\\\/]+", StringUtil.EMPTY);
+            body = body.replaceAll("^[\\\\/]+", StringUtils.EMPTY);
             // 替换多个\或/为单个/
             body = body.replace("\\", "/");
             //issue#I25MZL，双斜杠在URL中是允许存在的，不做替换
         }
 
-        final int pathSepIndex = StringUtil.indexOf(body, '/');
+        final int pathSepIndex = StringUtils.indexOf(body, '/');
         String domain = body;
         String path = null;
         if (pathSepIndex > 0) {
-            domain = StringUtil.subPre(body, pathSepIndex);
-            path = StringUtil.subSuf(body, pathSepIndex);
+            domain = StringUtils.subPre(body, pathSepIndex);
+            path = StringUtils.subSuf(body, pathSepIndex);
         }
         if (isEncodePath) {
             path = encode(path);
         }
-        return protocol + domain + StringUtil.nullToEmpty(path) + StringUtil.nullToEmpty(params);
+        return protocol + domain + StringUtils.nullToEmpty(path) + StringUtils.nullToEmpty(params);
     }
 
     /**
@@ -172,7 +172,7 @@ public class UrlUtil {
      * @since 4.4.1
      */
     public static String encode(String url, Charset charset) {
-        if (StringUtil.isEmpty(url)) {
+        if (StringUtils.isEmpty(url)) {
             return url;
         }
         if (null == charset) {

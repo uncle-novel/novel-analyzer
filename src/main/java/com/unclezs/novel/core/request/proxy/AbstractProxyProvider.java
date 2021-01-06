@@ -4,7 +4,7 @@ import com.unclezs.novel.core.concurrent.pool.ThreadPoolUtil;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.request.spi.ProxyProvider;
-import com.unclezs.novel.core.utils.RandomUtil;
+import com.unclezs.novel.core.util.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -118,7 +118,7 @@ public abstract class AbstractProxyProvider implements ProxyProvider {
             return NO_PROXY;
         }
         // 随机位置
-        int randomInt = RandomUtil.randomInt(index.size());
+        int randomInt = RandomUtils.randomInt(index.size());
         // 获取host
         String host = index.get(randomInt);
         // 生成proxy

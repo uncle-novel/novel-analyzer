@@ -1,7 +1,7 @@
-package com.unclezs.novel.core.utils.uri;
+package com.unclezs.novel.core.util.uri;
 
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.RegexUtils;
 
 import java.io.UnsupportedEncodingException;
 
@@ -24,7 +24,7 @@ public class UrlEncoder {
         StringBuilder toUrl = new StringBuilder();
         for (char c : url.toCharArray()) {
             String word = String.valueOf(c);
-            if (RegexUtil.isChinese(word)) {
+            if (RegexUtils.isChinese(word)) {
                 try {
                     toUrl.append(java.net.URLEncoder.encode(word, charset));
                 } catch (UnsupportedEncodingException e) {
@@ -50,7 +50,7 @@ public class UrlEncoder {
         int lastPos = 0;
         int pos;
         char ch;
-        src = src.replace("&#x", "%u").replace(";", StringUtil.EMPTY);
+        src = src.replace("&#x", "%u").replace(";", StringUtils.EMPTY);
         while (lastPos < src.length()) {
             pos = src.indexOf("%", lastPos);
             if (pos == lastPos) {

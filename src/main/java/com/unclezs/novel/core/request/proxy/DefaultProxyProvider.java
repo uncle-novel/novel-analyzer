@@ -2,7 +2,7 @@ package com.unclezs.novel.core.request.proxy;
 
 import com.jayway.jsonpath.JsonPath;
 import com.unclezs.novel.core.request.Http;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class DefaultProxyProvider extends AbstractProxyProvider {
                 log.debug("新抓取代理：{}:{}", host, port);
             }
             url = JsonPath.read(json, "$.data.next_page_url");
-        } while (StringUtil.isNotEmpty(url));
+        } while (StringUtils.isNotEmpty(url));
     }
 
     public static void main(String[] args) {

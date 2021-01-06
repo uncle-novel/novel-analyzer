@@ -1,6 +1,6 @@
 package com.unclezs.novel.core.request;
 
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 
 /**
  * @author blog.unclezs.com
@@ -14,7 +14,7 @@ public enum MediaType {
     /**
      * GET请求使用
      */
-    NONE(StringUtil.EMPTY),
+    NONE(StringUtils.EMPTY),
     /**
      * JSON
      */
@@ -23,7 +23,7 @@ public enum MediaType {
     /**
      * content-type
      */
-    private String mediaType;
+    private final String mediaType;
 
     public String getMediaType() {
         return mediaType;

@@ -1,4 +1,4 @@
-package com.unclezs.novel.core.utils;
+package com.unclezs.novel.core.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
  */
 @Slf4j
 @UtilityClass
-public class CommandUtil {
+public class CommandUtils {
     /**
      * 执行CMD命令
      *
@@ -31,7 +31,7 @@ public class CommandUtil {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String tmp;
         while ((tmp = br.readLine()) != null) {
-            buffer.append(tmp).append(StringUtil.NEW_LINE);
+            buffer.append(tmp).append(StringUtils.NEW_LINE);
         }
         return buffer.toString();
     }

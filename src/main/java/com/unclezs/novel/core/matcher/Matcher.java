@@ -1,7 +1,7 @@
 package com.unclezs.novel.core.matcher;
 
 import com.unclezs.novel.core.matcher.model.MatcherRule;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +25,7 @@ public class Matcher {
         MatcherRule matcherRule = MatcherRule.of(rule);
         if (matcherRule.getMatcherType() == null) {
             log.trace("不支持的解析器类型：{}", matcherRule.getMatcherType());
-            return StringUtil.EMPTY;
+            return StringUtils.EMPTY;
         }
         return matching(matcherRule, src);
     }
@@ -55,7 +55,7 @@ public class Matcher {
                 ret = XpathMatcher.matching(src, rule.getRule());
         }
         // 去广告
-        ret = StringUtil.remove(ret, rule.getAdvertisement());
+        ret = StringUtils.remove(ret, rule.getAdvertisement());
         return ret;
     }
 }

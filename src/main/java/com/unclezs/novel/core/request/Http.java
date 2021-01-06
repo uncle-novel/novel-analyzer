@@ -6,7 +6,7 @@ import com.unclezs.novel.core.request.phantomjs.PhantomJsClient;
 import com.unclezs.novel.core.request.proxy.DefaultProxyProvider;
 import com.unclezs.novel.core.request.spi.HttpProvider;
 import com.unclezs.novel.core.request.spi.ProxyProvider;
-import com.unclezs.novel.core.utils.StringUtil;
+import com.unclezs.novel.core.util.StringUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -97,7 +97,7 @@ public class Http {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return StringUtil.EMPTY;
+        return StringUtils.EMPTY;
     }
 
     /**

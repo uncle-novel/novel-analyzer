@@ -1,8 +1,8 @@
 package com.unclezs.novel.core.matcher;
 
 import com.unclezs.novel.core.model.Pair;
-import com.unclezs.novel.core.utils.StringUtil;
-import com.unclezs.novel.core.utils.regex.RegexUtil;
+import com.unclezs.novel.core.util.StringUtils;
+import com.unclezs.novel.core.util.regex.RegexUtils;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -26,8 +26,8 @@ public class RegexMatcher {
      * @return /
      */
     public String matcher(String src, String regex, int index) {
-        String ret = RegexUtil.get(regex, src, index);
-        return ret == null ? StringUtil.EMPTY : ret;
+        String ret = RegexUtils.get(regex, src, index);
+        return ret == null ? StringUtils.EMPTY : ret;
     }
 
     /**
@@ -44,8 +44,8 @@ public class RegexMatcher {
      */
     public String matcher(String src, String regex) {
         Pair<String, String> pair = getTemplate(regex);
-        String ret = RegexUtil.extractMulti(pair.getLeft(), src, pair.getRight());
-        return ret == null ? StringUtil.EMPTY : ret;
+        String ret = RegexUtils.extractMulti(pair.getLeft(), src, pair.getRight());
+        return ret == null ? StringUtils.EMPTY : ret;
     }
 
     /**
@@ -80,6 +80,6 @@ public class RegexMatcher {
      * @return /
      */
     public String titleWithNotNumber(String content) {
-        return RegexUtil.removeNotChineseAndNotNumber(title(content));
+        return RegexUtils.removeNotChineseAndNotNumber(title(content));
     }
 }
