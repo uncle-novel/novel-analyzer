@@ -5,3 +5,4 @@ logs
 *.tmp
 *.DS_Store
 *.log
+lib/
