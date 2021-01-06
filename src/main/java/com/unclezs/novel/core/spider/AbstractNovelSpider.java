@@ -10,7 +10,7 @@ import com.unclezs.novel.core.model.Novel;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
 import com.unclezs.novel.core.spider.pipline.Pipeline;
-import com.unclezs.novel.core.utils.uri.UrlUtil;
+import com.unclezs.novel.core.util.uri.UrlUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -85,21 +85,21 @@ public abstract class AbstractNovelSpider {
     /**
      * 爬取一本小说
      *
-     * @param requestData 请求
-     * @param pipeline    数据处理管道
+     * @param requestData     请求
+     * @param chapterPipeline 章节数据处理管道
      * @throws IOException 目录地址爬取失败
      */
-    public void crawling(RequestData requestData, Pipeline<Chapter> pipeline) throws IOException {
-        crawling(chapters(requestData), pipeline);
+    public void crawling(RequestData requestData, Pipeline<Chapter> chapterPipeline) throws IOException {
+        crawling(chapters(requestData), chapterPipeline);
     }
 
 
     /**
      * 爬取一本小说
      *
-     * @param pipeline 数据处理管道，传入爬取的每一个章节
+     * @param chapterPipeline 数据处理管道，传入爬取的每一个章节
      */
-    public void crawling(List<Chapter> chapters, Pipeline<Chapter> pipeline) {
+    public void crawling(List<Chapter> chapters, Pipeline<Chapter> chapterPipeline) {
         ThreadPool threadPool =
             ThreadPoolUtil.newFixedThreadPoolExecutor(AnalyzerManager.me().getThreadNum(), "chapter-spider");
         log.debug("开始爬取小说：共{}章", chapters.size());
@@ -114,7 +114,7 @@ public abstract class AbstractNovelSpider {
                 }
                 chapter.setContent(content);
                 chapter.setOrder(order.getAndIncrement());
-                pipeline.process(chapter);
+                chapterPipeline.process(chapter);
             });
         }
         threadPool.waitCompeted(chapters.size(), true);
@@ -135,7 +135,7 @@ public abstract class AbstractNovelSpider {
         throws IOException {
         String page;
         // 如果下一页存在并且没有被抓取过（防止重复抓取的情况）
-        while (UrlUtil.isHttpUrl(requestData.getUrl()) && !pageLinks.contains(requestData.getUrl())) {
+        while (UrlUtils.isHttpUrl(requestData.getUrl()) && !pageLinks.contains(requestData.getUrl())) {
             // 已经爬取过
             pageLinks.add(requestData.getUrl());
             // 获取网页内容

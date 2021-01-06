@@ -8,7 +8,7 @@ import com.unclezs.novel.core.model.Chapter;
 import com.unclezs.novel.core.model.Novel;
 import com.unclezs.novel.core.request.Http;
 import com.unclezs.novel.core.request.RequestData;
-import com.unclezs.novel.core.utils.uri.UrlUtil;
+import com.unclezs.novel.core.util.uri.UrlUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
-public class TextNovelSpider extends NovelSpider {
+public class TextNovelSpider extends AbstractNovelSpider {
     /**
      * 解析配置信息
      */
@@ -72,7 +72,7 @@ public class TextNovelSpider extends NovelSpider {
             // 如果有下一页
             requestData.setUrl(AnalyzerHelper.nextPage(page, config.getNextPageRule(), requestData.getUrl()));
             // 如果下一页存在并且没有被抓取过（防止重复抓取的情况）
-            if (UrlUtil.isHttpUrl(requestData.getUrl())) {
+            if (UrlUtils.isHttpUrl(requestData.getUrl())) {
                 multiPage(requestData, pageLinks, title, config.getNextPageRule(),
                     pageHtml -> pages.append(TextNovelAnalyzer.content(pageHtml, config)));
             }
@@ -98,7 +98,7 @@ public class TextNovelSpider extends NovelSpider {
             // 如果有下一页
             requestData.setUrl(AnalyzerHelper.nextPage(page, config.getNextChapterPageRule(), config.getBaseUri()));
             // 如果下一页存在并且没有被抓取过（防止重复抓取的情况）
-            if (UrlUtil.isHttpUrl(requestData.getUrl())) {
+            if (UrlUtils.isHttpUrl(requestData.getUrl())) {
                 multiPage(requestData, pageLinks, title, config.getNextChapterPageRule(),
                     pageHtml -> chapterList.addAll(TextNovelAnalyzer.chapters(pageHtml, config)));
             }
