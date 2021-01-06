@@ -79,7 +79,7 @@ public class StringUtil {
         return !isBlank(str);
     }
 
-    private Pattern ncrReg = Pattern.compile("&#([\\d]{2,6});");
+    private final Pattern ncrReg = Pattern.compile("&#([\\d]{2,6});");
 
     /**
      * 去除头尾
@@ -287,7 +287,7 @@ public class StringUtil {
         StringBuilder paragraphs = new StringBuilder();
         for (String line : paragraph) {
             if (isNotBlank(line)) {
-                paragraphs.append("    ").append(line.trim()).append("StringUtil.NEW_LINEStringUtil.NEW_LINE");
+                paragraphs.append("    ").append(line.trim()).append(StringUtil.NEW_LINE).append(StringUtil.NEW_LINE);
             }
         }
         return paragraphs.toString();
