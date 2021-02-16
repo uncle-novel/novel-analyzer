@@ -1,0 +1,14 @@
+{
+  "type": "xpath",
+  "rule": "xpath://div[@id='content']/allText()",
+  "purifyRules": [
+    {
+      "regex": "123",
+      "template": "$1123"
+    },
+    "1231233## ",
+    "大萨达"
+  ],
+  "script": "112312312"
+}
+

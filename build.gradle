@@ -3,6 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
+group = 'com.unclezs'
+version = '1.0'
+description 'catalog analyzer core SDK'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+
 repositories {
     mavenLocal()
     maven {
@@ -11,11 +17,15 @@ repositories {
 }
 
 dependencies {
+    def lombok_version = '1.18.16'
+    constraints {
+
+    }
     // lombok
-    compileOnly "org.projectlombok:lombok:1.18.16"
-    annotationProcessor "org.projectlombok:lombok:1.18.16"
-    testCompileOnly "org.projectlombok:lombok:1.18.16"
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.16"
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    testCompileOnly "org.projectlombok:lombok:${lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
 
     implementation 'org.jsoup:jsoup:1.10.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
@@ -25,12 +35,15 @@ dependencies {
     implementation 'cn.wanghaomiao:JsoupXpath:2.4.3'
     implementation 'com.jayway.jsonpath:json-path:2.5.0'
     testImplementation 'junit:junit:4.13.1'
+//    testImplementation group: 'junit', name: 'junit', version: '4.12'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
-group = 'com.unclezs'
-version = '1.0'
-description = 'novel-analyzer'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+//test {
+//    useJUnitPlatform()
+//}
+
 
 publishing {
     publications {
@@ -44,17 +57,3 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-task printProps {
-    doLast {
-        println project.property("org.gradle.console")
-        println System.properties['user.dir']
-    }
-}
-
-task showRepositories {
-    doLast {
-        repositories.each {
-            println "repository: ${it.name} ('${it.url}')"
-        }
-    }
-}
