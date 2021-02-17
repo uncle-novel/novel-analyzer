@@ -20,8 +20,10 @@ import java.util.function.Consumer;
  * 匹配器  正则,xpath,jsonpath,css
  * <p>
  * 格式： 解析器类型：解析规则[##$正则组号(仅regex可选)]
- * css:div > .author > a@href
- * regex:<title>(.+?)</title>##$1
+ * <p>
+ * eg: css:div -&gt; .author -&gt; a@href
+ * <p>
+ * regex:&lt;title&gt;(.+?)&lt;/title&gt;##$1
  *
  * @author blog.unclezs.com
  * @date 2020/12/21 11:24

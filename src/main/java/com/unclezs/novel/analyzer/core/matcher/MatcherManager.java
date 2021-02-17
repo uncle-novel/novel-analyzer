@@ -128,7 +128,7 @@ public class MatcherManager {
      * 判断是否为默认别名
      *
      * @param alias 别名
-     * @return 是否为默认别名 true 是默认  null->false
+     * @return 是否为默认别名 true 是默认  null 则返回false
      */
     public static boolean isDefaultAlias(String alias) {
         return DEFAULT_ALIAS_SET.contains(alias);

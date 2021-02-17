@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @UtilityClass
 public class FileUtils {
-    public final String USER_DIR = System.getProperty("user.dir");
+    public static final String USER_DIR = System.getProperty("user.dir");
 
     static {
         log.debug("当前工作目录：{}", USER_DIR);
@@ -35,7 +35,7 @@ public class FileUtils {
      * @param file 文件
      * @throws IOException IO异常
      */
-    public void deleteFile(File file) throws IOException {
+    public static void deleteFile(File file) throws IOException {
         Files.deleteIfExists(Paths.get(file.getAbsolutePath()));
     }
 
@@ -45,7 +45,7 @@ public class FileUtils {
      * @param file 文件
      * @throws IOException IO异常
      */
-    public void deleteFile(String file) throws IOException {
+    public static void deleteFile(String file) throws IOException {
         Files.deleteIfExists(Paths.get(file));
     }
 

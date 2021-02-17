@@ -53,7 +53,7 @@ public class UrlUtils {
     /**
      * 获取host
      *
-     * @param url /   https://www.unclezs.com  => unclezs
+     * @param url /   https://www.unclezs.com  得到 unclezs
      * @return /
      */
     public static String getSite(String url) {
@@ -68,7 +68,7 @@ public class UrlUtils {
 
     /**
      * 获取不带参数的URL
-     * https://www.unclezs.com?ab=1&c=2  => https://www.unclezs.com
+     * https://www.unclezs.com?ab=1&amp;c=2  得到 https://www.unclezs.com
      *
      * @param url 带参URL
      * @return 不带参URL
@@ -83,7 +83,7 @@ public class UrlUtils {
 
     /**
      * 获取URL参数
-     * https://www.unclezs.com?ab=1&c=2  => ab=1&c=2
+     * https://www.unclezs.com?ab=1&amp;c=2  得到 ab=1&amp;c=2
      *
      * @param url 带参URL
      * @return URL参数

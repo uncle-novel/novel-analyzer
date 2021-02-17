@@ -55,7 +55,7 @@ public class UrlEncoder {
     }
 
     /**
-     * &#x编码转换成汉字
+     * {@code &#x}编码转换成汉字
      *
      * @param src 字符集
      * @return 解码后的字符集

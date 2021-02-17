@@ -22,7 +22,7 @@ public class SystemUtils {
      *
      * @return 如果当前OS类型为Mac，则返回<code>true</code>
      */
-    public boolean isMac() {
+    public static boolean isMac() {
         return IS_OS_MAC;
     }
 
@@ -32,7 +32,7 @@ public class SystemUtils {
      * @param osNamePrefix OS名称前缀
      * @return 如果匹配，则返回<code>true</code>
      */
-    private boolean getOsMatches(String osNamePrefix) {
+    private static boolean getOsMatches(String osNamePrefix) {
         if (OS_NAME == null) {
             return false;
         }
@@ -49,7 +49,7 @@ public class SystemUtils {
      *
      * @return 如果当前OS类型为Linux，则返回<code>true</code>
      */
-    public boolean isLinux() {
+    public static boolean isLinux() {
         return IS_OS_LINUX;
     }
 
@@ -62,16 +62,16 @@ public class SystemUtils {
      *
      * @return 如果当前OS类型为Windows，则返回<code>true</code>
      */
-    public boolean isWindows() {
+    public static boolean isWindows() {
         return IS_OS_WINDOWS;
     }
 
     /**
      * 获取可执行文件后缀名
      *
-     * @return
+     * @return /
      */
-    public String getExecuteSuffix() {
+    public static String getExecuteSuffix() {
         if (isWindows()) {
             return ".exe";
         }

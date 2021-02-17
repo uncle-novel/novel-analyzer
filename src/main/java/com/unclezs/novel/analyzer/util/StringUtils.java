@@ -259,9 +259,9 @@ public class StringUtils {
     }
 
     /**
-     * 将&#类得字符转化为汉字
+     * 将{@code &#}类得字符转化为汉字
      *
-     * @param src 字符集&#20491;&#30007;&#20154;&#30475;
+     * @param src 字符集 {@code &#20491;&#30007;&#20154;&#30475;}
      * @return 转码后得字符集
      */
     public String ncr2Chinese(String src) {

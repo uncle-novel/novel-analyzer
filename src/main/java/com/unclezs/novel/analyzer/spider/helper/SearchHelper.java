@@ -33,10 +33,9 @@ public class SearchHelper {
 
     /**
      * 获取计算后的参数
-     * page={{page}}&key={{keyword}}
-     * -> page=1&key={{keyword}}
+     * page={{page}}&amp;key={{keyword}} 编译为 page=1&amp;key={{keyword}}
      *
-     * @param src        源字符串  page={{page}}&key={{keyword}}
+     * @param src        源字符串  page={{page}}&amp;key={{keyword}}
      * @param param      参数
      * @param paramValue 参数值
      * @return 参数处理后结果
@@ -56,10 +55,10 @@ public class SearchHelper {
 
     /**
      * 获取计算后的参数
-     * page={{page}}&key={{keyword}}
-     * -> page=1&key={{keyword}}
+     * <p>
+     * 拓展{@link SearchHelper#pretreatmentParam}
      *
-     * @param src    源字符串  page={{page}}&key={{keyword}}
+     * @param src    源字符串  page={{page}}&amp;key={{keyword}}
      * @param params 参数 key参数名 value参数值
      * @return 参数处理后结果
      */
@@ -72,7 +71,9 @@ public class SearchHelper {
 
     /**
      * 预处理搜索参数
-     * page={{page}}&key={{keyword}}
+     * <p>
+     * page={{page}}&amp;key={{keyword}}
+     * <p>
      * 也支持URL参数格式 https://book.com/{{page}}/?keyword={{keyword}}
      *
      * @param params  请求参数
