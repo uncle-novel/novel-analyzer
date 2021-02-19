@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  * URL工具类
  *
  * @author uncle
- * @since 2020/3/25 21:11
+ * @date 2020/3/25 21:11
  */
 @UtilityClass
 public class UrlUtils {
@@ -152,7 +152,7 @@ public class UrlUtils {
      * @param url          URL字符串
      * @param isEncodePath 是否对URL中path部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
      * @return 标准化后的URL字符串
-     * @since 4.4.1
+     * @date 4.4.1
      */
     public static String normalize(String url, boolean isEncodePath) {
         if (StringUtils.isBlank(url)) {
@@ -206,7 +206,7 @@ public class UrlUtils {
      * @param url URL
      * @return 编码后的URL
      * @throws UtilException UnsupportedEncodingException
-     * @since 3.1.2
+     * @date 3.1.2
      */
     public static String encode(String url) throws UtilException {
         return encode(url, StandardCharsets.UTF_8);
@@ -220,7 +220,7 @@ public class UrlUtils {
      * @param url     被编码内容
      * @param charset 编码
      * @return 编码后的字符
-     * @since 4.4.1
+     * @date 4.4.1
      */
     public static String encode(String url, Charset charset) {
         if (StringUtils.isEmpty(url)) {

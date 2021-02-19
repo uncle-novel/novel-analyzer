@@ -15,7 +15,7 @@ import static javax.script.ScriptContext.GLOBAL_SCOPE;
  * 脚本工具 默认JS
  *
  * @author blog.unclezs.com
- * @since 2021/1/28 22:55
+ * @date 2021/1/28 22:55
  */
 @UtilityClass
 public class ScriptUtils {

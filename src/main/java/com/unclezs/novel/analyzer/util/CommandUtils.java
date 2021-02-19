@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
  * 执行CMD命令工具
  *
  * @author blog.unclezs.com
- * @since 2020/12/25 11:09
+ * @date 2020/12/25 11:09
  */
 @Slf4j
 @UtilityClass

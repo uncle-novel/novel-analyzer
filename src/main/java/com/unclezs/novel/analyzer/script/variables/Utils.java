@@ -16,7 +16,7 @@ import java.io.IOException;
  * 提供一些Js调用的java方法
  *
  * @author blog.unclezs.com
- * @since 2021/1/28 22:29
+ * @date 2021/1/28 22:29
  */
 @Slf4j
 public class Utils implements ScriptGlobalVariables<Utils> {

@@ -7,7 +7,7 @@ import lombok.Setter;
  * 解析器全局配置类 单例
  *
  * @author blog.unclezs.com
- * @since 2020/12/20 3:04 下午
+ * @date 2020/12/20 3:04 下午
  */
 public class AnalyzerManager {
     /**

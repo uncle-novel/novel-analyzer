@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * @author unclezs.com
- * @since 2019.07.08 19:46
+ * @date 2019.07.08 19:46
  */
 public class UrlEncoder {
     private UrlEncoder() {

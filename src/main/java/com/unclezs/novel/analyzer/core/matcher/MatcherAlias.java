@@ -12,7 +12,7 @@ import lombok.Data;
  * xpath://abc/xx   xpath如果是默认 则被识别为 xpath://abc/xx
  *
  * @author blog.unclezs.com
- * @since 2021/01/28 15:34
+ * @date 2021/01/28 15:34
  * @see com.unclezs.novel.analyzer.core.helper.RuleHelper#parseRuleType(java.lang.String)
  */
 @Data

@@ -10,7 +10,7 @@ import com.unclezs.novel.analyzer.request.proxy.HttpProxy;
  * 优先级 先判断此此字段为true 再判断全局AnalyzerManager.autoProxy是否开启
  *
  * @author blog.unclezs.com
- * @since 2020/12/27 12:18 下午
+ * @date 2020/12/27 12:18 下午
  */
 public interface ProxyProvider {
     /**

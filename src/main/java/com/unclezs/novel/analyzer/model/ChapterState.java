@@ -4,7 +4,7 @@ package com.unclezs.novel.analyzer.model;
  * 章节状态
  *
  * @author blog.unclezs.com
- * @since 2021/01/12 12:12
+ * @date 2021/01/12 12:12
  */
 public enum ChapterState {
     /**

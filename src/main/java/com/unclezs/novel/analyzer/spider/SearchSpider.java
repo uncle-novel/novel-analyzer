@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author blog.unclezs.com
- * @since 2021/2/12 18:36
+ * @date 2021/2/12 18:36
  */
 @Slf4j
 public class SearchSpider extends AbstractPageable<Novel> {

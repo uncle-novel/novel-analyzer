@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Object工具类
  *
  * @author blog.unclezs.com
- * @since 2021/2/15 11:01
+ * @date 2021/2/15 11:01
  */
 public class SerializationUtils {
     /**

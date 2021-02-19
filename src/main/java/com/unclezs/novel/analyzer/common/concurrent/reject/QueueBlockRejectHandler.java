@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 队列无限长
  *
  * @author blog.unclezs.com
- * @since 2020/12/27 7:01 下午
+ * @date 2020/12/27 7:01 下午
  */
 public class QueueBlockRejectHandler implements RejectedExecutionHandler {
     private static final QueueBlockRejectHandler QUEUE_BLOCK_REJECT_HANDLER = new QueueBlockRejectHandler();

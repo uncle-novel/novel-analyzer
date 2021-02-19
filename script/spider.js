@@ -4,7 +4,7 @@
  *
  * 注意：不能使用let声明变量 使用参照 com.unclezs.novel.core.request.PhantomJsClientTest
  * @author blog.unclezs.com
- * @since   2020-12-24
+ * @date   2020-12-24
  * @see    https://phantomjs.org/api/
  */
 var page = require('webpage').create();

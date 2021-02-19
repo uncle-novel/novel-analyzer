@@ -9,7 +9,7 @@ import org.slf4j.helpers.MessageFormatter;
  * eg. Console.println("you are {}","beautiful")
  *
  * @author blog.unclezs.com
- * @since 2021/1/6 8:11
+ * @date 2021/1/6 8:11
  */
 @UtilityClass
 public class Console {

@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * 包含了格式预处理
  *
  * @author blog.unclezs.com
- * @since 2021/02/08 10:45
+ * @date 2021/02/08 10:45
  */
 public abstract class AbstractTextPipeline extends BaseFilePipeline {
     @Setter

@@ -4,7 +4,7 @@ package com.unclezs.novel.analyzer.common.cache;
  * 缓存
  *
  * @author blog.unclezs.com
- * @since 2021/2/15 8:55
+ * @date 2021/2/15 8:55
  */
 public interface Cache<K, V> {
     /**

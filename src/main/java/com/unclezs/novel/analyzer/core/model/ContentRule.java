@@ -27,7 +27,7 @@ import java.lang.reflect.Type;
  * </pre>
  *
  * @author blog.unclezs.com
- * @since 2021/02/10 11:13
+ * @date 2021/02/10 11:13
  */
 @Data
 public class ContentRule implements Verifiable, Serializable, JsonDeserializer<ContentRule> {

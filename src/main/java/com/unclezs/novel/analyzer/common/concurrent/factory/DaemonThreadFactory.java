@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 创建daemon线程的 线程工厂
  *
  * @author blog.unclezs.com
- * @since 2020/12/27 6:55 下午
+ * @date 2020/12/27 6:55 下午
  */
 public class DaemonThreadFactory implements ThreadFactory {
     private final AtomicInteger threadNumber = new AtomicInteger(1);

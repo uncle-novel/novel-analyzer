@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author blog.unclezs.com
- * @since 2020/12/20 6:58 下午
+ * @date 2020/12/20 6:58 下午
  */
 @UtilityClass
 public class StringUtils {

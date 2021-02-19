@@ -8,7 +8,7 @@ import java.util.Objects;
  * Http代理Model
  *
  * @author blog.unclezs.com
- * @since 2020/12/27 12:39 下午
+ * @date 2020/12/27 12:39 下午
  */
 @Data
 public class HttpProxy {

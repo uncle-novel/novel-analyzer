@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 小说信息规则
  *
  * @author blog.unclezs.com
- * @since 2021/2/6 22:03
+ * @date 2021/2/6 22:03
  */
 @Data
 public class DetailRule implements Serializable, Verifiable {

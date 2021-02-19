@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
  * 规则的一些默认值
  *
  * @author blog.unclezs.com
- * @since 2021/02/10 11:11
+ * @date 2021/02/10 11:11
  */
 @UtilityClass
 public class RuleConstant {

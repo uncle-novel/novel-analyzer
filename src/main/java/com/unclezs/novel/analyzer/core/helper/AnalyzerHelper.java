@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * 小说解析器辅助类
  *
  * @author blog.unclezs.com
- * @since 2020/12/20 6:42 下午
+ * @date 2020/12/20 6:42 下午
  */
 @UtilityClass
 public class AnalyzerHelper {

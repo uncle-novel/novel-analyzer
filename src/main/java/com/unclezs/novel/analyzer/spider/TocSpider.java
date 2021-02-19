@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * 小说目录爬虫
  *
  * @author blog.unclezs.com
- * @since 2021/2/12 22:13
+ * @date 2021/2/12 22:13
  */
 @Slf4j
 @NoArgsConstructor

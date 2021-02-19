@@ -4,7 +4,7 @@ import com.unclezs.novel.analyzer.util.StringUtils;
 
 /**
  * @author blog.unclezs.com
- * @since 2020/12/21 1:37 上午
+ * @date 2020/12/21 1:37 上午
  */
 public enum MediaType {
     /**

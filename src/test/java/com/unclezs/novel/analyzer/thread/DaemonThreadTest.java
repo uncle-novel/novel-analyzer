@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author blog.unclezs.com
- * @since 2021/1/17 22:34
+ * @date 2021/1/17 22:34
  */
 public class DaemonThreadTest {
     public static void main(String[] args) throws InterruptedException {
