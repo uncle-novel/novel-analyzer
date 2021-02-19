@@ -30,7 +30,7 @@ import java.util.Map;
  * </pre>
  *
  * @author blog.unclezs.com
- * @date 2021/1/27 21:56
+ * @since 2021/1/27 21:56
  * @see com.unclezs.novel.analyzer.core.helper.RuleHelper
  */
 @Data

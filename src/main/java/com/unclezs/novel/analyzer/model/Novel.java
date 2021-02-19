@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  *
  * @author blog.unclezs.com
- * @date 2020/12/23 18:42
+ * @since 2020/12/23 18:42
  */
 @Data
 public class Novel {

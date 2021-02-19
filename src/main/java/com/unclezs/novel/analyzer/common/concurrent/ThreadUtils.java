@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * 2.创建线程
  *
  * @author blog.unclezs.com
- * @date 2020/12/20 4:50 下午
+ * @since 2020/12/20 4:50 下午
  */
 @UtilityClass
 public class ThreadUtils {

@@ -11,7 +11,7 @@ import java.util.Objects;
  * 解析规则
  *
  * @author blog.unclezs.com
- * @date 2020/12/20 6:44 下午
+ * @since 2020/12/20 6:44 下午
  */
 @Data
 public class AnalyzerRule implements Serializable, Verifiable {

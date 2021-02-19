@@ -6,7 +6,7 @@ import java.net.Proxy;
 
 /**
  * @author blog.unclezs.com
- * @date 2020/12/21 12:47 上午
+ * @since 2020/12/21 12:47 上午
  */
 @Data
 public class HttpConfig {

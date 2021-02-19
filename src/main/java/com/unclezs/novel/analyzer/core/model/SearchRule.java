@@ -24,7 +24,7 @@ import java.io.Serializable;
  * </pre>
  *
  * @author blog.unclezs.com
- * @date 2021/02/08 19:21
+ * @since 2021/02/08 19:21
  */
 @Data
 public class SearchRule implements Serializable {

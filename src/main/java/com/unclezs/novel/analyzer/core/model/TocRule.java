@@ -31,7 +31,7 @@ import java.util.Set;
  * </pre>
  *
  * @author blog.unclezs.com
- * @date 2021/02/10 11:10
+ * @since 2021/02/10 11:10
  */
 @Data
 public class TocRule implements Verifiable, Serializable {

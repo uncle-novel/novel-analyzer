@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * 简单实现FIFO
  *
  * @author blog.unclezs.com
- * @date 2021/2/15 9:09
+ * @since 2021/2/15 9:09
  */
 public class FifoCache<K, V> implements Cache<K, V> {
     /**

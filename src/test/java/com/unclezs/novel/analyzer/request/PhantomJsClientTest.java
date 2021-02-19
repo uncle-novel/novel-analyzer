@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 
 /**
  * @author blog.unclezs.com
- * @date 2020/12/24 11:35
+ * @since 2020/12/24 11:35
  */
 public class PhantomJsClientTest {
     private static final String exePath = "/Users/zhanghongguo/coder/uncle-novel/novel-com.unclezs.novel.analyzer.analyzer/lib/phantomjs";

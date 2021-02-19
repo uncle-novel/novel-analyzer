@@ -4,7 +4,7 @@ package com.unclezs.novel.analyzer.request;
  * HTTP请求方法
  *
  * @author blog.unclezs.com
- * @date 2021/01/29 11:18
+ * @since 2021/01/29 11:18
  */
 public enum HttpMethod {
     /**

@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutorService;
  * 并非线程安全的类，但是高效
  *
  * @author blog.unclezs.com
- * @date 2020/12/27 12:24 下午
+ * @since 2020/12/27 12:24 下午
  */
 @Slf4j
 public abstract class AbstractProxyProvider implements ProxyProvider {
