@@ -35,15 +35,18 @@ public class NovelMatcherTest {
 
     @Test
     public void testToc() throws IOException {
-//        DefaultNovelSpider spider = new DefaultNovelSpider();
-        AnalyzerRule rule = RuleHelper.getRule("www.h4xs.cc");
-//        spider.setConfig(rule);
-//        MultiPageData<Chapter> multiPageData = new MultiPageData<>();
-//        spider.chapters(RequestParams.create("https://www.h4xs.cc/page/2/?s=%E7%88%B1"), multiPageData);
+        AnalyzerRule rule = RuleHelper.rule("https://m.jx.la/book/394/index_93.html");
         TocSpider tocSpider = new TocSpider(rule);
         tocSpider.setOnNewItemAddHandler(chapter -> System.out.println(chapter.getName()));
-        tocSpider.toc("https://www.h4xs.cc/page/2/?s=%E7%88%B1");
-        tocSpider.loadAll();
+        tocSpider.toc("https://m.jx.la/book/394/index_93.html");
+        while (true) {
+            System.out.println(tocSpider.getNextPageUrl() + "  " + tocSpider.hasMore());
+            if(tocSpider.hasMore()){
+                tocSpider.loadMore();
+            }else {
+                return;
+            }
+        }
     }
 
     @Test

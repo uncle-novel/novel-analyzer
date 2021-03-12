@@ -100,9 +100,8 @@ public abstract class AbstractPageable<T> implements Pageable {
         if (loadLock.tryLock()) {
             try {
                 this.page++;
-                this.hasMore = loadPage(this.page);
                 try {
-                    loadPage(this.page);
+                    this.hasMore = loadPage(this.page);
                 } catch (IOException e) {
                     // 忽略异常 否则回退一页 下次继续请求
                     if (!ignoreError) {

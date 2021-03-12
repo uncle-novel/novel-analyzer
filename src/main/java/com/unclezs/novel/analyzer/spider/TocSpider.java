@@ -173,4 +173,12 @@ public class TocSpider extends AbstractPageable<Chapter> {
         }
         return toc;
     }
+
+    /**
+     * @return 下一页链接
+     */
+    public String getNextPageUrl() {
+        return this.params.getUrl();
+    }
 }
+

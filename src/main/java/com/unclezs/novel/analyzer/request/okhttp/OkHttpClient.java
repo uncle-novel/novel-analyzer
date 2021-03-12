@@ -114,7 +114,7 @@ public class OkHttpClient implements HttpProvider {
         if (HttpMethod.GET.name().equalsIgnoreCase(params.getMethod())) {
             requestBuilder.get();
         } else {
-            requestBuilder.method(params.getMethod(), RequestBody.create(params.getBody(), MediaType.parse(params.getMediaType())));
+            requestBuilder.method(params.getMethod(), RequestBody.create(MediaType.parse(params.getMediaType()), params.getBody()));
         }
         // 请求头
         if (CollectionUtils.isNotEmpty(params.getHeaders())) {
@@ -152,7 +152,7 @@ public class OkHttpClient implements HttpProvider {
             } else {
                 // 指定了编码则使用指定编码
                 if (StringUtils.isNotBlank(requestParams.getCharset())) {
-                    return body.byteString().string(Charset.forName(requestParams.getCharset()));
+                    return body.source().readByteString().string(Charset.forName(requestParams.getCharset()));
                 }
                 return getString(body.source(), body.contentType());
             }
@@ -230,7 +230,7 @@ public class OkHttpClient implements HttpProvider {
             charset = contentType.charset(null);
             if (charset == null) {
                 // 根据字节前几位特征读取编码
-                charset = Util.readBomAsCharset(source, StandardCharsets.UTF_16LE);
+                charset = Util.bomAwareCharset(source, StandardCharsets.UTF_16LE);
                 isHtml = "text/html".equalsIgnoreCase(contentType.toString());
             }
         }

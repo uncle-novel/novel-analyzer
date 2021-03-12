@@ -1,6 +1,8 @@
 package com.unclezs.novel.analyzer.common.concurrent.factory;
 
-import org.jetbrains.annotations.NotNull;
+
+import lombok.NonNull;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,7 +22,7 @@ public class DaemonThreadFactory implements ThreadFactory {
     }
 
     @Override
-    public Thread newThread(@NotNull Runnable r) {
+    public Thread newThread(@NonNull Runnable r) {
         Thread t = new Thread(Thread.currentThread().getThreadGroup(), r,
             namePrefix + threadNumber.getAndIncrement(),
             0);

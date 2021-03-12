@@ -1,2 +1,11 @@
-*.bat           text eol=crlf
-*               text eof=lf
+*       text eof=lf
+*.bat   -text
+*.gif   binary
+*.jar   binary
+*.jpeg  binary
+*.jpg   binary
+*.png   binary
+*.vsd   binary
+*.ttf   binary
+exe.vsd   binary
+phantomjs*   binary
