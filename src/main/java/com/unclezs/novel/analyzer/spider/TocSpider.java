@@ -15,6 +15,7 @@ import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -29,12 +30,13 @@ import java.util.stream.Collectors;
  * @date 2021/2/12 22:13
  */
 @Slf4j
+@Getter
+@Setter
 @NoArgsConstructor
 public class TocSpider extends AbstractPageable<Chapter> {
     /**
      * 规则
      */
-    @Getter
     private AnalyzerRule rule;
     /**
      * 请求目录参数

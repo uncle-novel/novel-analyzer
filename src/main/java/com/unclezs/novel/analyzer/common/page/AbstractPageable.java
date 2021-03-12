@@ -25,6 +25,8 @@ public abstract class AbstractPageable<T> implements Pageable {
     /**
      * 当前页码
      */
+    @Setter
+    @Getter
     private int page;
     /**
      * 一个书源搜索完成后的回调
