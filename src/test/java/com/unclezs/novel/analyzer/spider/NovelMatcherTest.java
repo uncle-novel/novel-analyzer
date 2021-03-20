@@ -27,9 +27,12 @@ public class NovelMatcherTest {
     @Test
     public void testContent() throws IOException {
         NovelSpider spider = new NovelSpider();
-        AnalyzerRule rule = RuleHelper.getRule("www.h4xs.cc");
+        AnalyzerRule rule = RuleHelper.rule("https://vipreader.qidian.com/chapter/1020842452/549224997");
         spider.setRule(rule);
-        String content = spider.content(RequestParams.create("https://www.h4xs.cc/dushi/15550/"));
+        RequestParams params = RequestParams.create("https://vipreader.qidian.com/chapter/1020842452/549224997");
+        params.setDynamic(true);
+        params.addHeader("Cookie","_csrfToken=kvjXnYAXzq40X2lCbM4KEYuDRbk3XDdxLhzYk60w; newstatisticUUID=1616218128_966730623; qdrs=6%7C3%7C0%7C0%7C1; showSectionCommentGuide=1; qdgd=1; lrbc=1020842452%7C549224997%7C1; rcr=1020842452; bc=1020842452; ywkey=yw7X12MWXfBd; ywguid=1585503310; ywopenid=7387FAAE42281F44434B7CF4977CFD3E; pageOps=1");
+        String content = spider.content(params);
         System.out.println(content);
     }
 

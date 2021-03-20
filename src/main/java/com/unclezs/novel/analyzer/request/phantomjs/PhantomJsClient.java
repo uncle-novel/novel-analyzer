@@ -87,10 +87,12 @@ public class PhantomJsClient implements HttpProvider {
         // script
         command.append(StringUtils.BLANK).append(System.getProperty(PHANTOMJS_SCRIPT, DEFAULT_PHANTOMJS_SCRIPT));
         // args
-        command.append(StringUtils.BLANK).append(data.getUrl());
-        command.append(StringUtils.BLANK).append(data.getReferer());
-        command.append(StringUtils.BLANK).append(data.getCookie());
-        command.append(StringUtils.BLANK).append(data.getUserAgent());
-        return CommandUtils.execute(command.toString());
+        command.append(StringUtils.BLANK).append("\"").append(data.getUrl()).append("\"");
+        command.append(StringUtils.BLANK).append("\"").append(data.getReferer()).append("\"");
+        command.append(StringUtils.BLANK).append("\"").append(data.getCookie()).append("\"");
+        command.append(StringUtils.BLANK).append("\"").append(data.getUserAgent()).append("\"");
+        String execute = CommandUtils.execute(command.toString());
+        System.out.println(execute);
+        return execute;
     }
 }
