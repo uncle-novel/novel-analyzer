@@ -6,7 +6,7 @@
     <name>novel-analyzer</name>
     <groupId>com.unclezs</groupId>
     <artifactId>novel-analyzer</artifactId>
-    <version>1.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <url>http://github.com/unclezs/novel-analyzer</url>
     <description>Uncle小说解析 SDK</description>
@@ -16,7 +16,7 @@
             <id>https://blog.unclezs.com</id>
             <name>uncle</name>
             <url>https://github.com/unclezs</url>
-            <email>1585503310@qq.com</email>
+            <email>unclezs@qq.com</email>
         </developer>
     </developers>
 
@@ -32,15 +32,17 @@
         <connection>scm:git:https://github.com/novel-analyzer.git</connection>
     </scm>
 
+    <!--阿里云 maven 私服-->
     <distributionManagement>
         <snapshotRepository>
-            <!-- 对应setting.xml里面的ID -->
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>rdc-snapshots</id>
+            <layout>default</layout>
+            <url>https://packages.aliyun.com/maven/repository/2087066-snapshot-nRzmqy/</url>
         </snapshotRepository>
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>rdc-releases</id>
+            <layout>default</layout>
+            <url>https://packages.aliyun.com/maven/repository/2087066-release-uqSqPb/</url>
         </repository>
     </distributionManagement>
 
@@ -62,8 +64,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <java.version>1.8</java.version>
-
+        <java.version>8</java.version>
         <jsoup.version>1.10.3</jsoup.version>
         <okhttp.version>3.14.7</okhttp.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
@@ -80,7 +81,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -145,6 +146,11 @@
                     <encoding>UTF-8</encoding>
                     <doclint>none</doclint>
                     <doctitle>Uncle小说解析SDK</doctitle>
+                    <excludes>
+                        <exclude>/analyzer/</exclude>
+                        <exclude>/script/</exclude>
+                        <exclude>logback.xml</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <!-- resources plugin,Maven 资源插件 -->
@@ -160,6 +166,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <finalName>${artifactId}-source</finalName>
+                    <excludes>
+                        <exclude>/analyzer/</exclude>
+                        <exclude>/script/</exclude>
+                        <exclude>logback.xml</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <!-- compiler plugin,Maven 编译插件 -->
             <plugin>
@@ -172,20 +186,33 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <finalName>${artifactId}</finalName>
+                    <excludes>
+                        <exclude>/analyzer/</exclude>
+                        <exclude>/script/</exclude>
+                        <exclude>logback.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <!-- gpg 加密校验 -->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-gpg-plugin</artifactId>-->
-<!--                <version>1.5</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>verify</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>sign</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-gpg-plugin</artifactId>-->
+            <!--                <version>1.5</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>verify</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>sign</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
