@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer.util;
 import com.unclezs.novel.analyzer.common.exception.UtilException;
 import com.unclezs.novel.analyzer.util.io.FastByteArrayOutputStream;
 import com.unclezs.novel.analyzer.util.io.IoUtils;
+import lombok.experimental.UtilityClass;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * @author blog.unclezs.com
  * @date 2021/2/15 11:01
  */
+@UtilityClass
 public class SerializationUtils {
     /**
      * 深克隆

@@ -123,7 +123,7 @@ public class FileUtils {
         List<String> lines = readLines(file, StandardCharsets.UTF_8.name());
         StringBuilder allLine = new StringBuilder();
         for (String line : lines) {
-            allLine.append(line).append(StringUtils.NEW_LINE);
+            allLine.append(line).append(StringUtils.LF);
         }
         return allLine.toString();
     }

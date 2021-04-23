@@ -12,11 +12,24 @@
       "list": "//*[@id=\"sitembox\"]/dl",
       "detail": {
         "url": "/dd[1]/h3/a/@href",
-        "title": "/dd[1]/h3/a/allText()"
+        "title": "/dd[1]/h3/a/allText()",
+        "coverUrl": "dt[1]/a/img/@_src",
+        "introduce": "dd[3]/text()",
+        "wordCount": "/dd[2]/span[4]/text()",
+        "category": "/dd[2]/span[3]/text()",
+        "state": "/dd[2]/span[2]/text()",
+        "author": "/dd[2]/span[1]/text()",
+        "latestChapterUrl": "dd[4]/a/@href",
+        "latestChapterName": "dd[4]/a/text()",
+        "updateTime": "dd[4]/span/text()"
       }
+    },
+    "detail": {
+      "category": "//*[@id=\"smallcons\"]/span[1]/text()"
     }
   },
   {
+    "enabled": false,
     "name": "笔趣阁",
     "site": "https://m.biquge.com.cn/",
     "search": {
@@ -33,6 +46,7 @@
     }
   },
   {
+    "enabled": false,
     "name": "幻世小说",
     "site": "https://www.h4xs.cc/",
     "toc": {
@@ -54,6 +68,7 @@
     }
   },
   {
+    "enabled": false,
     "name": "全本小说网",
     "site": "http://www.quanben.me/",
     "toc": {

@@ -66,7 +66,7 @@ public class PhantomJsClientTest {
         StringBuilder buffer = new StringBuilder();
         String tmp;
         while ((tmp = br.readLine()) != null) {
-            buffer.append(tmp).append(StringUtils.NEW_LINE);
+            buffer.append(tmp).append(StringUtils.LF);
         }
         return buffer.toString();
     }

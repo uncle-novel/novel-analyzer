@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer.common.concurrent;
 import com.unclezs.novel.analyzer.common.concurrent.factory.DaemonThreadFactory;
 import com.unclezs.novel.analyzer.common.concurrent.reject.BlockRejectHandler;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author blog.unclezs.com
  * @date 2020/12/20 4:50 下午
  */
+@Slf4j
 @UtilityClass
 public class ThreadUtils {
     private static final ThreadPoolExecutor GLOBAL_THREAD_POOL = ThreadUtils.newCachedThreadPool("global");
@@ -55,7 +57,8 @@ public class ThreadUtils {
         try {
             Thread.currentThread().join(time);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("sleep error", e);
+            Thread.currentThread().interrupt();
         }
     }
 

@@ -39,7 +39,7 @@ public class DefaultContentMatcher {
         String cleanHtml = Jsoup.clean(originalText, Whitelist.none().addTags(WHITELIST));
         // p、br替换为换行，移除特殊空格
         String divHtml = StringUtils.remove(cleanHtml, BLANK);
-        divHtml = StringUtils.replace(divHtml, StringUtils.NEW_LINE, "\n", NEW_LINE_SYMBOL);
+        divHtml = StringUtils.replace(divHtml, StringUtils.LF, "\n", NEW_LINE_SYMBOL);
         divHtml = StringUtils.replaceAllCaseInsensitive(divHtml, NEW_LINE_SYMBOL, P_BR_TAG);
         // 解析 忽略标签大小写
         Parser parser = Parser.htmlParser();
@@ -55,6 +55,6 @@ public class DefaultContentMatcher {
                 maxLen = ownText.length();
             }
         }
-        return text.replace(NEW_LINE_SYMBOL, StringUtils.NEW_LINE);
+        return text.replace(NEW_LINE_SYMBOL, StringUtils.LF);
     }
 }

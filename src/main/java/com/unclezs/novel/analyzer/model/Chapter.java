@@ -15,7 +15,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class  Chapter {
+public class Chapter {
     /**
      * 章节序号
      */

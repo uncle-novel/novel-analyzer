@@ -23,16 +23,6 @@ import java.util.Set;
 @Slf4j
 public class CssMatcher extends Matcher {
     private static final CssMatcher ME = new CssMatcher();
-
-    /**
-     * 获取单例
-     *
-     * @return 实例
-     */
-    public static CssMatcher me() {
-        return ME;
-    }
-
     /**
      * 绝对路径  eg. abs:href   abs:src
      */
@@ -41,8 +31,16 @@ public class CssMatcher extends Matcher {
      * 支持的自定义属性选择器
      */
     private static final Set<String> SUPPORT_ATTR = CollectionUtils.newSet("href", "src", "text", "ownText");
-
     private CssMatcher() {
+    }
+
+    /**
+     * 获取单例
+     *
+     * @return 实例
+     */
+    public static CssMatcher me() {
+        return ME;
     }
 
     /**

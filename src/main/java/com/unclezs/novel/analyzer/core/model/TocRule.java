@@ -74,15 +74,6 @@ public class TocRule implements Verifiable, Serializable {
     private boolean sort;
 
     /**
-     * 是否允许章节翻页 规则必须存在
-     *
-     * @return /
-     */
-    public boolean isAllowNextPage() {
-        return enableNext && CommonRule.isEffective(next);
-    }
-
-    /**
      * 目录规则是否有效
      *
      * @param rule 目录规则
@@ -90,6 +81,15 @@ public class TocRule implements Verifiable, Serializable {
      */
     public static boolean isEffective(TocRule rule) {
         return rule != null && rule.isEffective();
+    }
+
+    /**
+     * 是否允许章节翻页 规则必须存在
+     *
+     * @return /
+     */
+    public boolean isAllowNextPage() {
+        return enableNext && CommonRule.isEffective(next);
     }
 
     /**

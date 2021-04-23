@@ -48,7 +48,7 @@ public class ParagraphContentMatcher {
             String tag = matcher.group(1);
             String paragraph = StringUtils.htmlBlank(matcher.group(2));
             if (StringUtils.isNotBlank(paragraph) && isParagraph(paragraph) && StringUtils.endWith(tag, EFFECTIVE_TAG)) {
-                content.append(paragraph).append(StringUtils.NEW_LINE);
+                content.append(paragraph).append(StringUtils.LF);
             }
         }
         return content.toString();

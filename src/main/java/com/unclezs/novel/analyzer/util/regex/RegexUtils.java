@@ -267,7 +267,7 @@ public class RegexUtils {
      * 例如：<br>
      * content 2013年5月 pattern (.*?)年(.*?)月 template： $1-$2 return 2013-5
      *
-     * @param regex  匹配正则
+     * @param regex    匹配正则
      * @param content  被匹配的内容
      * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
      * @return 新字符串列表
@@ -520,7 +520,7 @@ public class RegexUtils {
         if (CONTAINS_NUMBER.matcher(source).matches()) {
             type = 1;
         }
-        if (CONTAINS_CHAR.matcher(source).matches()){
+        if (CONTAINS_CHAR.matcher(source).matches()) {
             type += 2;
         }
         return type;

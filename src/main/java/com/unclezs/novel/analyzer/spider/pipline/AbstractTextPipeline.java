@@ -32,7 +32,7 @@ public abstract class AbstractTextPipeline extends BaseFilePipeline {
         // 预处理文本格式
         content = AnalyzerHelper.formatContent(content);
         // 标题加入正文， 如果标题已经包含了则移除
-        content = chapter.getName() + StringUtils.NEW_LINE + StringUtils.removeTitle(content, chapter.getName());
+        content = chapter.getName() + StringUtils.LF + StringUtils.removeTitle(content, chapter.getName());
         chapter.setContent(content);
         processChapter(chapter);
     }

@@ -37,67 +37,67 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReplaceRule implements Serializable, JsonDeserializer<ReplaceRule> {
-    private static final long serialVersionUID = 830391532687585985L;
-    /**
-     * 广告匹配正则
-     */
-    private String from;
-    /**
-     * 替换模板，$1代表第一组 类推
-     */
-    private String to;
+  private static final long serialVersionUID = 830391532687585985L;
+  /**
+   * 广告匹配正则
+   */
+  private String from;
+  /**
+   * 替换模板，$1代表第一组 类推
+   */
+  private String to;
 
-    /**
-     * 获取净化规则
-     *
-     * @param replaceRules 净化规则
-     * @return PurifyRule
-     */
-    public static ReplaceRule getRule(Object replaceRules) {
-        @SuppressWarnings("unchecked")
-        Map<String, Object> purify = (Map<String, Object>) replaceRules;
-        return getRule(purify);
-    }
+  /**
+   * 获取净化规则
+   *
+   * @param replaceRules 净化规则
+   * @return PurifyRule
+   */
+  public static ReplaceRule getRule(Object replaceRules) {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> purify = (Map<String, Object>) replaceRules;
+    return getRule(purify);
+  }
 
-    /**
-     * 获取净化规则
-     *
-     * @param purify 净化规则
-     * @return PurifyRule
-     */
-    public static ReplaceRule getRule(Map<String, Object> purify) {
-        String regex = StringUtils.toString(purify.get("from"));
-        if (StringUtils.isNotEmpty(regex)) {
-            String template = StringUtils.toString(purify.get("to"));
-            return new ReplaceRule(regex, template);
-        }
-        return null;
+  /**
+   * 获取净化规则
+   *
+   * @param purify 净化规则
+   * @return PurifyRule
+   */
+  public static ReplaceRule getRule(Map<String, Object> purify) {
+    String regex = StringUtils.toString(purify.get("from"));
+    if (StringUtils.isNotEmpty(regex)) {
+      String template = StringUtils.toString(purify.get("to"));
+      return new ReplaceRule(regex, template);
     }
+    return null;
+  }
 
-    @Override
-    public ReplaceRule deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        // 一个对象
-        if (json.isJsonObject()) {
-            ReplaceRule replaceRule = new ReplaceRule();
-            JsonObject ruleObject = json.getAsJsonObject();
-            replaceRule.setFrom(GsonUtils.getOrDefault(ruleObject, "from", null));
-            replaceRule.setTo(GsonUtils.getOrDefault(ruleObject, "to", null));
-            return replaceRule;
-        }
-        return null;
-    }
+  /**
+   * 解析净化模板
+   *
+   * @param rule 规则 广告正则@模板
+   * @return 净化规则
+   */
+  public static ReplaceRule parseRule(String rule) {
+    ReplaceRule replaceRule = new ReplaceRule();
+    Pair<String, String> pair = RegexMatcher.getTemplate(rule);
+    replaceRule.setFrom(pair.getLeft());
+    replaceRule.setTo("$0".equals(pair.getRight()) ? "" : pair.getRight());
+    return replaceRule;
+  }
 
-    /**
-     * 解析净化模板
-     *
-     * @param rule 规则 广告正则@模板
-     * @return 净化规则
-     */
-    public static ReplaceRule parseRule(String rule) {
-        ReplaceRule replaceRule = new ReplaceRule();
-        Pair<String, String> pair = RegexMatcher.getTemplate(rule);
-        replaceRule.setFrom(pair.getLeft());
-        replaceRule.setTo("$0".equals(pair.getRight()) ? "" : pair.getRight());
-        return replaceRule;
+  @Override
+  public ReplaceRule deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    // 一个对象
+    if (json.isJsonObject()) {
+      ReplaceRule replaceRule = new ReplaceRule();
+      JsonObject ruleObject = json.getAsJsonObject();
+      replaceRule.setFrom(GsonUtils.getOrDefault(ruleObject, "from", null));
+      replaceRule.setTo(GsonUtils.getOrDefault(ruleObject, "to", null));
+      return replaceRule;
     }
+    return null;
+  }
 }

@@ -19,9 +19,17 @@ import java.util.function.Consumer;
 @Slf4j
 public abstract class AbstractPageable<T> implements Pageable {
     /**
+     * 是否取消，防止多个线程时候，一个还在取消中，一个又开始了新的搜索
+     */
+    private static final ThreadLocal<Boolean> CANCELED = new ThreadLocal<>();
+    /**
      * 已经访问过的链接
      */
     private final Set<String> visited = new HashSet<>(16);
+    /**
+     * 加载数据锁
+     */
+    private final Lock loadLock = new ReentrantLock();
     /**
      * 当前页码
      */
@@ -32,14 +40,6 @@ public abstract class AbstractPageable<T> implements Pageable {
      * 一个书源搜索完成后的回调
      */
     private Consumer<T> onNewItemAddHandler;
-    /**
-     * 加载数据锁
-     */
-    private final Lock loadLock = new ReentrantLock();
-    /**
-     * 是否取消，防止多个线程时候，一个还在取消中，一个又开始了新的搜索
-     */
-    private static final ThreadLocal<Boolean> CANCELED = new ThreadLocal<>();
     /**
      * 标记已完成
      */

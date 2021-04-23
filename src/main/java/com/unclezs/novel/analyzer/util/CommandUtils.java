@@ -28,10 +28,10 @@ public class CommandUtils {
         log.trace("执行Command - 命令：{}", command);
         Process process = Runtime.getRuntime().exec(command);
         InputStream is = process.getInputStream();
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(is))){
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String tmp;
             while ((tmp = br.readLine()) != null) {
-                buffer.append(tmp).append(StringUtils.NEW_LINE);
+                buffer.append(tmp).append(StringUtils.LF);
             }
         }
         return buffer.toString();

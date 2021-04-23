@@ -40,7 +40,7 @@ public class FullTextContentMatcher {
         while (m.find()) {
             String paragraph = m.group(1);
             if (!paragraph.isEmpty()) {
-                content.append(paragraph).append(StringUtils.NEW_LINE);
+                content.append(paragraph).append(StringUtils.LF);
             }
         }
         return content.toString();

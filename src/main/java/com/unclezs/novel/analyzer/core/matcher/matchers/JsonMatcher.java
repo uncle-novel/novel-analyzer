@@ -55,6 +55,9 @@ public class JsonMatcher extends Matcher {
         });
     }
 
+    private JsonMatcher() {
+    }
+
     /**
      * 获取单例
      *
@@ -62,9 +65,6 @@ public class JsonMatcher extends Matcher {
      */
     public static JsonMatcher me() {
         return ME;
-    }
-
-    private JsonMatcher() {
     }
 
     /**

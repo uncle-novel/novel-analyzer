@@ -78,8 +78,8 @@ public abstract class Matcher {
     /**
      * 匹配一页里面的多个结果，并且封装到Map
      *
-     * @param source      源节点（节点、字符串）
-     * @param ruleMap     规则集合
+     * @param source  源节点（节点、字符串）
+     * @param ruleMap 规则集合
      * @return 匹配结果
      */
     public Map<String, String> matchMultiple(Object source, Map<String, CommonRule> ruleMap) {

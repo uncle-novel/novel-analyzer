@@ -15,11 +15,11 @@ import java.util.List;
  * @date 2020/12/21 11:39
  */
 public class RegexMatcher extends Matcher {
-    private static final RegexMatcher ME = new RegexMatcher();
     /**
      * 分组模板分隔符
      */
     public static final String REGEX_TEMPLATE_DELIMITER = "##";
+    private static final RegexMatcher ME = new RegexMatcher();
     /**
      * HTML中的title标签内容
      */
@@ -35,6 +35,22 @@ public class RegexMatcher extends Matcher {
      */
     public static RegexMatcher me() {
         return ME;
+    }
+
+    /**
+     * 获取正则模板 left：正则 right：模板 $1:$2
+     * 格式：正则##模板
+     *
+     * @param regex 正则
+     * @return /
+     */
+    public static Pair<String, String> getTemplate(String regex) {
+        String[] ret = regex.split(REGEX_TEMPLATE_DELIMITER);
+        Pair<String, String> pair = Pair.of(ret[0], "$0");
+        if (ret.length > 1) {
+            pair.setRight(ret[1]);
+        }
+        return pair;
     }
 
     /**
@@ -62,7 +78,6 @@ public class RegexMatcher extends Matcher {
         // 通过模板匹配列表
         return (List<E>) RegexUtils.findAllByTemplate(rulePair.getLeft(), src, rulePair.getRight());
     }
-
 
     /**
      * 正则匹配
@@ -95,7 +110,6 @@ public class RegexMatcher extends Matcher {
         return ret == null ? StringUtils.EMPTY : ret;
     }
 
-
     /**
      * 正则匹配
      * <p>
@@ -104,30 +118,14 @@ public class RegexMatcher extends Matcher {
      * 例如：<br>
      * src 2013年5月 regex (.*?)年(.*?)月##$1-$2 得到 2013-5
      *
-     * @param src     源
-     * @param rule    正则
+     * @param src  源
+     * @param rule 正则
      * @return /
      */
     public String match(String src, String rule) {
         Pair<String, String> pair = getTemplate(rule);
         String ret = RegexUtils.findByTemplate(pair.getLeft(), src, pair.getRight());
         return ret == null ? StringUtils.EMPTY : ret;
-    }
-
-    /**
-     * 获取正则模板 left：正则 right：模板 $1:$2
-     * 格式：正则##模板
-     *
-     * @param regex 正则
-     * @return /
-     */
-    public static Pair<String, String> getTemplate(String regex) {
-        String[] ret = regex.split(REGEX_TEMPLATE_DELIMITER);
-        Pair<String, String> pair = Pair.of(ret[0], "$0");
-        if (ret.length > 1) {
-            pair.setRight(ret[1]);
-        }
-        return pair;
     }
 
     /**

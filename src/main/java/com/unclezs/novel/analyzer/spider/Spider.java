@@ -2,9 +2,9 @@ package com.unclezs.novel.analyzer.spider;
 
 import com.unclezs.novel.analyzer.AnalyzerManager;
 import com.unclezs.novel.analyzer.common.concurrent.ThreadUtils;
+import com.unclezs.novel.analyzer.common.exception.SpiderRuntimeException;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
-import com.unclezs.novel.analyzer.common.exception.SpiderRuntimeException;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.ChapterState;
 import com.unclezs.novel.analyzer.model.Novel;
@@ -42,10 +42,6 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public final class Spider implements Serializable {
-    /**
-     * 爬虫计数器，统计本次启动了多少个爬虫
-     */
-    private static final AtomicInteger COUNTER = new AtomicInteger(1);
     public static final int INIT = 0;
     public static final int RUNNING = 1;
     public static final int PAUSING = 2;
@@ -53,6 +49,10 @@ public final class Spider implements Serializable {
     public static final int STOPPING = 4;
     public static final int STOPPED = 5;
     public static final int COMPLETED = 6;
+    /**
+     * 爬虫计数器，统计本次启动了多少个爬虫
+     */
+    private static final AtomicInteger COUNTER = new AtomicInteger(1);
     /**
      * 爬虫状态 0：未开始  1：运行中  2：暂停中 3：已暂停  4：停止中 5：已停止
      * 可能3->1， 不可能4->1
@@ -108,78 +108,6 @@ public final class Spider implements Serializable {
      * 剩余待下载的章节数据
      */
     private AtomicInteger leftCount;
-
-    /**
-     * 章节抓取任务
-     */
-    class Task implements Runnable {
-        private final Chapter chapter;
-        private boolean canceled = false;
-
-        public Task(Chapter chapter) {
-            this.chapter = chapter;
-            tasks.add(this);
-        }
-
-        /**
-         * 执行章节抓取任务
-         */
-        @Override
-        public void run() {
-            try {
-                if (!canceled) {
-                    // 与章节请求配置相同
-                    RequestParams requestParams = Spider.this.requestParams.copy();
-                    requestParams.setUrl(chapter.getUrl());
-                    String content = novelSpider.content(requestParams);
-                    // 内容是空白也当做错误处理
-                    if (StringUtils.isBlank(content)) {
-                        throw new RuntimeException("未知的，未抓取的章节内容");
-                    }
-                    chapter.setContent(content);
-                    if (!canceled) {
-                        // 管道处理章节数据
-                        pipelineProcess(chapter);
-                        // 管道处理完成之后释放章节内容
-                        chapter.setContent(null);
-                        // 下完完成标记
-                        chapter.setState(ChapterState.DOWNLOADED);
-                        notifyCompleteChapterHandler();
-                    }
-                }
-            } catch (IOException e) {
-                chapter.setMsg(e.getMessage());
-                chapter.setState(ChapterState.FAILED);
-                log.warn("小说章节内容爬取失败：order:{} - {} - {}", chapter.getOrder(), chapter.getName(), chapter.getUrl(), e);
-            } finally {
-                tasks.remove(this);
-            }
-        }
-
-        /**
-         * 尝试取消任务 不一定会有效，在正文解析前取消有效
-         */
-        public void cancel() {
-            this.canceled = true;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            Task task = (Task) o;
-            return chapter.getOrder() == task.chapter.getOrder();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(chapter);
-        }
-    }
 
     /**
      * 创建一个爬虫
@@ -384,7 +312,6 @@ public final class Spider implements Serializable {
         // 初始化任务监控集合
         tasks = new HashSet<>(toc.size() * 2);
     }
-
 
     /**
      * 启动爬虫
@@ -611,5 +538,77 @@ public final class Spider implements Serializable {
     protected void finalize() throws Throwable {
         super.finalize();
         this.stop();
+    }
+
+    /**
+     * 章节抓取任务
+     */
+    class Task implements Runnable {
+        private final Chapter chapter;
+        private boolean canceled = false;
+
+        public Task(Chapter chapter) {
+            this.chapter = chapter;
+            tasks.add(this);
+        }
+
+        /**
+         * 执行章节抓取任务
+         */
+        @Override
+        public void run() {
+            try {
+                if (!canceled) {
+                    // 与章节请求配置相同
+                    RequestParams requestParams = Spider.this.requestParams.copy();
+                    requestParams.setUrl(chapter.getUrl());
+                    String content = novelSpider.content(requestParams);
+                    // 内容是空白也当做错误处理
+                    if (StringUtils.isBlank(content)) {
+                        throw new RuntimeException("未知的，未抓取的章节内容");
+                    }
+                    chapter.setContent(content);
+                    if (!canceled) {
+                        // 管道处理章节数据
+                        pipelineProcess(chapter);
+                        // 管道处理完成之后释放章节内容
+                        chapter.setContent(null);
+                        // 下完完成标记
+                        chapter.setState(ChapterState.DOWNLOADED);
+                        notifyCompleteChapterHandler();
+                    }
+                }
+            } catch (IOException e) {
+                chapter.setMsg(e.getMessage());
+                chapter.setState(ChapterState.FAILED);
+                log.warn("小说章节内容爬取失败：order:{} - {} - {}", chapter.getOrder(), chapter.getName(), chapter.getUrl(), e);
+            } finally {
+                tasks.remove(this);
+            }
+        }
+
+        /**
+         * 尝试取消任务 不一定会有效，在正文解析前取消有效
+         */
+        public void cancel() {
+            this.canceled = true;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Task task = (Task) o;
+            return chapter.getOrder() == task.chapter.getOrder();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(chapter);
+        }
     }
 }

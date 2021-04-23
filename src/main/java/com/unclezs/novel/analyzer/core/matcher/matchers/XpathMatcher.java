@@ -21,6 +21,9 @@ import java.util.Objects;
 public class XpathMatcher extends Matcher {
     private static final XpathMatcher ME = new XpathMatcher();
 
+    private XpathMatcher() {
+    }
+
     /**
      * 获取单例
      *
@@ -28,9 +31,6 @@ public class XpathMatcher extends Matcher {
      */
     public static XpathMatcher me() {
         return ME;
-    }
-
-    private XpathMatcher() {
     }
 
     /**

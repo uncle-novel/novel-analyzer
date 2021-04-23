@@ -23,10 +23,6 @@ import java.util.List;
  */
 public class DefaultTextMatcher extends Matcher {
     /**
-     * 单例
-     */
-    private static final DefaultTextMatcher ME = new DefaultTextMatcher();
-    /**
      * 全文模式
      */
     public static final String FULL_TEXT = "FULL_TEXT";
@@ -36,6 +32,10 @@ public class DefaultTextMatcher extends Matcher {
      */
     public static final String PARAGRAPH = "PARAGRAPH";
     public static final String PARAGRAPH_ORDER = "2";
+    /**
+     * 单例
+     */
+    private static final DefaultTextMatcher ME = new DefaultTextMatcher();
 
     private DefaultTextMatcher() {
     }

@@ -23,11 +23,12 @@ public class UrlUtils {
 
     /**
      * 获取重定向地址
+     *
      * @param path
      * @return
      * @throws Exception
      */
-    public static String getRedirectUrl(String path){
+    public static String getRedirectUrl(String path) {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(path)
                 .openConnection();

@@ -126,7 +126,7 @@ public class Http {
      * @throws IOException 请求失败
      */
     public byte[] bytes(RequestParams requestParams) throws IOException {
-         initDefaultRequestParams(requestParams);
+        initDefaultRequestParams(requestParams);
         try {
             return staticHttpClient.bytes(requestParams);
         } catch (IOException e) {

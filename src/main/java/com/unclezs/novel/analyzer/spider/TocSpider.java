@@ -35,6 +35,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class TocSpider extends AbstractPageable<Chapter> {
     /**
+     * 章节顺序比较器
+     */
+    public static final ChapterComparator CHAPTER_COMPARATOR = new ChapterComparator();
+    /**
      * 规则
      */
     private AnalyzerRule rule;
@@ -48,15 +52,54 @@ public class TocSpider extends AbstractPageable<Chapter> {
     private String uniqueId = "none";
     private int order = 1;
 
-    /**
-     * 章节顺序比较器
-     */
-    public static final ChapterComparator CHAPTER_COMPARATOR = new ChapterComparator();
-
     public TocSpider(AnalyzerRule rule) {
         this.rule = rule;
         // 不忽略错误
         super.setIgnoreError(false);
+    }
+
+    /**
+     * 预处理目录
+     *
+     * @param toc     目录
+     * @param baseUrl BaseURL
+     * @param tocRule 规则
+     * @param order   起始序号
+     * @return 预处理后的目录
+     */
+    public static List<Chapter> pretreatmentToc(List<Chapter> toc, String baseUrl, TocRule tocRule, int order) {
+        if (CollectionUtils.isNotEmpty(toc)) {
+            // 去重，并且移除javascript的链接
+            toc = toc.stream()
+                .distinct()
+                .filter(chapter -> !chapter.getUrl().startsWith("javascript"))
+                .collect(Collectors.toList());
+            if (tocRule != null) {
+                // 移除黑名单列表
+                if (CollectionUtils.isNotEmpty(tocRule.getBlackUrls())) {
+                    List<Chapter> blackList = toc.stream()
+                        .filter(chapter -> tocRule.getBlackUrls().contains(chapter.getUrl()))
+                        .collect(Collectors.toList());
+                    toc.removeAll(blackList);
+                }
+                // 章节过滤
+                if (tocRule.isFilter()) {
+                    toc = AnalyzerHelper.filterImpuritiesChapters(toc);
+                }
+            }
+            // 自动拼接完整URL
+            toc.stream()
+                .filter(chapter -> !UrlUtils.isHttpUrl(chapter.getUrl()))
+                .forEach(chapter -> chapter.setUrl(UrlUtils.completeUrl(baseUrl, chapter.getUrl())));
+            if (tocRule != null && tocRule.isSort()) {
+                toc.sort(CHAPTER_COMPARATOR);
+            }
+            // 编号
+            for (Chapter chapter : toc) {
+                chapter.setOrder(order++);
+            }
+        }
+        return toc;
     }
 
     /**
@@ -110,16 +153,16 @@ public class TocSpider extends AbstractPageable<Chapter> {
         boolean hasMore = false;
         if (tocRule.isAllowNextPage()) {
             // 获取网页唯一ID 为 网页标题只留下了中文（不包含零到十）
-            String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
+            String pageUniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
             String nextPageUrl = AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl());
-            // 下一页存在 条件：下一页不为空 && 唯一ID相等或者是第一页 && 允许翻页
-            hasMore = StringUtils.isNotBlank(nextPageUrl) && (Objects.equals(uniqueId, this.uniqueId) || page == 1);
+            // 下一页存在 条件：下一页不为空 并且 唯一ID相等或者是第一页 并且 允许翻页
+            hasMore = StringUtils.isNotBlank(nextPageUrl) && (Objects.equals(pageUniqueId, this.uniqueId) || page == 1);
             if (CollectionUtils.isNotEmpty(chapters)) {
                 hasMore = addItems(chapters) && hasMore;
                 log.trace("小说目录 第{}页 抓取完成，共{}章.", page, chapters.size());
             }
             if (hasMore) {
-                this.uniqueId = uniqueId;
+                this.uniqueId = pageUniqueId;
                 this.params.setUrl(nextPageUrl);
             } else {
                 // 已经抓取完成
@@ -127,53 +170,6 @@ public class TocSpider extends AbstractPageable<Chapter> {
             }
         }
         return hasMore;
-    }
-
-    /**
-     * 预处理目录
-     *
-     * @param toc     目录
-     * @param baseUrl BaseURL
-     * @param tocRule 规则
-     * @param order   起始序号
-     * @return 预处理后的目录
-     */
-    public static List<Chapter> pretreatmentToc(List<Chapter> toc, String baseUrl, TocRule tocRule, int order) {
-        if (CollectionUtils.isNotEmpty(toc)) {
-            // 去重，并且移除javascript的链接
-            toc = toc.stream()
-                .distinct()
-                .filter(chapter -> !chapter.getUrl().startsWith("javascript"))
-                .collect(Collectors.toList());
-            if (tocRule != null) {
-                // 移除黑名单列表
-                if (CollectionUtils.isNotEmpty(tocRule.getBlackUrls())) {
-                    List<Chapter> blackList = toc.stream()
-                        .filter(chapter -> tocRule.getBlackUrls().contains(chapter.getUrl()))
-                        .collect(Collectors.toList());
-                    toc.removeAll(blackList);
-                }
-                // 章节过滤
-                if (tocRule.isFilter()) {
-                    toc = AnalyzerHelper.filterImpuritiesChapters(toc);
-                }
-            }
-            // 自动拼接完整URL
-            toc.stream()
-                .filter(chapter -> !UrlUtils.isHttpUrl(chapter.getUrl()))
-                .forEach(chapter -> chapter.setUrl(UrlUtils.completeUrl(baseUrl, chapter.getUrl())));
-            if (tocRule != null) {
-                // 乱序重排
-                if (tocRule.isSort()) {
-                    toc.sort(CHAPTER_COMPARATOR);
-                }
-            }
-            // 编号
-            for (Chapter chapter : toc) {
-                chapter.setOrder(order++);
-            }
-        }
-        return toc;
     }
 
     /**

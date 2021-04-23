@@ -2,7 +2,6 @@ package com.unclezs.novel.analyzer.common.concurrent.factory;
 
 
 import lombok.NonNull;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
