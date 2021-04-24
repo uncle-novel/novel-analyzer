@@ -6,7 +6,6 @@ import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * 解析规则
@@ -33,6 +32,10 @@ public class AnalyzerRule implements Serializable, Verifiable {
    * 启用
    */
   private boolean enabled = true;
+  /**
+   * 是否为文本小说
+   */
+  private boolean audio = false;
   /**
    * 权重(越高优先被搜索)
    */

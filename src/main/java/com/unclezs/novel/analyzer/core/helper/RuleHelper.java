@@ -10,15 +10,18 @@ import com.unclezs.novel.analyzer.core.rule.ReplaceRule;
 import com.unclezs.novel.analyzer.model.Pair;
 import com.unclezs.novel.analyzer.util.BeanUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 规则辅助器
@@ -41,6 +44,11 @@ public class RuleHelper {
    * 所有规则
    */
   private static final Map<String, AnalyzerRule> RULES = new HashMap<>();
+  /**
+   * 规则改变监听
+   */
+  @Setter
+  private static Consumer<List<AnalyzerRule>> onRuleChangeListener;
 
   /**
    * 获取规则
@@ -64,9 +72,9 @@ public class RuleHelper {
     if (rule == null) {
       rule = new AnalyzerRule();
       String host = UrlUtils.getHost(url);
-      rule.setSite(host);
+      rule.setSite(url);
       rule.setName(host);
-      RULES.put(host, rule);
+      addRule(rule);
     }
     return rule;
   }
@@ -99,11 +107,29 @@ public class RuleHelper {
    */
   public static int setRules(List<AnalyzerRule> rules) {
     RULES.clear();
-    for (AnalyzerRule rule : rules) {
-      RULES.put(UrlUtils.getHost(rule.getSite()), rule);
-    }
-    log.info("本次加载规则共：{} 个", rules.size());
+    RuleHelper.addRule(rules);
     return rules.size();
+  }
+
+  /**
+   * 添加规则，触发监听
+   *
+   * @param rule 规则
+   */
+  public static void addRule(AnalyzerRule rule) {
+    addRule(Collections.singletonList(rule));
+  }
+
+  /**
+   * 添加规则，触发监听
+   *
+   * @param rules 规则
+   */
+  public static void addRule(List<AnalyzerRule> rules) {
+    rules.forEach(rule -> RULES.put(UrlUtils.getHost(rule.getSite()), rule));
+    if (onRuleChangeListener != null) {
+      onRuleChangeListener.accept(rules());
+    }
   }
 
   /**

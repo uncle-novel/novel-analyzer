@@ -169,6 +169,7 @@ public class RuleTester {
         novelList.add(novel);
       });
       searchSpider.search(keyword);
+      searchSpider.loadAll();
       printFooter(type, page.get());
       return novelList;
     } catch (Exception e) {

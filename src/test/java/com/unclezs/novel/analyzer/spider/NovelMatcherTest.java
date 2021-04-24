@@ -68,7 +68,7 @@ public class NovelMatcherTest {
 
   @Test
   public void testSearchEngine() throws IOException {
-    AnalyzerRule rule = RuleHelper.getRule("http://www.quanben.me/modules/article/search.php");
+    AnalyzerRule rule = RuleHelper.getRule("https://www.zhaishuyuan.com/search/");
     List<AnalyzerRule> rules = Collections.singletonList(rule);
     SearchSpider searchSpider = new SearchSpider(rules);
     searchSpider.setOnNewItemAddHandler(novel -> {
