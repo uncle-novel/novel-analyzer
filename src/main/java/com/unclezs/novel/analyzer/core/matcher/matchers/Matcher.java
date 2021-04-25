@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -169,7 +170,7 @@ public abstract class Matcher {
      * @param src   净化内容
      * @return 净化后结果
      */
-    private String purify(List<ReplaceRule> rules, String src) {
+    private String purify(Set<ReplaceRule> rules, String src) {
         if (CollectionUtils.isNotEmpty(rules)) {
             for (ReplaceRule rule : rules) {
                 // 包含模板则进行模板替换

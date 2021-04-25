@@ -5,6 +5,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.unclezs.novel.analyzer.core.matcher.matchers.DefaultTextMatcher;
+import com.unclezs.novel.analyzer.core.matcher.matchers.text.DefaultContentMatcher;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Verifiable;
@@ -39,7 +41,7 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
   /**
    * 正文
    */
-  private CommonRule content;
+  private CommonRule content = CommonRule.create(DefaultTextMatcher.DEFAULT_RULE_TYPE, DefaultTextMatcher.DEFAULT_ORDER);
   /**
    * 正文下一页规则（存在则会匹配下一页）
    */

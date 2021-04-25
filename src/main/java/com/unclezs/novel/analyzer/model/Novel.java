@@ -4,6 +4,7 @@ import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  * @date 2020/12/23 18:42
  */
 @Data
-public class Novel {
+public class Novel implements Serializable {
   /**
    * 目录链接
    */

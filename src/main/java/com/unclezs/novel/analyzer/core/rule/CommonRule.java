@@ -19,8 +19,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -90,7 +90,7 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
   /**
    * 净化规则
    */
-  private List<ReplaceRule> replace;
+  private Set<ReplaceRule> replace;
 
   /**
    * 是否为有效的规则
@@ -181,6 +181,19 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
         rule.setRuleString(ruleString);
       }
     };
+  }
+
+  /**
+   * 添加净化规则
+   *
+   * @param rule 净化规则
+   */
+  public void addReplaceRule(ReplaceRule rule) {
+    if (this.replace == null) {
+      this.replace = new HashSet<>();
+    }
+    this.replace.remove(rule);
+    this.replace.add(rule);
   }
 
   /**
@@ -293,8 +306,8 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
    * @param context                上下文
    * @return 净化规则列表
    */
-  private List<ReplaceRule> handlePurifyRule(JsonElement purifyRulesJsonElement, JsonDeserializationContext context) {
-    List<ReplaceRule> replaceRules = new ArrayList<>();
+  private Set<ReplaceRule> handlePurifyRule(JsonElement purifyRulesJsonElement, JsonDeserializationContext context) {
+    Set<ReplaceRule> replaceRules = new HashSet<>();
     // 只有一个 可以为json对象
     if (purifyRulesJsonElement.isJsonObject()) {
       ReplaceRule replaceRule = context.deserialize(purifyRulesJsonElement, ReplaceRule.class);

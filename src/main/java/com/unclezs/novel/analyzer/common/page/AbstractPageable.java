@@ -208,7 +208,7 @@ public abstract class AbstractPageable<T> implements Pageable {
    *
    * @return true已经被取消
    */
-  protected boolean isCanceled() {
+  public boolean isCanceled() {
     return CANCELED.get() == null;
   }
 

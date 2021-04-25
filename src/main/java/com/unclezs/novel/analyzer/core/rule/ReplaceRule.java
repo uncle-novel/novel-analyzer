@@ -11,11 +11,13 @@ import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 净化规则
@@ -99,5 +101,18 @@ public class ReplaceRule implements Serializable, JsonDeserializer<ReplaceRule> 
       return replaceRule;
     }
     return null;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ReplaceRule that = (ReplaceRule) o;
+    return Objects.equals(from, that.from);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(from);
   }
 }
