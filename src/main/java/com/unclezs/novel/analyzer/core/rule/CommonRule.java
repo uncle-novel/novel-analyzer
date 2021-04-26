@@ -12,7 +12,6 @@ import com.google.gson.JsonSerializer;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.matcher.MatcherManager;
 import com.unclezs.novel.analyzer.model.Pair;
-import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Data;
@@ -71,10 +70,6 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
    * 规则匹配的页面 比如 detail：详情页  search：搜索页
    */
   private String page;
-  /**
-   * 请求参数
-   */
-  private RequestParams params;
   /**
    * 匹配器类型 可以手动填写这个，如果不填写则从规则进行解析
    */
@@ -258,10 +253,10 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
     // 规则是个对象
     if (json.isJsonObject()) {
       JsonObject ruleJson = json.getAsJsonObject();
-      JsonElement paramsElement = ruleJson.get("params");
-      if (paramsElement != null) {
-        commonRule.setParams(context.deserialize(paramsElement, RequestParams.class));
-      }
+//      JsonElement paramsElement = ruleJson.get("params");
+//      if (paramsElement != null) {
+//        commonRule.setParams(context.deserialize(paramsElement, RequestParams.class));
+//      }
       // 规则类型
       commonRule.setPage(GsonUtils.getOrDefault(ruleJson, "page", null));
       // 规则类型
@@ -344,7 +339,7 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
 
   @Override
   public JsonElement serialize(CommonRule commonRule, Type type, JsonSerializationContext jsonSerializationContext) {
-    if (commonRule.params == null && (commonRule.replace == null || commonRule.replace.size() <= 1)) {
+    if (commonRule.replace == null || commonRule.replace.size() <= 1) {
       return new JsonPrimitive(commonRule.ruleString());
     }
     return GsonUtils.me().toJsonTree(commonRule);

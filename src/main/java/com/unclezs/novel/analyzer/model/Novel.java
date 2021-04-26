@@ -21,7 +21,7 @@ public class Novel implements Serializable {
   /**
    * 书名
    */
-  private String title = StringUtils.EMPTY;
+  private String title;
   /**
    * 作者
    */

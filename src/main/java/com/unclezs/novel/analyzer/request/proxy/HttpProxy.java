@@ -1,7 +1,10 @@
 package com.unclezs.novel.analyzer.request.proxy;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,33 +14,28 @@ import java.util.Objects;
  * @date 2020/12/27 12:39 下午
  */
 @Data
-public class HttpProxy {
-    public static final HttpProxy NO_PROXY = new HttpProxy("127.0.0.1", 80);
-    private String host;
-    private Integer port;
+@NoArgsConstructor
+@AllArgsConstructor
+public class HttpProxy implements Serializable {
+  public static final HttpProxy NO_PROXY = new HttpProxy("127.0.0.1", 80);
+  private static final long serialVersionUID = 5277637191594804618L;
+  private String host;
+  private Integer port;
 
-    public HttpProxy() {
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    HttpProxy httpProxy = (HttpProxy) o;
+    return Objects.equals(host, httpProxy.host) && Objects.equals(port, httpProxy.port);
+  }
 
-    public HttpProxy(String host, Integer port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        HttpProxy httpProxy = (HttpProxy) o;
-        return Objects.equals(host, httpProxy.host) && Objects.equals(port, httpProxy.port);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(host, port);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(host, port);
+  }
 }

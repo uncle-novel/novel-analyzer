@@ -25,10 +25,6 @@ import java.util.List;
 public class FileUtils {
     public static final String USER_DIR = System.getProperty("user.dir");
 
-    static {
-        log.debug("当前工作目录：{}", USER_DIR);
-    }
-
     /**
      * 删除文件
      *

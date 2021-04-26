@@ -89,7 +89,7 @@ public class TocSpider extends AbstractPageable<Chapter> {
           toc.removeAll(blackList);
         }
         // 章节过滤
-        if (tocRule.isFilter()) {
+        if (Boolean.TRUE.equals(tocRule.getFilter())) {
           toc = AnalyzerHelper.filterImpuritiesChapters(toc);
         }
       }
@@ -97,7 +97,7 @@ public class TocSpider extends AbstractPageable<Chapter> {
       toc.stream()
         .filter(chapter -> !UrlUtils.isHttpUrl(chapter.getUrl()))
         .forEach(chapter -> chapter.setUrl(UrlUtils.completeUrl(baseUrl, chapter.getUrl())));
-      if (tocRule != null && tocRule.isSort()) {
+      if (tocRule != null && Boolean.TRUE.equals(tocRule.getSort())) {
         toc.sort(CHAPTER_COMPARATOR);
       }
       // 编号
@@ -111,22 +111,12 @@ public class TocSpider extends AbstractPageable<Chapter> {
   /**
    * 获取小说目录
    *
-   * @param url 目录URL
+   * @param url 目录地址
    * @throws IOException IO异常
    */
   public void toc(String url) throws IOException {
-    toc(RequestParams.create(url));
-  }
-
-  /**
-   * 获取小说目录
-   *
-   * @param params 请求参数
-   * @throws IOException IO异常
-   */
-  public void toc(RequestParams params) throws IOException {
     this.order = 1;
-    this.params = params.copy();
+    this.params = RequestParams.create(url, rule.getToc().getParams());
     super.firstLoad();
   }
 
@@ -152,7 +142,7 @@ public class TocSpider extends AbstractPageable<Chapter> {
   protected boolean loadPage(int page) throws IOException {
     TocRule tocRule = getRule().getToc();
     // 获取网页内容
-    String originalText = SpiderHelper.request(null, params);
+    String originalText = SpiderHelper.request(rule.getParams(), params);
     // 解析小说详情，从目录页
     if (page == 1) {
       this.novel = NovelMatcher.details(originalText, rule.getDetail());

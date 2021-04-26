@@ -31,15 +31,19 @@ public class AnalyzerRule implements Serializable, Verifiable {
   /**
    * 启用
    */
-  private boolean enabled = true;
+  private Boolean enabled = true;
   /**
    * 是否为文本小说
    */
-  private boolean audio = false;
+  private Boolean audio = false;
   /**
    * 权重(越高优先被搜索)
    */
   private int weight = 0;
+  /**
+   * 默认全局参数
+   */
+  private Params params = new Params();
   /**
    * 正文
    */

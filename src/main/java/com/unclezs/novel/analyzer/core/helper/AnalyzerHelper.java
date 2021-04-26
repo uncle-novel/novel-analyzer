@@ -156,10 +156,10 @@ public class AnalyzerHelper {
      */
     private static <T> void computeUrlFeatures(Map<Integer, List<T>> results, int features, String url, T item) {
         // 移除末尾的 /
-        if (url.endsWith(StringUtils.DELIMITER)) {
+        if (url.endsWith(StringUtils.BACKSLASH)) {
             url = url.substring(0, url.length() - 1);
         }
-        String[] parts = url.split(StringUtils.DELIMITER);
+        String[] parts = url.split(StringUtils.BACKSLASH);
         // 特征为 URL目录深度
         features += parts.length;
         if (parts.length > 1) {

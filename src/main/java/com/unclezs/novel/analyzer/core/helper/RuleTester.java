@@ -99,7 +99,7 @@ public class RuleTester {
         messageConsumer.accept("正文规则无效，采用自动解析模式!!");
       }
       AtomicInteger page = new AtomicInteger(0);
-      spider.content(RequestParams.create(url), str -> {
+      spider.content(url, str -> {
         printPage(type, page.incrementAndGet());
         messageConsumer.accept(str.concat(LF));
       });
@@ -124,7 +124,7 @@ public class RuleTester {
       }
       AtomicInteger page = new AtomicInteger(0);
       List<Chapter> toc = new ArrayList<>();
-      spider.toc(RequestParams.create(url), chapters -> {
+      spider.toc(url, chapters -> {
         if (CollectionUtils.isNotEmpty(chapters)) {
           printPage(type, page.incrementAndGet());
           StringJoiner chapterJoiner = new StringJoiner(LF);

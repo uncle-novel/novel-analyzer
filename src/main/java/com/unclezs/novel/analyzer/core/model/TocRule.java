@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer.core.model;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Verifiable;
+import com.unclezs.novel.analyzer.request.RequestParams;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -35,70 +36,70 @@ import java.util.Set;
  */
 @Data
 public class TocRule implements Verifiable, Serializable {
-    private static final long serialVersionUID = -6824834231883722483L;
-    /**
-     * 章节列表
-     */
-    private CommonRule list;
-    /**
-     * 章节名称
-     */
-    private CommonRule name;
-    /**
-     * 章节链接
-     */
-    private CommonRule url;
-    /**
-     * 章节下一页规则（存在则会匹配下一页）
-     */
-    private CommonRule next = CommonRule.create("xpath", RuleConstant.NEXT_PAGE_RULE);
-    /**
-     * 章节翻页
-     */
-    private boolean enableNext = true;
-    /**
-     * 章节黑名单链接（其中的链接不会加入到章节列表）
-     */
-    private Set<String> blackUrls;
-    /**
-     * 章节过滤
-     */
-    private boolean filter = true;
-    /**
-     * 章节逆序
-     */
-    private boolean reserve;
-    /**
-     * 章节乱序重排
-     */
-    private boolean sort;
+  private static final long serialVersionUID = -6824834231883722483L;
+  /**
+   * 请求参数
+   */
+  private RequestParams params;
+  /**
+   * 章节列表
+   */
+  private CommonRule list;
+  /**
+   * 章节名称
+   */
+  private CommonRule name;
+  /**
+   * 章节链接
+   */
+  private CommonRule url;
+  /**
+   * 章节下一页规则（存在则会匹配下一页）
+   */
+  private CommonRule next = CommonRule.create("xpath", RuleConstant.NEXT_PAGE_RULE);
+  /**
+   * 章节翻页
+   */
+  private Boolean enableNext = true;
+  /**
+   * 章节黑名单链接（其中的链接不会加入到章节列表）
+   */
+  private Set<String> blackUrls;
+  /**
+   * 章节过滤
+   */
+  private Boolean filter = true;
+  /**
+   * 章节乱序重排
+   */
+  private Boolean sort;
 
-    /**
-     * 目录规则是否有效
-     *
-     * @param rule 目录规则
-     * @return true 有效
-     */
-    public static boolean isEffective(TocRule rule) {
-        return rule != null && rule.isEffective();
-    }
+  /**
+   * 目录规则是否有效
+   *
+   * @param rule 目录规则
+   * @return true 有效
+   */
+  public static boolean isEffective(TocRule rule) {
+    return rule != null && rule.isEffective();
+  }
 
-    /**
-     * 是否允许章节翻页 规则必须存在
-     *
-     * @return /
-     */
-    public boolean isAllowNextPage() {
-        return enableNext && CommonRule.isEffective(next);
-    }
+  /**
+   * 是否允许章节翻页 规则必须存在
+   *
+   * @return /
+   */
+  public boolean isAllowNextPage() {
+    return enableNext && CommonRule.isEffective(next);
+  }
 
-    /**
-     * 章节规则是否有效
-     *
-     * @return /
-     */
-    @Override
-    public boolean isEffective() {
-        return CommonRule.isEffective(list) && CommonRule.hasRule(name) && CommonRule.hasRule(url);
-    }
+  /**
+   * 章节规则是否有效
+   *
+   * @return /
+   */
+  @Override
+  public boolean isEffective() {
+    return CommonRule.isEffective(list) && CommonRule.hasRule(name) && CommonRule.hasRule(url);
+  }
 }

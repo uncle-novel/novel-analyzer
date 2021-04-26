@@ -57,7 +57,13 @@ public class UrlUtils {
    * @return 域名
    */
   public static String getSite(String url) {
-    return UrlUtils.isHttpUrl(url) ? RegexUtils.get("(http[s]{0,1}://.+?)/", url + "/", 1) : url;
+    if (UrlUtils.isHttpUrl(url)) {
+      String site = RegexUtils.get("(http[s]{0,1}://.+?)/", url + "/", 1);
+      if (StringUtils.isNotBlank(site)) {
+        return site.concat(StringUtils.BACKSLASH);
+      }
+    }
+    return url;
   }
 
 
@@ -116,7 +122,7 @@ public class UrlUtils {
    */
   public static String getUrlLastPathNotSuffix(String url) {
     String str = url.replaceAll("\\.htm.*", StringUtils.EMPTY);
-    int i = str.lastIndexOf(StringUtils.DELIMITER);
+    int i = str.lastIndexOf(StringUtils.BACKSLASH);
     return str.substring(i + 1);
   }
 
@@ -192,7 +198,7 @@ public class UrlUtils {
       //noinspection ConstantConditions
       body = body.replaceAll("^[\\\\/]+", StringUtils.EMPTY);
       // 替换多个\或/为单个/
-      body = body.replace("\\", StringUtils.DELIMITER);
+      body = body.replace("\\", StringUtils.BACKSLASH);
       //issue#I25MZL，双斜杠在URL中是允许存在的，不做替换
     }
 

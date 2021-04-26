@@ -31,9 +31,13 @@ public class StringUtils {
    */
   public static final String LF = "\n";
   /**
-   * 分隔符
+   * 斜杠
    */
-  public static final String DELIMITER = "/";
+  public static final String SLASH = "/";
+  /**
+   * 反斜杠
+   */
+  public static final String BACKSLASH = "/";
   /**
    * HTML的空白标签
    */

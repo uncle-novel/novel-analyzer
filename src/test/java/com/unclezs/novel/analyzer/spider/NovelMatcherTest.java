@@ -34,7 +34,7 @@ public class NovelMatcherTest {
     RequestParams params = RequestParams.create("https://vipreader.qidian.com/chapter/1020842452/549224997");
     params.setDynamic(true);
     params.addHeader("Cookie", "_csrfToken=kvjXnYAXzq40X2lCbM4KEYuDRbk3XDdxLhzYk60w; newstatisticUUID=1616218128_966730623; qdrs=6%7C3%7C0%7C0%7C1; showSectionCommentGuide=1; qdgd=1; lrbc=1020842452%7C549224997%7C1; rcr=1020842452; bc=1020842452; ywkey=yw7X12MWXfBd; ywguid=1585503310; ywopenid=7387FAAE42281F44434B7CF4977CFD3E; pageOps=1");
-    String content = spider.content(params);
+    String content = spider.content("params");
     System.out.println(content);
   }
 
@@ -60,7 +60,7 @@ public class NovelMatcherTest {
     AnalyzerRule analyzerRule = new AnalyzerRule();
     ContentRule contentRule = new ContentRule();
     CommonRule content = CommonRule.create("css:#chaptercontent@text");
-    content.setReplace(Collections.singletonList(new ReplaceRule("『章节错误，点此举报』.+?无广告！", "")));
+    content.setReplace(Collections.singleton(new ReplaceRule("『章节错误，点此举报』.+?无广告！", "")));
     contentRule.setContent(content);
     analyzerRule.setContent(contentRule);
     new RuleTester(analyzerRule).content(url);

@@ -62,6 +62,21 @@ public class RuleHelper {
   }
 
   /**
+   * 获取规则
+   *
+   * @param url 网站
+   * @return 规则不存在则创建
+   */
+  public static AnalyzerRule getOrDefault(String url) {
+    AnalyzerRule rule = getRule(url);
+    if (rule == null) {
+      rule = new AnalyzerRule();
+      rule.setSite(UrlUtils.getSite(url));
+    }
+    return rule;
+  }
+
+  /**
    * 获取规则，不存在则使用默认，并存下来
    *
    * @param url 网址

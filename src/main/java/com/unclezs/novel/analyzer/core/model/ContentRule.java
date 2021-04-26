@@ -6,10 +6,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.unclezs.novel.analyzer.core.matcher.matchers.DefaultTextMatcher;
-import com.unclezs.novel.analyzer.core.matcher.matchers.text.DefaultContentMatcher;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Verifiable;
+import com.unclezs.novel.analyzer.request.RequestParams;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -37,7 +37,11 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
   /**
    * 正文翻页
    */
-  private boolean enableNext = true;
+  private Boolean enableNext;
+  /**
+   * 请求参数
+   */
+  private RequestParams params;
   /**
    * 正文
    */
@@ -62,7 +66,7 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
    * @return /
    */
   public boolean isAllowNextPage() {
-    return enableNext && CommonRule.isEffective(next);
+    return Boolean.TRUE.equals(enableNext) && CommonRule.isEffective(next);
   }
 
   /**

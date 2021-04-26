@@ -1,8 +1,10 @@
 package com.unclezs.novel.analyzer.request;
 
+import com.unclezs.novel.analyzer.core.model.Params;
 import com.unclezs.novel.analyzer.model.Verifiable;
 import com.unclezs.novel.analyzer.request.proxy.HttpProxy;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
+import com.unclezs.novel.analyzer.util.SerializationUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestParams implements Cloneable, Verifiable, Serializable {
+public class RequestParams implements Verifiable, Serializable {
   public static final String REFERER = "Referer";
   public static final String COOKIE = "Cookie";
   public static final String USER_AGENT = "User-Agent";
@@ -40,8 +42,7 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
   /**
    * 请求方法
    */
-  @Builder.Default
-  private String method = "GET";
+  private String method;
   /**
    * 网页编码
    */
@@ -53,18 +54,15 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
   /**
    * 请求方式
    */
-  @Builder.Default
-  private String mediaType = MediaType.FORM.getMediaType();
+  private String mediaType;
   /**
    * 请求体
    */
-  @Builder.Default
-  private String body = StringUtils.EMPTY;
+  private String body;
   /**
    * 是否为动态网页
    */
-  @Builder.Default
-  private boolean dynamic = false;
+  private Boolean dynamic;
   /**
    * HTTP代理信息
    */
@@ -72,16 +70,14 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
   /**
    * 启用HTTP代理 标记允许代理 如果开发了全局代理配置这个字段将会自动设置为true
    */
-  @Builder.Default
-  private boolean enableProxy = false;
+  private Boolean enableProxy;
   /**
    * 自动代理
    * 请在全局代理中开启自动代理配置 并且设置此字段为true 才会真正启用全局代理
    * 这么做是为了方便全局控制代理的热拔插
    * 优先级 先判断此此字段为true 再判断全局AnalyzerManager.autoProxy是否开启
    */
-  @Builder.Default
-  private boolean autoProxy = true;
+  private Boolean autoProxy;
 
   /**
    * 默认请求配置
@@ -91,6 +87,23 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
    */
   public static RequestParams create(String url) {
     return builder().url(url).build();
+  }
+
+  /**
+   * 创建一个请求
+   *
+   * @param url    网页链接
+   * @param params 请求参数
+   * @return RequestParams
+   */
+  public static RequestParams create(String url, RequestParams params) {
+    if (params == null) {
+      params = new RequestParams();
+    } else {
+      params = params.copy();
+    }
+    params.setUrl(url);
+    return params;
   }
 
   public String getMethod() {
@@ -106,7 +119,7 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
     if (this.proxy == null || this.proxy == HttpProxy.NO_PROXY) {
       return false;
     }
-    return enableProxy;
+    return Boolean.TRUE.equals(enableProxy);
   }
 
   /**
@@ -132,16 +145,7 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
    * @return /
    */
   public RequestParams copy() {
-    try {
-      return (RequestParams) clone();
-    } catch (CloneNotSupportedException e) {
-      throw new RuntimeException("clone requestData error.", e);
-    }
-  }
-
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    return super.clone();
+    return SerializationUtils.deepClone(this);
   }
 
   /**
@@ -168,7 +172,7 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
     if (CollectionUtils.isNotEmpty(headers)) {
       return headers.get(headerName);
     }
-    return StringUtils.EMPTY;
+    return null;
   }
 
   /**
@@ -233,6 +237,33 @@ public class RequestParams implements Cloneable, Verifiable, Serializable {
     for (String headerLine : headerLines) {
       String[] split = headerLine.split(HEADER_SEPARATOR);
       headers.put(split[0], split[1]);
+    }
+  }
+
+  /**
+   * 覆盖默认参数
+   *
+   * @param params 参数
+   */
+  public void overrideParams(Params params) {
+    if (params == null) {
+      return;
+    }
+    // cookie
+    if (StringUtils.isNotBlank(params.getCookie()) && getHeader(RequestParams.COOKIE) == null) {
+      setHeader(RequestParams.COOKIE, params.getCookie());
+    }
+    // ua
+    if (StringUtils.isNotBlank(params.getUserAgent()) && getHeader(RequestParams.USER_AGENT) == null) {
+      setHeader(RequestParams.USER_AGENT, params.getUserAgent());
+    }
+    // 动态网页
+    if (Boolean.TRUE.equals(params.getDynamic())) {
+      setDynamic(true);
+    }
+    // 代理
+    if (Boolean.TRUE.equals(params.getEnabledProxy())) {
+      setEnableProxy(true);
     }
   }
 

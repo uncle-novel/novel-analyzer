@@ -65,7 +65,7 @@ public class SearchSpider extends AbstractPageable<Novel> {
       if (!isVisited(rule.getSite())) {
         try {
           AtomicBoolean siteHasMore = new AtomicBoolean();
-          List<Novel> novels = NovelMatcher.search(page, keyword, rule.getSearch(), novel -> {
+          List<Novel> novels = NovelMatcher.search(page, keyword, rule, novel -> {
             // 如果已经取消了则不再执行 并且如果有新的则认为还有下一页
             if (!isCanceled() && addItem(novel)) {
               siteHasMore.set(true);

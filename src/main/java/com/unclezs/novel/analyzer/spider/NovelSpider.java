@@ -50,28 +50,21 @@ public class NovelSpider {
    * @throws IOException IO异常
    */
   public String content(String url) throws IOException {
-    return content(RequestParams.create(url));
+    return content(url, null).getData();
   }
 
   /**
    * 获取小说正文
    *
-   * @param params 请求
+   * @param url 正文链接
    * @throws IOException IO异常
    */
-  public String content(RequestParams params) throws IOException {
-    return content(params, null).getData();
-  }
-
-  /**
-   * 获取小说正文
-   *
-   * @param params 请求
-   * @throws IOException IO异常
-   */
-  public Result<String> content(RequestParams params, Consumer<String> pageConsumer) throws IOException {
+  public Result<String> content(String url, Consumer<String> pageConsumer) throws IOException {
     ContentRule contentRule = getRule().getContent();
-    String originalText = SpiderHelper.request(null, params);
+    // 请求参数
+    RequestParams params = RequestParams.create(url, contentRule.getParams());
+
+    String originalText = request(params);
     StringBuilder contentBuilder = new StringBuilder();
     String content = NovelMatcher.content(originalText, contentRule);
     contentBuilder.append(content);
@@ -82,11 +75,11 @@ public class NovelSpider {
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
     int page = 1;
     // 如果允许下一页
-    if (contentRule != null && contentRule.isAllowNextPage()) {
+    if (contentRule.isAllowNextPage()) {
       String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
       params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
       while (visited.add(params.getUrl())) {
-        originalText = SpiderHelper.request(contentRule.getContent(), params);
+        originalText = request(params);
         // 判断是否符合本页为同一
         if (!uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
           break;
@@ -113,29 +106,21 @@ public class NovelSpider {
    * @throws IOException IO异常
    */
   public List<Chapter> toc(String url) throws IOException {
-    return toc(RequestParams.create(url));
+    return toc(url, null);
   }
 
   /**
    * 获取小说章节列表
    *
-   * @param params 目录地址
-   * @throws IOException IO异常
-   */
-  public List<Chapter> toc(RequestParams params) throws IOException {
-    return toc(params, null);
-  }
-
-  /**
-   * 获取小说章节列表
-   *
-   * @param params       目录地址
+   * @param url          目录地址
    * @param pageConsumer 单页抓取完成回调
    * @throws IOException IO异常
    */
-  public List<Chapter> toc(RequestParams params, Consumer<List<Chapter>> pageConsumer) throws IOException {
+  public List<Chapter> toc(String url, Consumer<List<Chapter>> pageConsumer) throws IOException {
     TocRule tocRule = getRule().getToc();
-    String originalText = SpiderHelper.request(null, params);
+    RequestParams params = tocRule.getParams();
+    params.setUrl(url);
+    String originalText = request(params);
     List<Chapter> toc = NovelMatcher.toc(originalText, tocRule);
     if (pageConsumer != null) {
       pageConsumer.accept(toc);
@@ -143,12 +128,12 @@ public class NovelSpider {
     // 记录已经访问过的页面
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
     // 如果允许下一页
-    if (tocRule != null && tocRule.isAllowNextPage()) {
+    if (tocRule.isAllowNextPage()) {
       String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
       params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
       // 如果是新的链接则进行
       while (visited.add(params.getUrl())) {
-        originalText = SpiderHelper.request(null, params);
+        originalText = request(params);
         // 判断是否符合本页为同一
         if (!uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
           break;
@@ -177,9 +162,13 @@ public class NovelSpider {
    * @return 小说信息
    */
   public Novel details(RequestParams params) throws IOException {
-    Novel novel = NovelMatcher.details(SpiderHelper.request(params), getRule().getDetail());
+    Novel novel = NovelMatcher.details(request(params), getRule().getDetail());
     // 对相对路径自动完整URL
     novel.competeUrl(params.getUrl());
     return novel;
+  }
+
+  private String request(RequestParams params) throws IOException {
+    return SpiderHelper.request(rule.getParams(), params);
   }
 }
