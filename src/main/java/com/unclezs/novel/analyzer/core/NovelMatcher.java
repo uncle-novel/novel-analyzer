@@ -117,7 +117,7 @@ public class NovelMatcher {
       // 预处理请求参数
       SearchHelper.pretreatmentSearchParam(params, page, keyword);
       // 请求网页
-      String originalText = SpiderHelper.request(null, params);
+      String originalText = SpiderHelper.request(rule.getParams(), params);
       // 列表规则
       CommonRule listRule = searchRule.getList();
       Map<String, CommonRule> childRuleMap = Matchers.getChildMap(listRule.getType(), searchRule.getDetail());
@@ -138,10 +138,10 @@ public class NovelMatcher {
             Map<String, CommonRule> detailPage = new HashMap<>(16);
             Map<String, CommonRule> searchPage = new HashMap<>(16);
             childRuleMap.forEach((k, v) -> {
-              if (RuleConstant.DETAIL_PAGE.equals(v.getPage())) {
-                detailPage.put(k, v);
-              } else {
+              if (RuleConstant.SEARCH_PAGE.equals(v.getPage())) {
                 searchPage.put(k, v);
+              } else {
+                detailPage.put(k, v);
               }
             });
             // 详情页与搜索页混合匹配

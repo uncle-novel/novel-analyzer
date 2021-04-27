@@ -31,7 +31,6 @@ import java.util.function.Supplier;
  *    rule: "xpath://dic[@class='xx']"
  *    # 完整规则
  *    rule:{
- *      "params": "自定义请求参数"
  *      "type": "xx"
  *      "rule": "xpath://dic[@class='xx']"
  *      "script": "js脚本内容"

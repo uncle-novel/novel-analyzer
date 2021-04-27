@@ -187,7 +187,7 @@ public class RuleTester {
     String type = "详情解析";
     try {
       printHeader(type, rule.getDetail());
-      Novel novel = spider.details(RequestParams.create(url));
+      Novel novel = spider.details(url);
       printNovel(novel);
       printFooter(type);
     } catch (Exception e) {
@@ -281,6 +281,7 @@ public class RuleTester {
     StringJoiner novelJoiner = new StringJoiner(LF)
       .add("书名：" + novel.getTitle())
       .add("作者：" + novel.getAuthor())
+      .add("播音：" + novel.getBroadcast())
       .add("链接：" + novel.getUrl())
       .add("分类：" + novel.getCategory())
       .add("封面：" + novel.getCoverUrl())

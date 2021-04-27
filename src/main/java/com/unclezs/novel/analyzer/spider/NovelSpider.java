@@ -5,6 +5,7 @@ import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.ContentRule;
+import com.unclezs.novel.analyzer.core.model.DetailRule;
 import com.unclezs.novel.analyzer.core.model.TocRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
@@ -118,8 +119,7 @@ public class NovelSpider {
    */
   public List<Chapter> toc(String url, Consumer<List<Chapter>> pageConsumer) throws IOException {
     TocRule tocRule = getRule().getToc();
-    RequestParams params = tocRule.getParams();
-    params.setUrl(url);
+    RequestParams params = RequestParams.create(url, tocRule.getParams());
     String originalText = request(params);
     List<Chapter> toc = NovelMatcher.toc(originalText, tocRule);
     if (pageConsumer != null) {
@@ -158,11 +158,14 @@ public class NovelSpider {
   /**
    * 小说详情
    *
-   * @param params 详情页请求
+   * @param url 请求链接
    * @return 小说信息
    */
-  public Novel details(RequestParams params) throws IOException {
-    Novel novel = NovelMatcher.details(request(params), getRule().getDetail());
+  public Novel details(String url) throws IOException {
+    DetailRule detailRule = rule.getDetail();
+    RequestParams params = RequestParams.create(url, detailRule.getParams());
+    String originalText = request(params);
+    Novel novel = NovelMatcher.details(originalText, detailRule);
     // 对相对路径自动完整URL
     novel.competeUrl(params.getUrl());
     return novel;

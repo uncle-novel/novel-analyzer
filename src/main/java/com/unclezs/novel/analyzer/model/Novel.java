@@ -27,6 +27,10 @@ public class Novel implements Serializable {
    */
   private String author;
   /**
+   * 播音
+   */
+  private String broadcast;
+  /**
    * 分类
    */
   private String category;

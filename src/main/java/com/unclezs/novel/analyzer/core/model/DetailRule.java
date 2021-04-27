@@ -33,6 +33,10 @@ public class DetailRule implements Serializable, Verifiable {
    */
   private CommonRule author;
   /**
+   * 播音
+   */
+  private CommonRule broadcast;
+  /**
    * 分类
    */
   private CommonRule category;
