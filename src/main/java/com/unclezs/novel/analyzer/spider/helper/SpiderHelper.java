@@ -6,6 +6,7 @@ import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.util.FileUtils;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.Arrays;
  * @author blog.unclezs.com
  * @date 2021/02/10 16:53
  */
+@Slf4j
 @UtilityClass
 public class SpiderHelper {
   /**
@@ -56,9 +58,12 @@ public class SpiderHelper {
    *
    * @param dir      小说目录
    * @param filename 文件
+   * @param delete   合并后删除
    */
-  public static void mergeNovel(File dir, String filename) throws IOException {
-    FileUtils.deleteFile(filename);
+  public static void mergeNovel(File dir, String filename, boolean delete) throws IOException {
+    // 保存到父目录下
+    String saveFile = new File(dir.getParent(), filename).getAbsolutePath();
+    FileUtils.deleteFile(saveFile);
     File[] txtFiles = dir.listFiles((dir1, name) -> name.endsWith(".txt"));
     if (txtFiles != null) {
       Arrays.stream(txtFiles).sorted((o1, o2) -> {
@@ -68,11 +73,18 @@ public class SpiderHelper {
       }).forEach(file -> {
         try {
           String s = FileUtils.readUtf8String(file.getAbsoluteFile());
-          FileUtils.appendUtf8String(filename, s);
+          FileUtils.appendUtf8String(saveFile, s);
+          if (delete) {
+            FileUtils.deleteFile(file);
+          }
         } catch (IOException e) {
+          log.error("小说合并失败：文件夹：{}，文件名：{}", dir, filename, e);
           e.printStackTrace();
         }
       });
+    }
+    if (delete) {
+      FileUtils.deleteFile(dir);
     }
   }
 }

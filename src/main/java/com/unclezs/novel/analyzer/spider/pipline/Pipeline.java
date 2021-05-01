@@ -8,19 +8,27 @@ import com.unclezs.novel.analyzer.model.Novel;
  *
  * @author blog.unclezs.com
  * @date 2020/12/23 15:51
+ * @see com.unclezs.novel.analyzer.spider.Spider
  */
 public interface Pipeline {
-    /**
-     * 注入小说信息
-     *
-     * @param novel 小说信息
-     */
-    void injectNovel(Novel novel);
+  /**
+   * 注入小说信息
+   *
+   * @param novel 小说信息
+   */
+  void injectNovel(Novel novel);
 
-    /**
-     * 处理数据
-     *
-     * @param chapter 数据
-     */
-    void process(Chapter chapter);
+  /**
+   * 处理数据
+   *
+   * @param chapter 数据
+   */
+  void process(Chapter chapter);
+
+  /**
+   * 当完成时触发
+   */
+  default void onComplete() {
+    // do something ..
+  }
 }

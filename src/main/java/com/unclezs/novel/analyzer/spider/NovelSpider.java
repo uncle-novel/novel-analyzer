@@ -96,7 +96,7 @@ public class NovelSpider {
         params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
       }
     }
-    log.debug("小说章节内容:{} 抓取完成，共{}页，共{}字", params.getUrl(), visited.size(), contentBuilder.length());
+    log.trace("小说章节内容:{} 抓取完成，共{}页，共{}字", params.getUrl(), visited.size(), contentBuilder.length());
     return new Result<>(page, contentBuilder.toString());
   }
 

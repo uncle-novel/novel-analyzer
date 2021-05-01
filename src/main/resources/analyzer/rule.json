@@ -7,7 +7,7 @@
     "audio": false,
     "weight": 0,
     "params": {
-      "dynamic": true,
+      "dynamic": false,
       "enabledProxy": false
     },
     "content": {

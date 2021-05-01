@@ -81,14 +81,10 @@ public class Http {
    * @param requestParams /
    * @return /
    */
-  public String content(RequestParams requestParams) throws IOException {
+  public static String content(RequestParams requestParams) throws IOException {
     initDefaultRequestParams(requestParams);
     try {
-      if (Boolean.TRUE.equals(requestParams.getDynamic())) {
-        return dynamicHttpClient.content(requestParams);
-      } else {
-        return staticHttpClient.content(requestParams);
-      }
+      return client(requestParams).content(requestParams);
     } catch (IOException e) {
       proxyFailed(requestParams);
       throw new IOException(e);
@@ -102,7 +98,7 @@ public class Http {
    * @param dynamic 动态网页
    * @return null if error.
    */
-  public String get(String url, boolean dynamic) {
+  public static String get(String url, boolean dynamic) {
     RequestParams requestParams = RequestParams.builder().dynamic(dynamic).url(url).build();
     try {
       return content(requestParams);
@@ -118,7 +114,7 @@ public class Http {
    * @param url /
    * @return null if error.
    */
-  public String get(String url) {
+  public static String get(String url) {
     return get(url, false);
   }
 
@@ -129,14 +125,44 @@ public class Http {
    * @return /
    * @throws IOException 请求失败
    */
-  public byte[] bytes(RequestParams requestParams) throws IOException {
+  public static byte[] bytes(RequestParams requestParams) throws IOException {
     initDefaultRequestParams(requestParams);
     try {
-      return staticHttpClient.bytes(requestParams);
+      return client(requestParams).bytes(requestParams);
     } catch (IOException e) {
       proxyFailed(requestParams);
       throw new IOException(e);
     }
+  }
+
+  /**
+   * 验证链接是否有效
+   *
+   * @param requestParams 请求参数
+   * @return this
+   * @throws IOException IO异常
+   */
+  public static boolean validate(RequestParams requestParams) throws IOException {
+    initDefaultRequestParams(requestParams);
+    try {
+      return client(requestParams).validate(requestParams);
+    } catch (IOException e) {
+      proxyFailed(requestParams);
+      throw new IOException(e);
+    }
+  }
+
+  /**
+   * 根据请求参数获取是静态请求还是动态请求
+   *
+   * @param params 请求参数
+   * @return HttpProvider
+   */
+  private HttpProvider client(RequestParams params) {
+    if (Boolean.TRUE.equals(params.getDynamic())) {
+      return dynamicHttpClient;
+    }
+    return staticHttpClient;
   }
 
   /**
