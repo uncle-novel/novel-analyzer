@@ -15,6 +15,7 @@ import com.unclezs.novel.analyzer.util.FileUtils;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public final class Spider implements Serializable {
   public static final int STOPPING = 5;
   public static final int STOPPED = 6;
   /**
-   * 抓取结束
+   * 抓取结束,不一定全部成功，结合COMPLETED判断是否完成
    */
   public static final int FINISHED = 7;
   public static final int COMPLETED = 8;
@@ -103,6 +104,7 @@ public final class Spider implements Serializable {
    * 重新下载 下载失败的章节 次数 0则不重试
    */
   @Getter
+  @Setter
   private int currentTimes = 0;
   @Getter
   private int retryTimes = 0;
@@ -122,7 +124,7 @@ public final class Spider implements Serializable {
   @Getter
   private String url;
   /**
-   * 剩余待下载的章节数据
+   * 剩余未下载成功的章节
    */
   private AtomicInteger leftCount;
   /**
@@ -307,6 +309,7 @@ public final class Spider implements Serializable {
    * 初始化爬虫，兼容从备份导入方式
    */
   private void init() throws IOException {
+    setState(INIT);
     novelSpider = new NovelSpider();
     // 设置解析配置
     if (this.analyzerRule == null) {
@@ -378,9 +381,15 @@ public final class Spider implements Serializable {
     if (isState(INIT)) {
       init();
     }
-    for (; currentTimes < retryTimes + 1 && !isCompleted(); currentTimes++) {
+    do {
       this.crawling();
+      currentTimes++;
+    } while (canRetry());
+    // 没有全部成功，并且不是中断，标记为已经结束状态
+    if (!isCompleted() && tasks.isEmpty()) {
+      setState(FINISHED);
     }
+    currentTimes = 0;
   }
 
   /**
@@ -404,18 +413,16 @@ public final class Spider implements Serializable {
    */
   private void crawling() {
     // 只有 已暂停和准备状态可以启动爬虫
-    if (isState(READY) || isState(PAUSED)) {
+    if (isState(READY) || isState(PAUSED) || isState(FINISHED)) {
       setState(RUNNING);
       log.debug("开始爬取小说[{}]：剩余未下载{}/{}章 开启{}个线程 是否启用自动代理：{}", novel.getTitle(), leftCount, toc.size(), threadNum, AnalyzerManager.me().isAutoProxy());
+      // 清空以前的任务
+      tasks.clear();
       toc.stream()
         .filter(chapter -> !chapter.downloaded())
         .forEach(chapter -> threadPool.execute(new Task(chapter)));
-      while (true) {
-        // 全部章节都已经下载成功
-        if (isCompleted()) {
-          setState(COMPLETED);
-          return;
-        }
+      // 全部任务已完成（不一定都下载成功）
+      while (!tasks.isEmpty()) {
         // 被暂停
         if (isState(PAUSING)) {
           setState(PAUSING, PAUSED);
@@ -426,13 +433,13 @@ public final class Spider implements Serializable {
           setState(STOPPING, STOPPED);
           return;
         }
-        if (finished()) {
-          setState(FINISHED);
-          break;
-        }
+      }
+      // 全部章节都已经下载成功
+      if (isCompleted()) {
+        setState(COMPLETED);
       }
     } else {
-      log.debug("爬虫状态已经进入不可启动状态 非INIT与PAUSED状态");
+      log.debug("爬虫状态已经进入不可启动状态 非READY与PAUSED状态");
     }
   }
 
@@ -443,6 +450,15 @@ public final class Spider implements Serializable {
    */
   public boolean isCompleted() {
     return leftCount.get() == 0;
+  }
+
+  /**
+   * 是否能够继续重试
+   *
+   * @return true 可以重试
+   */
+  public boolean canRetry() {
+    return currentTimes <= retryTimes && !isCompleted() && tasks.isEmpty();
   }
 
   /**
@@ -457,13 +473,14 @@ public final class Spider implements Serializable {
       return;
     }
     beforeChangeState(toState);
+    // 状态改变回调
+    if (onStateChange != null) {
+      onStateChange.accept(expectState, toState);
+    }
     if (expectState != null && isState(expectState)) {
       this.state.compareAndSet(expectState, toState);
     } else {
       this.state.set(toState);
-    }
-    if (onStateChange != null) {
-      onStateChange.accept(expectState, toState);
     }
   }
 
@@ -483,28 +500,32 @@ public final class Spider implements Serializable {
    */
   private void beforeChangeState(int state) {
     switch (state) {
-      // 停止、完成 关闭线程池
-      case STOPPED:
-        log.trace("小说[{}]抓取已停止 - 任务丢弃", novel.getTitle());
-        shutdown();
-        break;
-      case COMPLETED:
-        log.debug("小说[{}]抓取完成：共{}章", novel.getTitle(), toc.size());
-        // 回调管道处理完成
-        pipelines.forEach(Pipeline::onComplete);
-        shutdown();
-        break;
-      // 暂停、停止、清除全部正在自行的任务
-      case STOPPING:
-        log.trace("小说[{}]抓取停止中：剩余未下载{}/{}章", novel.getTitle(), leftCount.get(), toc.size());
-        cancelRunningTasks();
-        break;
       case PAUSING:
         log.trace("小说[{}]抓取暂停中：剩余未下载{}/{}章", novel.getTitle(), leftCount.get(), toc.size());
         cancelRunningTasks();
         break;
       case PAUSED:
         log.trace("小说[{}]抓取已经暂停：剩余未下载{}/{}章", novel.getTitle(), leftCount.get(), toc.size());
+        break;
+      // 暂停、停止、清除全部正在自行的任务
+      case STOPPING:
+        log.trace("小说[{}]抓取停止中：剩余未下载{}/{}章", novel.getTitle(), leftCount.get(), toc.size());
+        cancelRunningTasks();
+        break;
+      // 停止、完成 关闭线程池
+      case STOPPED:
+        log.trace("小说[{}]抓取已停止 - 任务丢弃", novel.getTitle());
+        shutdown();
+        break;
+      // 停止、完成 关闭线程池
+      case FINISHED:
+        log.trace("小说[{}]抓取完成：剩余未下载{}/{}章，错误章节：{}", novel.getTitle(), leftCount.get(), toc.size(), errorCount());
+        break;
+      case COMPLETED:
+        log.debug("小说[{}]抓取成功：共{}章", novel.getTitle(), toc.size());
+        // 回调管道处理完成
+        pipelines.forEach(Pipeline::onComplete);
+        shutdown();
         break;
       default:
         break;
@@ -527,7 +548,6 @@ public final class Spider implements Serializable {
   public void cancelRunningTasks() {
     tasks.forEach(Task::cancel);
     threadPool.getQueue().clear();
-    tasks.clear();
   }
 
   /**
@@ -576,25 +596,7 @@ public final class Spider implements Serializable {
   }
 
   /**
-   * 单次抓取完成，不管失败
-   *
-   * @return true 完成
-   */
-  public boolean finished() {
-    if (leftCount == null) {
-      return false;
-    }
-    if (errorCount == null) {
-      return false;
-    }
-    if (toc == null) {
-      return false;
-    }
-    return toc.size() == leftCount() + errorCount();
-  }
-
-  /**
-   * 剩余数量
+   * 剩余未下载成功的数量
    *
    * @return 剩余数量
    */
@@ -668,11 +670,6 @@ public final class Spider implements Serializable {
     public void run() {
       try {
         if (canceled.compareAndSet(false, false)) {
-          // 初始化状态
-          if (chapter.getState() == ChapterState.FAILED) {
-            errorCount.decrementAndGet();
-            chapter.setState(ChapterState.INIT);
-          }
           String content = novelSpider.content(chapter.getUrl());
           // 内容是空白也当做错误处理
           if (StringUtils.isBlank(content)) {
@@ -686,20 +683,26 @@ public final class Spider implements Serializable {
             }
             // 管道处理完成之后释放章节内容
             chapter.setContent(null);
+            // 计数器改变
+            leftCount.getAndDecrement();
+            if (chapter.getState() == ChapterState.FAILED) {
+              errorCount.decrementAndGet();
+            }
             // 下完完成标记
             chapter.setState(ChapterState.DOWNLOADED);
             // 通知完成一个章节的抓取
-            leftCount.getAndDecrement();
             if (progressChangeHandler != null && toc != null) {
               int total = toc.size();
               progressChangeHandler.accept(progress(), String.format("%d/%d", (total - leftCount.get()), total));
             }
           }
         }
-      } catch (IOException e) {
+      } catch (Exception e) {
+        if (chapter.getState() != ChapterState.FAILED) {
+          chapter.setState(ChapterState.FAILED);
+          errorCount.incrementAndGet();
+        }
         chapter.setMsg(e.getMessage());
-        chapter.setState(ChapterState.FAILED);
-        errorCount.incrementAndGet();
         log.warn("小说章节内容爬取失败：order:{} - {} - {}", chapter.getOrder(), chapter.getName(), chapter.getUrl(), e);
       } finally {
         tasks.remove(this);

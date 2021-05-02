@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer.spider.pipline;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.FileUtils;
+import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +32,7 @@ public class TxtPipeline extends AbstractTextPipeline {
 
   @Override
   public void processChapter(Chapter chapter) {
-    String filePath = String.format(DOWNLOAD_FILE_FORMAT, getFilePath(), chapter.getOrder(), chapter.getName());
+    String filePath = String.format(DOWNLOAD_FILE_FORMAT, getFilePath(), chapter.getOrder(), StringUtils.removeInvalidSymbol(chapter.getName()));
     try {
       // 写入文件
       FileUtils.writeString(filePath, chapter.getContent(), getCharset());
