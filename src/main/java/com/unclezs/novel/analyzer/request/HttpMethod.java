@@ -7,20 +7,20 @@ package com.unclezs.novel.analyzer.request;
  * @date 2021/01/29 11:18
  */
 public enum HttpMethod {
-    /**
-     * POST方法
-     */
-    POST,
-    /**
-     * GET方法
-     */
-    GET,
-    /**
-     * PUT方法
-     */
-    PUT,
-    /**
-     * DELETE方法
-     */
-    DELETE
+  /**
+   * POST方法
+   */
+  POST,
+  /**
+   * GET方法
+   */
+  GET,
+  /**
+   * PUT方法
+   */
+  PUT,
+  /**
+   * DELETE方法
+   */
+  DELETE
 }

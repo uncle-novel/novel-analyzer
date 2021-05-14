@@ -186,6 +186,9 @@ public class Http {
     if (Boolean.TRUE.equals(requestParams.getAutoProxy()) && AnalyzerManager.me().isAutoProxy()) {
       requestParams.setProxy(PROXY_PROVIDER.getProxy());
     }
+    if (requestParams.getMediaType() == null) {
+      requestParams.setMediaType(MediaType.NONE.getMediaType());
+    }
     // 初始化请求头
     requestParams.addHeader(RequestParams.REFERER, requestParams.getUrl());
     requestParams.addHeader(RequestParams.USER_AGENT, RequestParams.USER_AGENT_DEFAULT_VALUE);

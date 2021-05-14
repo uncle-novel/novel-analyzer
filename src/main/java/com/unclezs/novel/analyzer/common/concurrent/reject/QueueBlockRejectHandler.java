@@ -10,14 +10,14 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2020/12/27 7:01 下午
  */
 public class QueueBlockRejectHandler implements RejectedExecutionHandler {
-    private static final QueueBlockRejectHandler QUEUE_BLOCK_REJECT_HANDLER = new QueueBlockRejectHandler();
+  private static final QueueBlockRejectHandler QUEUE_BLOCK_REJECT_HANDLER = new QueueBlockRejectHandler();
 
-    public static QueueBlockRejectHandler me() {
-        return QUEUE_BLOCK_REJECT_HANDLER;
-    }
+  public static QueueBlockRejectHandler me() {
+    return QUEUE_BLOCK_REJECT_HANDLER;
+  }
 
-    @Override
-    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        executor.getQueue().add(r);
-    }
+  @Override
+  public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+    executor.getQueue().add(r);
+  }
 }

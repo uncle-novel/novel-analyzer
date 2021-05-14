@@ -33,18 +33,12 @@ public class Chapter implements Serializable {
    * 正文
    */
   private String content;
-  /**
-   * 一些信息 比如错误信息
-   */
-  private transient String msg;
+  private Long from;
+  private Long to;
   /**
    * 章节状态
    */
   private ChapterState state = ChapterState.INIT;
-  /**
-   * 书籍ID
-   */
-  private String id;
 
   public Chapter(String name, String url) {
     this.name = name;
@@ -77,15 +71,6 @@ public class Chapter implements Serializable {
   @Override
   public String toString() {
     return String.format("name=%s,url=%s", name, url);
-  }
-
-  /**
-   * 显示错误信息
-   *
-   * @return 错误信息
-   */
-  public String errorInfo() {
-    return String.format("%s : %s", name, msg);
   }
 
   /**

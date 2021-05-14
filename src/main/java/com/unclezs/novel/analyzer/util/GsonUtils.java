@@ -23,6 +23,7 @@ public class GsonUtils {
   static {
     GSON = new GsonBuilder()
       .setDateFormat("yyyy-MM-dd HH:mm:ss")
+      .disableHtmlEscaping()
       .create();
     NULL_PRETTY = new GsonBuilder()
       .serializeNulls()

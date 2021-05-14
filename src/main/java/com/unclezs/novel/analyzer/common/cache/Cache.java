@@ -7,20 +7,20 @@ package com.unclezs.novel.analyzer.common.cache;
  * @date 2021/2/15 8:55
  */
 public interface Cache<K, V> {
-    /**
-     * 添加缓存
-     *
-     * @param key   健
-     * @param value 值
-     * @return 返回缓存
-     */
-    V put(K key, V value);
+  /**
+   * 添加缓存
+   *
+   * @param key   健
+   * @param value 值
+   * @return 返回缓存
+   */
+  V put(K key, V value);
 
-    /**
-     * 读取缓存
-     *
-     * @param key 值
-     * @return 返回缓存
-     */
-    V get(K key);
+  /**
+   * 读取缓存
+   *
+   * @param key 值
+   * @return 返回缓存
+   */
+  V get(K key);
 }

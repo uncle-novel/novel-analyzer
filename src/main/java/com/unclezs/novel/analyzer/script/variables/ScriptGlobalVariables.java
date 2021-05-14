@@ -7,10 +7,10 @@ package com.unclezs.novel.analyzer.script.variables;
  * @date 2021/2/2 23:22
  */
 public interface ScriptGlobalVariables<T> {
-    /**
-     * 变量名
-     *
-     * @return 变量名
-     */
-    String getVariableName();
+  /**
+   * 变量名
+   *
+   * @return 变量名
+   */
+  String getVariableName();
 }

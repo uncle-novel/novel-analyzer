@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.request.okhttp;
 
+import com.unclezs.novel.analyzer.common.exception.RequestFailedException;
 import com.unclezs.novel.analyzer.request.HttpConfig;
 import com.unclezs.novel.analyzer.request.HttpMethod;
 import com.unclezs.novel.analyzer.request.RequestParams;
@@ -28,7 +29,6 @@ import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.ProxySelector;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -214,7 +214,7 @@ public class OkHttpClient implements HttpProvider {
    */
   private void handleFailed(Response response) throws IOException {
     if (!response.isSuccessful()) {
-      throw new IOException("错误的状态码，非200-299 ：" + response);
+      throw new RequestFailedException("错误的状态码，非200-299 ：" + response);
     }
   }
 

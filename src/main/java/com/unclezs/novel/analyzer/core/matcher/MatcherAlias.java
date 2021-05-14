@@ -17,54 +17,54 @@ import lombok.Data;
  */
 @Data
 public class MatcherAlias {
-    private static WeakCache<String, MatcherAlias> aliasCaches = new WeakCache<>();
-    /**
-     * 别名名称
-     */
-    private String name;
-    /**
-     * 是否为语法默认前缀
-     */
-    private boolean isDefault;
+  private static WeakCache<String, MatcherAlias> aliasCaches = new WeakCache<>();
+  /**
+   * 别名名称
+   */
+  private String name;
+  /**
+   * 是否为语法默认前缀
+   */
+  private boolean isDefault;
 
-    private MatcherAlias(String name, boolean isDefault) {
-        this.name = name;
-        this.isDefault = isDefault;
-    }
+  private MatcherAlias(String name, boolean isDefault) {
+    this.name = name;
+    this.isDefault = isDefault;
+  }
 
-    /**
-     * 默认的匹配器别名
-     *
-     * @param name 别名
-     * @return 默认的匹配器别名
-     */
-    public static MatcherAlias defaultAlias(String name) {
-        return create(name, true);
-    }
+  /**
+   * 默认的匹配器别名
+   *
+   * @param name 别名
+   * @return 默认的匹配器别名
+   */
+  public static MatcherAlias defaultAlias(String name) {
+    return create(name, true);
+  }
 
-    /**
-     * 默认的匹配器别名
-     *
-     * @param name 别名
-     * @return 默认的匹配器别名
-     */
-    public static MatcherAlias alias(String name) {
-        return create(name, false);
-    }
+  /**
+   * 默认的匹配器别名
+   *
+   * @param name 别名
+   * @return 默认的匹配器别名
+   */
+  public static MatcherAlias alias(String name) {
+    return create(name, false);
+  }
 
-    /**
-     * 默认的匹配器别名
-     *
-     * @param name 别名
-     * @return 默认的匹配器别名
-     */
-    public static MatcherAlias create(String name, boolean isDefault) {
-        MatcherAlias alias = aliasCaches.get(name);
-        if (alias != null) {
-            return alias;
-        }
-        alias = new MatcherAlias(name, isDefault);
-        aliasCaches.put(name, alias);
-        return alias;
+  /**
+   * 默认的匹配器别名
+   *
+   * @param name 别名
+   * @return 默认的匹配器别名
+   */
+  public static MatcherAlias create(String name, boolean isDefault) {
+    MatcherAlias alias = aliasCaches.get(name);
+    if (alias != null) {
+      return alias;
     }
+    alias = new MatcherAlias(name, isDefault);
+    aliasCaches.put(name, alias);
+    return alias;
+  }
 }

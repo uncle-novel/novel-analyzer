@@ -9,8 +9,8 @@ import java.io.IOException;
  * @date 2021/2/12 14:26
  */
 public interface Pageable {
-    /**
-     * 加载更多
-     */
-    void loadMore() throws IOException;
+  /**
+   * 加载更多
+   */
+  void loadMore() throws IOException;
 }

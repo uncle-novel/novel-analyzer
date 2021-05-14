@@ -9,8 +9,8 @@ import com.unclezs.novel.analyzer.model.Chapter;
  * @date 2020/12/23 15:56
  */
 public class ConsolePipeline extends AbstractTextPipeline {
-    @Override
-    public void processChapter(Chapter chapter) {
-        System.out.println(chapter);
-    }
+  @Override
+  public void processChapter(Chapter chapter) {
+    System.out.println(chapter);
+  }
 }

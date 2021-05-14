@@ -7,10 +7,10 @@ package com.unclezs.novel.analyzer.common.exception;
  * @date 2021/02/10 16:23
  */
 public class MatcherRuntimeException extends RuntimeException {
-    public MatcherRuntimeException(String message) {
-        super(message);
-    }
+  public MatcherRuntimeException(String message) {
+    super(message);
+  }
 
-    public MatcherRuntimeException() {
-    }
+  public MatcherRuntimeException() {
+  }
 }

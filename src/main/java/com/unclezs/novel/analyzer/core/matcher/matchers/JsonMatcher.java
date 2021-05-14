@@ -31,101 +31,101 @@ import java.util.Set;
  */
 @Slf4j
 public class JsonMatcher extends Matcher {
-    private static final JsonMatcher ME = new JsonMatcher();
+  private static final JsonMatcher ME = new JsonMatcher();
 
-    static {
-        // 使用gson
-        GsonJsonProvider gsonJsonProvider = new GsonJsonProvider();
-        MappingProvider mappingProvider = new GsonMappingProvider();
-        Configuration.setDefaults(new Configuration.Defaults() {
-            @Override
-            public JsonProvider jsonProvider() {
-                return gsonJsonProvider;
-            }
+  static {
+    // 使用gson
+    GsonJsonProvider gsonJsonProvider = new GsonJsonProvider();
+    MappingProvider mappingProvider = new GsonMappingProvider();
+    Configuration.setDefaults(new Configuration.Defaults() {
+      @Override
+      public JsonProvider jsonProvider() {
+        return gsonJsonProvider;
+      }
 
-            @Override
-            public Set<Option> options() {
-                return EnumSet.noneOf(Option.class);
-            }
+      @Override
+      public Set<Option> options() {
+        return EnumSet.noneOf(Option.class);
+      }
 
-            @Override
-            public MappingProvider mappingProvider() {
-                return mappingProvider;
-            }
-        });
+      @Override
+      public MappingProvider mappingProvider() {
+        return mappingProvider;
+      }
+    });
+  }
+
+  private JsonMatcher() {
+  }
+
+  /**
+   * 获取单例
+   *
+   * @return 实例
+   */
+  public static JsonMatcher me() {
+    return ME;
+  }
+
+  /**
+   * 别名列表
+   *
+   * @return 别名列表
+   */
+  @Override
+  public MatcherAlias[] aliases() {
+    return new MatcherAlias[]{MatcherAlias.alias("json:"), MatcherAlias.alias("json"), MatcherAlias.defaultAlias("$.")};
+  }
+
+  /**
+   * 匹配列表
+   *
+   * @param src      源
+   * @param listRule rule
+   * @param <E>      类型
+   * @return 列表结果
+   */
+  @Override
+  @SuppressWarnings("unchecked")
+  protected <E> List<E> list(String src, CommonRule listRule) {
+    JsonArray matchedList = JsonPath.parse(src).read(listRule.getRule());
+    List<JsonElement> items = new ArrayList<>();
+    for (JsonElement element : matchedList) {
+      items.add(element);
     }
+    return (List<E>) items;
+  }
 
-    private JsonMatcher() {
-    }
+  /**
+   * 匹配一个
+   *
+   * @param element 源文本
+   * @param rule    规则
+   * @return 匹配结果
+   */
+  @Override
+  protected <E> String one(E element, String rule) {
+    return match(GsonUtils.toJson(element), rule);
+  }
 
-    /**
-     * 获取单例
-     *
-     * @return 实例
-     */
-    public static JsonMatcher me() {
-        return ME;
+  /**
+   * 匹配一个
+   *
+   * @param src  源文本
+   * @param rule 规则
+   * @return 匹配结果
+   */
+  public String match(String src, String rule) {
+    try {
+      Object ret = JsonPath.read(src, rule);
+      if (ret != null) {
+        return ret.toString();
+      }
+    } catch (PathNotFoundException e) {
+      log.trace("JsonPath未匹配到：{}", e.getMessage());
+      return StringUtils.EMPTY;
     }
-
-    /**
-     * 别名列表
-     *
-     * @return 别名列表
-     */
-    @Override
-    public MatcherAlias[] aliases() {
-        return new MatcherAlias[]{MatcherAlias.alias("json:"), MatcherAlias.alias("json"), MatcherAlias.defaultAlias("$.")};
-    }
-
-    /**
-     * 匹配列表
-     *
-     * @param src      源
-     * @param listRule rule
-     * @param <E>      类型
-     * @return 列表结果
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    protected <E> List<E> list(String src, CommonRule listRule) {
-        JsonArray matchedList = JsonPath.parse(src).read(listRule.getRule());
-        List<JsonElement> items = new ArrayList<>();
-        for (JsonElement element : matchedList) {
-            items.add(element);
-        }
-        return (List<E>) items;
-    }
-
-    /**
-     * 匹配一个
-     *
-     * @param element 源文本
-     * @param rule    规则
-     * @return 匹配结果
-     */
-    @Override
-    protected <E> String one(E element, String rule) {
-        return match(GsonUtils.toJson(element), rule);
-    }
-
-    /**
-     * 匹配一个
-     *
-     * @param src  源文本
-     * @param rule 规则
-     * @return 匹配结果
-     */
-    public String match(String src, String rule) {
-        try {
-            Object ret = JsonPath.read(src, rule);
-            if (ret != null) {
-                return ret.toString();
-            }
-        } catch (PathNotFoundException e) {
-            log.trace("JsonPath未匹配到：{}", e.getMessage());
-            return StringUtils.EMPTY;
-        }
-        return StringUtils.EMPTY;
-    }
+    return StringUtils.EMPTY;
+  }
 
 }

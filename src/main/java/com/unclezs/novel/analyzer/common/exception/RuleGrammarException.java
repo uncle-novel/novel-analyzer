@@ -7,11 +7,11 @@ package com.unclezs.novel.analyzer.common.exception;
  * @date 2021/01/28 18:14
  */
 public class RuleGrammarException extends RuntimeException {
-    public RuleGrammarException(String message) {
-        super(message);
-    }
+  public RuleGrammarException(String message) {
+    super(message);
+  }
 
-    public RuleGrammarException(Throwable cause) {
-        super(cause);
-    }
+  public RuleGrammarException(Throwable cause) {
+    super(cause);
+  }
 }

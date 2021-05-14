@@ -13,10 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class BasePipeline implements Pipeline {
-    private Novel novel = null;
+  private Novel novel = null;
 
-    @Override
-    public void injectNovel(Novel novel) {
-        this.novel = novel;
-    }
+  @Override
+  public void injectNovel(Novel novel) {
+    this.novel = novel;
+  }
 }

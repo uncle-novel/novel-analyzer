@@ -19,102 +19,102 @@ import java.util.Objects;
  */
 @Slf4j
 public class XpathMatcher extends Matcher {
-    private static final XpathMatcher ME = new XpathMatcher();
+  private static final XpathMatcher ME = new XpathMatcher();
 
-    private XpathMatcher() {
-    }
+  private XpathMatcher() {
+  }
 
-    /**
-     * 获取单例
-     *
-     * @return 实例
-     */
-    public static XpathMatcher me() {
-        return ME;
-    }
+  /**
+   * 获取单例
+   *
+   * @return 实例
+   */
+  public static XpathMatcher me() {
+    return ME;
+  }
 
-    /**
-     * 别名列表
-     *
-     * @return 别名列表
-     */
-    @Override
-    public MatcherAlias[] aliases() {
-        return new MatcherAlias[]{MatcherAlias.alias("xpath:"), MatcherAlias.alias("xpath"), MatcherAlias.defaultAlias("//")};
-    }
+  /**
+   * 别名列表
+   *
+   * @return 别名列表
+   */
+  @Override
+  public MatcherAlias[] aliases() {
+    return new MatcherAlias[]{MatcherAlias.alias("xpath:"), MatcherAlias.alias("xpath"), MatcherAlias.defaultAlias("//")};
+  }
 
-    /**
-     * 匹配列表
-     *
-     * @param src      源
-     * @param listRule 规则
-     * @param <E>      类型
-     * @return 列表结果
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    protected <E> List<E> list(String src, CommonRule listRule) {
-        List<JXNode> nodes = JXDocument.create(src).selN(listRule.getRule());
-        return (List<E>) nodes;
-    }
+  /**
+   * 匹配列表
+   *
+   * @param src      源
+   * @param listRule 规则
+   * @param <E>      类型
+   * @return 列表结果
+   */
+  @Override
+  @SuppressWarnings("unchecked")
+  protected <E> List<E> list(String src, CommonRule listRule) {
+    List<JXNode> nodes = JXDocument.create(src).selN(listRule.getRule());
+    return (List<E>) nodes;
+  }
 
-    /**
-     * XPath匹配一个
-     *
-     * @param element 源文本
-     * @param rule    规则
-     * @return 匹配结果
-     */
-    @Override
-    public <E> String one(E element, String rule) {
-        if (element instanceof String) {
-            return match(element.toString(), rule);
-        } else if (element instanceof JXDocument) {
-            return match((JXDocument) element, rule);
-        } else if (element instanceof JXNode) {
-            return match((JXNode) element, rule);
-        }
-        return StringUtils.EMPTY;
+  /**
+   * XPath匹配一个
+   *
+   * @param element 源文本
+   * @param rule    规则
+   * @return 匹配结果
+   */
+  @Override
+  public <E> String one(E element, String rule) {
+    if (element instanceof String) {
+      return match(element.toString(), rule);
+    } else if (element instanceof JXDocument) {
+      return match((JXDocument) element, rule);
+    } else if (element instanceof JXNode) {
+      return match((JXNode) element, rule);
     }
+    return StringUtils.EMPTY;
+  }
 
-    /**
-     * XPath匹配一个
-     *
-     * @param src  源文本
-     * @param rule 规则
-     * @return 匹配结果
-     */
-    public String match(String src, String rule) {
-        return match(JXDocument.create(src), rule);
-    }
+  /**
+   * XPath匹配一个
+   *
+   * @param src  源文本
+   * @param rule 规则
+   * @return 匹配结果
+   */
+  public String match(String src, String rule) {
+    return match(JXDocument.create(src), rule);
+  }
 
-    /**
-     * XPath匹配一个
-     *
-     * @param src  源文本
-     * @param rule 规则
-     * @return 匹配结果
-     */
-    public String match(JXDocument src, String rule) {
-        JXNode ret = src.selNOne(rule);
-        if (ret != null) {
-            return Objects.toString(ret);
-        }
-        return StringUtils.EMPTY;
+  /**
+   * XPath匹配一个
+   *
+   * @param src  源文本
+   * @param rule 规则
+   * @return 匹配结果
+   */
+  public String match(JXDocument src, String rule) {
+    JXNode ret = src.selNOne(rule);
+    if (ret != null) {
+      return Objects.toString(ret);
     }
+    return StringUtils.EMPTY;
+  }
 
-    /**
-     * XPath匹配一个
-     *
-     * @param src  源文本
-     * @param rule 规则
-     * @return 匹配结果
-     */
-    public String match(JXNode src, String rule) {
-        JXNode ret = src.selOne(rule);
-        if (ret != null) {
-            return Objects.toString(ret);
-        }
-        return StringUtils.EMPTY;
+  /**
+   * XPath匹配一个
+   *
+   * @param src  源文本
+   * @param rule 规则
+   * @return 匹配结果
+   */
+  public String match(JXNode src, String rule) {
+    JXNode ret = src.selOne(rule);
+    if (ret != null) {
+      return Objects.toString(ret);
     }
+    return StringUtils.EMPTY;
+  }
 }

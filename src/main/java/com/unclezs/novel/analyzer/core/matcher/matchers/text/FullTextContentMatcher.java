@@ -14,35 +14,35 @@ import java.util.regex.Pattern;
  * @date 2020/12/20 8:06 下午
  */
 public class FullTextContentMatcher {
-    /**
-     * 全文正则
-     */
-    private static final String
-        REGEX = "[pvri\\-/\"]>([^字<*][\\pP\\w\\pN\\pL\\pM" + RegexUtils.CHINESE + RegexUtils.UNICODE_LETTER_NUMBER
-        + RegexUtils.CHINESE_PUNCTUATION + "]{3,}[^字\\w>]{0,2})(<br|</p|</d|<p|<!|<d|</li)";
-    /**
-     * 预编译
-     */
-    private static final Pattern CORE_PATTERN = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
+  /**
+   * 全文正则
+   */
+  private static final String
+    REGEX = "[pvri\\-/\"]>([^字<*][\\pP\\w\\pN\\pL\\pM" + RegexUtils.CHINESE + RegexUtils.UNICODE_LETTER_NUMBER
+    + RegexUtils.CHINESE_PUNCTUATION + "]{3,}[^字\\w>]{0,2})(<br|</p|</d|<p|<!|<d|</li)";
+  /**
+   * 预编译
+   */
+  private static final Pattern CORE_PATTERN = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
 
-    private FullTextContentMatcher() {
-    }
+  private FullTextContentMatcher() {
+  }
 
-    /**
-     * 匹配正文
-     *
-     * @param originalText 源文本
-     * @return /
-     */
-    public static String matching(String originalText) {
-        StringBuilder content = new StringBuilder();
-        Matcher m = CORE_PATTERN.matcher(originalText);
-        while (m.find()) {
-            String paragraph = m.group(1);
-            if (!paragraph.isEmpty()) {
-                content.append(paragraph).append(StringUtils.LF);
-            }
-        }
-        return content.toString();
+  /**
+   * 匹配正文
+   *
+   * @param originalText 源文本
+   * @return /
+   */
+  public static String matching(String originalText) {
+    StringBuilder content = new StringBuilder();
+    Matcher m = CORE_PATTERN.matcher(originalText);
+    while (m.find()) {
+      String paragraph = m.group(1);
+      if (!paragraph.isEmpty()) {
+        content.append(paragraph).append(StringUtils.LF);
+      }
     }
+    return content.toString();
+  }
 }

@@ -7,7 +7,6 @@ import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.model.Verifiable;
-import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.spider.SearchSpider;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
@@ -132,8 +131,8 @@ public class RuleTester {
             // 生成完整URL
             chapter.setUrl(UrlUtils.completeUrl(url, chapter.getUrl()));
             chapterJoiner
-              .add("名称：".concat(chapter.getName()))
-              .add("链接：".concat(chapter.getUrl()))
+              .add("名称：" + chapter.getName())
+              .add("链接：" + chapter.getUrl())
               .add(LINE);
           });
           messageConsumer.accept(chapterJoiner.toString().concat(LF));

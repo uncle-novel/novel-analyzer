@@ -9,6 +9,6 @@
     "1231233## ",
     "大萨达"
   ],
-  "script": "112312312"
+  "script": "skeyPage = utils.get('https://www.yousxs.com/js/bootstrap.min.js');skey = utils.match(skeyPage, \"regex:ey\\\"]=\\\"(.+?)\\\"##$1\");result = utils.match(source, \"regex:url: '(https://.+?skey=)'##$1\") + skey;"
 }
 

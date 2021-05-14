@@ -560,4 +560,23 @@ public class StringUtils {
     }
     return obj.toString();
   }
+
+  /**
+   * 移除空行
+   *
+   * @param text 文本
+   * @return 处理后的
+   */
+  public static String removeBlankLines(String text) {
+    StringBuilder sb = new StringBuilder();
+    for (String p : text.split("\n")) {
+      if (!isBlank(p)) {
+        sb.append(p).append("\n");
+      }
+    }
+    if (sb.length() != 0) {
+      sb.deleteCharAt(sb.length() - 1);
+    }
+    return sb.toString();
+  }
 }

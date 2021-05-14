@@ -19,39 +19,39 @@ import static javax.script.ScriptContext.GLOBAL_SCOPE;
  */
 @UtilityClass
 public class ScriptUtils {
-    /**
-     * js引擎
-     */
-    private static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("js");
+  /**
+   * js引擎
+   */
+  private static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("js");
 
-    static {
-        // 通用工具
-        Utils utils = new Utils();
-        SCRIPT_ENGINE.getContext().setAttribute(utils.getVariableName(), utils, GLOBAL_SCOPE);
-    }
+  static {
+    // 通用工具
+    Utils utils = new Utils();
+    SCRIPT_ENGINE.getContext().setAttribute(utils.getVariableName(), utils, GLOBAL_SCOPE);
+  }
 
-    /**
-     * 执行脚本获取返回值
-     *
-     * @param js               js脚本内容
-     * @param runtimeVariables 运行时变量
-     * @return 结果
-     */
-    @SneakyThrows
-    public static String execute(String js, Bindings runtimeVariables) {
-        Object result = SCRIPT_ENGINE.eval(js, runtimeVariables);
-        return StringUtils.toStringNullToEmpty(result);
-    }
+  /**
+   * 执行脚本获取返回值
+   *
+   * @param js               js脚本内容
+   * @param runtimeVariables 运行时变量
+   * @return 结果
+   */
+  @SneakyThrows
+  public static String execute(String js, Bindings runtimeVariables) {
+    Object result = SCRIPT_ENGINE.eval(js, runtimeVariables);
+    return StringUtils.toStringNullToEmpty(result);
+  }
 
-    /**
-     * 执行脚本获取返回值
-     *
-     * @param js js脚本内容
-     * @return 结果
-     */
-    @SneakyThrows
-    public static String execute(String js) {
-        Object result = SCRIPT_ENGINE.eval(js);
-        return StringUtils.toStringNullToEmpty(result);
-    }
+  /**
+   * 执行脚本获取返回值
+   *
+   * @param js js脚本内容
+   * @return 结果
+   */
+  @SneakyThrows
+  public static String execute(String js) {
+    Object result = SCRIPT_ENGINE.eval(js);
+    return StringUtils.toStringNullToEmpty(result);
+  }
 }

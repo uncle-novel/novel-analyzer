@@ -8,11 +8,11 @@ package com.unclezs.novel.analyzer.common.exception;
  */
 public class UtilException extends RuntimeException {
 
-    public UtilException(String message) {
-        super(message);
-    }
+  public UtilException(String message) {
+    super(message);
+  }
 
-    public UtilException(Throwable cause) {
-        super(cause);
-    }
+  public UtilException(Throwable cause) {
+    super(cause);
+  }
 }

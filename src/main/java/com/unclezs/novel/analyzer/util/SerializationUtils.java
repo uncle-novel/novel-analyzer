@@ -18,32 +18,32 @@ import java.io.Serializable;
  */
 @UtilityClass
 public class SerializationUtils {
-    /**
-     * 深克隆
-     * 序列化后拷贝流的方式克隆<br>
-     * 对象必须实现Serializable接口
-     *
-     * @param <T> 对象类型
-     * @param obj 被克隆对象
-     * @return 克隆后的对象
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T deepClone(T obj) {
-        if (!(obj instanceof Serializable)) {
-            return null;
-        }
-        final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(byteOut);
-            out.writeObject(obj);
-            out.flush();
-            final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
-            return (T) in.readObject();
-        } catch (Exception e) {
-            throw new UtilException(e);
-        } finally {
-            IoUtils.close(out);
-        }
+  /**
+   * 深克隆
+   * 序列化后拷贝流的方式克隆<br>
+   * 对象必须实现Serializable接口
+   *
+   * @param <T> 对象类型
+   * @param obj 被克隆对象
+   * @return 克隆后的对象
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T deepClone(T obj) {
+    if (!(obj instanceof Serializable)) {
+      return null;
     }
+    final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
+    ObjectOutputStream out = null;
+    try {
+      out = new ObjectOutputStream(byteOut);
+      out.writeObject(obj);
+      out.flush();
+      final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
+      return (T) in.readObject();
+    } catch (Exception e) {
+      throw new UtilException(e);
+    } finally {
+      IoUtils.close(out);
+    }
+  }
 }

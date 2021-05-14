@@ -1,7 +1,6 @@
 package com.unclezs.novel.analyzer.model;
 
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
-import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Data;
 
 import java.io.Serializable;

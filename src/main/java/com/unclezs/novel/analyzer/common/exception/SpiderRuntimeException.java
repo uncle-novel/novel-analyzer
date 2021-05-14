@@ -7,10 +7,10 @@ package com.unclezs.novel.analyzer.common.exception;
  * @date 2021/2/14 21:37
  */
 public class SpiderRuntimeException extends RuntimeException {
-    public SpiderRuntimeException() {
-    }
+  public SpiderRuntimeException() {
+  }
 
-    public SpiderRuntimeException(String message) {
-        super(message);
-    }
+  public SpiderRuntimeException(String message) {
+    super(message);
+  }
 }

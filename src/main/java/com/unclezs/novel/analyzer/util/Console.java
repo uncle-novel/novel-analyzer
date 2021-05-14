@@ -13,23 +13,23 @@ import org.slf4j.helpers.MessageFormatter;
  */
 @UtilityClass
 public class Console {
-    /**
-     * 输出并换行
-     *
-     * @param msg  消息
-     * @param args 参数
-     */
-    public void println(String msg, Object... args) {
-        System.out.println(MessageFormatter.arrayFormat(msg, args).getMessage());
-    }
+  /**
+   * 输出并换行
+   *
+   * @param msg  消息
+   * @param args 参数
+   */
+  public void println(String msg, Object... args) {
+    System.out.println(MessageFormatter.arrayFormat(msg, args).getMessage());
+  }
 
-    /**
-     * 输出不换行
-     *
-     * @param msg  消息
-     * @param args 参数
-     */
-    public void print(String msg, Object... args) {
-        System.out.print(MessageFormatter.arrayFormat(msg, args).getMessage());
-    }
+  /**
+   * 输出不换行
+   *
+   * @param msg  消息
+   * @param args 参数
+   */
+  public void print(String msg, Object... args) {
+    System.out.print(MessageFormatter.arrayFormat(msg, args).getMessage());
+  }
 }
