@@ -21,10 +21,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
@@ -104,7 +103,7 @@ public final class Spider implements Serializable {
    *
    * @see com.unclezs.novel.analyzer.spider.Spider.Task
    */
-  private transient Set<Task> tasks;
+  private transient CopyOnWriteArraySet<Task> tasks;
   /**
    * 线程数量
    */
@@ -155,7 +154,7 @@ public final class Spider implements Serializable {
     this.successCount = new AtomicInteger(0);
     this.errorCount = new AtomicInteger(0);
     this.pipelines = new ArrayList<>();
-    this.tasks = new HashSet<>(16);
+    this.tasks = new CopyOnWriteArraySet<>();
   }
 
   /**
@@ -265,7 +264,7 @@ public final class Spider implements Serializable {
       pipeline.injectNovel(novel);
     });
     // 初始化任务监控集合
-    tasks = new HashSet<>(toc.size() * 2);
+    tasks = new CopyOnWriteArraySet<>();
     // 初始化线程
     threadPool = ThreadUtils.newFixedThreadPoolExecutor(this.threadNum, String.format("spider-%d", COUNTER.getAndIncrement()));
     // 更新初始进度
@@ -432,8 +431,12 @@ public final class Spider implements Serializable {
    * 取消正在执行的任务
    */
   public void cancelRunningTasks() {
-    tasks.forEach(Task::cancel);
-    threadPool.getQueue().clear();
+    if (tasks != null) {
+      tasks.forEach(Task::cancel);
+    }
+    if (threadPool != null) {
+      threadPool.getQueue().clear();
+    }
   }
 
   /**
@@ -441,7 +444,9 @@ public final class Spider implements Serializable {
    */
   private void shutdown() {
     this.cancelRunningTasks();
-    this.threadPool.shutdown();
+    if (this.threadPool != null) {
+      this.threadPool.shutdown();
+    }
     this.toc = null;
     this.novel = null;
     this.threadPool = null;
@@ -553,10 +558,6 @@ public final class Spider implements Serializable {
           // 下完完成标记
           chapter.setState(ChapterState.DOWNLOADED);
         }
-        // 通知完成一个章节的抓取
-        if (progressChangeHandler != null) {
-          progressChangeHandler.accept(progress(), progressText());
-        }
       } catch (Exception e) {
         if (e instanceof TaskCanceledException) {
           return;
@@ -571,6 +572,10 @@ public final class Spider implements Serializable {
         }
       } finally {
         tasks.remove(this);
+        // 通知完成一个章节的抓取（无论成功、失败、取消）
+        if (progressChangeHandler != null) {
+          progressChangeHandler.accept(progress(), progressText());
+        }
       }
     }
 

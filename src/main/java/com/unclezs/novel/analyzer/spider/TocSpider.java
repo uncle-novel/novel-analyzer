@@ -146,6 +146,7 @@ public class TocSpider extends AbstractPageable<Chapter> {
     // 解析小说详情，从目录页
     if (page == 1) {
       this.novel = NovelMatcher.details(originalText, rule.getDetail());
+      this.novel.setUrl(params.getUrl());
     }
     List<Chapter> chapters = NovelMatcher.toc(originalText, tocRule);
     // 预处理目录

@@ -62,6 +62,17 @@ public class RuleHelper {
   }
 
   /**
+   * 移除规则
+   *
+   * @param rule 規則
+   * @return 规则
+   */
+  public static AnalyzerRule removeRule(AnalyzerRule rule) {
+    String host = UrlUtils.getHost(rule.getSite());
+    return RULES.remove(host);
+  }
+
+  /**
    * 获取规则
    *
    * @param url 网站
@@ -115,7 +126,7 @@ public class RuleHelper {
   }
 
   /**
-   * 获取规则
+   * 设置全部的规则
    *
    * @param rules 规则列表
    * @return 本次加载了多少个规则

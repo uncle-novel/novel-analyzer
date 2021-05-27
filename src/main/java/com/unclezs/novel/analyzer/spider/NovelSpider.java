@@ -135,7 +135,7 @@ public class NovelSpider {
       while (visited.add(params.getUrl())) {
         originalText = request(params);
         // 判断是否符合本页为同一
-        if (!uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
+        if (Boolean.FALSE.equals(tocRule.getForceNext()) && !uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
           break;
         }
         // 页面章节列表

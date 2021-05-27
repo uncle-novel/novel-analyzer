@@ -214,7 +214,7 @@ public class OkHttpClient implements HttpProvider {
    */
   private void handleFailed(Response response) throws IOException {
     if (!response.isSuccessful()) {
-      throw new RequestFailedException("错误的状态码，非200-299 ：" + response);
+      throw new RequestFailedException("错误的状态码，code=" + response.code() + " ：" + response);
     }
   }
 

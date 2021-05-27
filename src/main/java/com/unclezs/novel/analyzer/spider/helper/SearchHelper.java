@@ -7,6 +7,7 @@ import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.regex.RegexUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlEncoder;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.script.Bindings;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @date 2021/02/09 15:50
  */
 @Slf4j
+@UtilityClass
 public class SearchHelper {
   /**
    * 搜索参数 关键词
@@ -41,14 +43,14 @@ public class SearchHelper {
    * @return 参数处理后结果
    */
   public static String pretreatmentParam(String src, String param, String paramValue) {
-    String script = RegexUtils.get("\\{\\{([^{]*?" + param + ".*?)}}", src, 1);
+    String script = RegexUtils.get("\\{\\{([^{]*?" + param + ".*?)\\}\\}", src, 1);
     // 是脚本则执行脚本获取参数
     if (StringUtils.isNotBlank(script) && !script.trim().equalsIgnoreCase(param)) {
       Bindings bindings = new SimpleBindings();
       bindings.put(param, paramValue);
       paramValue = ScriptUtils.execute(script, bindings);
     }
-    return src.replaceAll("\\{\\{[^{]*?" + param + ".*?}}", paramValue);
+    return src.replaceAll("\\{\\{[^{]*?" + param + ".*?\\}\\}", paramValue);
   }
 
   /**

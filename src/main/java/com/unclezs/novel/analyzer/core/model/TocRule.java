@@ -73,6 +73,14 @@ public class TocRule implements Verifiable, Serializable {
    * 章节乱序重排
    */
   private Boolean sort;
+  /**
+   * 自动翻页
+   */
+  private Boolean autoNext = true;
+  /**
+   * 强制下一页，忽略标题相同 过滤器
+   */
+  private Boolean forceNext = false;
 
   /**
    * 目录规则是否有效

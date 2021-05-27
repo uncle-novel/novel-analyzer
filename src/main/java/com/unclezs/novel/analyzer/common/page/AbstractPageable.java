@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -19,9 +20,9 @@ import java.util.function.Consumer;
 @Slf4j
 public abstract class AbstractPageable<T> implements Pageable {
   /**
-   * 是否取消，防止多个线程时候，一个还在取消中，一个又开始了新的搜索
+   * 取消状态
    */
-  private static final ThreadLocal<Boolean> CANCELED = new ThreadLocal<>();
+  private final AtomicBoolean canceled = new AtomicBoolean(false);
   /**
    * 已经访问过的链接
    */
@@ -200,7 +201,7 @@ public abstract class AbstractPageable<T> implements Pageable {
    * 取消搜索
    */
   public void cancel() {
-    CANCELED.remove();
+    canceled.set(true);
   }
 
   /**
@@ -209,7 +210,7 @@ public abstract class AbstractPageable<T> implements Pageable {
    * @return true已经被取消
    */
   public boolean isCanceled() {
-    return CANCELED.get() == null;
+    return canceled.get();
   }
 
   /**
@@ -218,7 +219,7 @@ public abstract class AbstractPageable<T> implements Pageable {
   protected void init() {
     this.page = 0;
     this.visited.clear();
-    CANCELED.set(false);
+    canceled.set(false);
     hasMore = true;
     // 初始化是否有更多页数据
     if (loadLock.tryLock()) {
