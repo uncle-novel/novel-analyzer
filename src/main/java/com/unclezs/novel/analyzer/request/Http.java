@@ -190,7 +190,7 @@ public class Http {
       requestParams.setMediaType(MediaType.NONE.getMediaType());
     }
     // 初始化请求头
-    requestParams.addHeader(RequestParams.REFERER, requestParams.getUrl());
+    // requestParams.addHeader(RequestParams.REFERER, requestParams.getUrl());
     requestParams.addHeader(RequestParams.USER_AGENT, RequestParams.USER_AGENT_DEFAULT_VALUE);
   }
 }

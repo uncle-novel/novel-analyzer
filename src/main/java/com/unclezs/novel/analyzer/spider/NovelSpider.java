@@ -10,6 +10,7 @@ import com.unclezs.novel.analyzer.core.model.TocRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.RequestParams;
+import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
@@ -65,36 +66,40 @@ public class NovelSpider {
     // 请求参数
     RequestParams params = RequestParams.create(url, contentRule.getParams());
 
-    String originalText = request(params);
     StringBuilder contentBuilder = new StringBuilder();
-    String content = NovelMatcher.content(originalText, contentRule);
-    contentBuilder.append(content);
-    if (pageConsumer != null) {
-      pageConsumer.accept(content);
-    }
+    int page = 1;
     // 记录已经访问过的页面
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
-    int page = 1;
-    // 如果允许下一页
-    if (contentRule.isAllowNextPage()) {
-      String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
-      params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
-      while (visited.add(params.getUrl())) {
-        originalText = request(params);
-        // 判断是否符合本页为同一
-        if (!uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
-          break;
-        }
-        String pageContent = NovelMatcher.content(originalText, contentRule);
-        contentBuilder.append(StringUtils.LF).append(pageContent);
-        // 回调
-        if (pageConsumer != null) {
-          pageConsumer.accept(pageContent);
-        }
-        page++;
-        // 下一页
-        params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
+    String originalText = request(params);
+    try {
+      String content = NovelMatcher.content(originalText, contentRule);
+      contentBuilder.append(content);
+      if (pageConsumer != null) {
+        pageConsumer.accept(content);
       }
+      // 文本小说进行翻页
+      if (Boolean.FALSE.equals(rule.getAudio()) && contentRule.isAllowNextPage()) {
+        String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
+        params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
+        while (visited.add(params.getUrl())) {
+          originalText = request(params);
+          // 判断是否符合本页为同一
+          if (!uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
+            break;
+          }
+          String pageContent = NovelMatcher.content(originalText, contentRule);
+          contentBuilder.append(StringUtils.LF).append(pageContent);
+          // 回调
+          if (pageConsumer != null) {
+            pageConsumer.accept(pageContent);
+          }
+          page++;
+          // 下一页
+          params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
+        }
+      }
+    } finally {
+      ScriptContext.remove();
     }
     log.trace("小说章节内容:{} 抓取完成，共{}页，共{}字", params.getUrl(), visited.size(), contentBuilder.length());
     return new Result<>(page, contentBuilder.toString());
@@ -120,37 +125,42 @@ public class NovelSpider {
   public List<Chapter> toc(String url, Consumer<List<Chapter>> pageConsumer) throws IOException {
     TocRule tocRule = getRule().getToc();
     RequestParams params = RequestParams.create(url, tocRule.getParams());
-    String originalText = request(params);
-    List<Chapter> toc = NovelMatcher.toc(originalText, tocRule);
-    if (pageConsumer != null) {
-      pageConsumer.accept(toc);
-    }
     // 记录已经访问过的页面
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
-    // 如果允许下一页
-    if (tocRule.isAllowNextPage()) {
-      String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
-      params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
-      // 如果是新的链接则进行
-      while (visited.add(params.getUrl())) {
-        originalText = request(params);
-        // 判断是否符合本页为同一
-        if (Boolean.FALSE.equals(tocRule.getForceNext()) && !uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
-          break;
-        }
-        // 页面章节列表
-        List<Chapter> pageChapters = NovelMatcher.toc(originalText, tocRule);
-        if (CollectionUtils.isNotEmpty(pageChapters)) {
-          toc.addAll(pageChapters);
-          if (pageConsumer != null) {
-            pageConsumer.accept(pageChapters);
-          }
-        }
-        // 下一页
-        params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
+    List<Chapter> toc;
+    String originalText = request(params);
+    try {
+      toc = NovelMatcher.toc(originalText, tocRule);
+      if (pageConsumer != null) {
+        pageConsumer.accept(toc);
       }
+      // 如果允许下一页
+      if (tocRule.isAllowNextPage()) {
+        String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
+        params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
+        // 如果是新的链接则进行
+        while (visited.add(params.getUrl())) {
+          originalText = request(params);
+          // 判断是否符合本页为同一
+          if (Boolean.FALSE.equals(tocRule.getForceNext()) && !uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
+            break;
+          }
+          // 页面章节列表
+          List<Chapter> pageChapters = NovelMatcher.toc(originalText, tocRule);
+          if (CollectionUtils.isNotEmpty(pageChapters)) {
+            toc.addAll(pageChapters);
+            if (pageConsumer != null) {
+              pageConsumer.accept(pageChapters);
+            }
+          }
+          // 下一页
+          params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
+        }
+      }
+      toc = TocSpider.pretreatmentToc(toc, params.getUrl(), tocRule, 1);
+    } finally {
+      ScriptContext.remove();
     }
-    toc = TocSpider.pretreatmentToc(toc, params.getUrl(), tocRule, 1);
     log.debug("小说目录:{} 抓取完成，共{}页，{}章节", params.getUrl(), visited.size(), toc.size());
     return toc;
   }
@@ -164,10 +174,17 @@ public class NovelSpider {
   public Novel details(String url) throws IOException {
     DetailRule detailRule = rule.getDetail();
     RequestParams params = RequestParams.create(url, detailRule.getParams());
+    Novel novel;
     String originalText = request(params);
-    Novel novel = NovelMatcher.details(originalText, detailRule);
-    // 对相对路径自动完整URL
-    novel.competeUrl(params.getUrl());
+    try {
+      novel = NovelMatcher.details(originalText, detailRule);
+      // 对相对路径自动完整URL
+      novel.competeUrl(params.getUrl());
+      // 去除首尾空白
+      novel.trim();
+    } finally {
+      ScriptContext.remove();
+    }
     return novel;
   }
 

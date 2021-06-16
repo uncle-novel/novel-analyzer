@@ -18,7 +18,7 @@ public enum MediaType {
   /**
    * JSON
    */
-  JSON("application/json;charset=utf-8");
+  JSON("application/json");
 
   /**
    * content-type

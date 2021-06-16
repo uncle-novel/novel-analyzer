@@ -1,6 +1,7 @@
 package com.unclezs.novel.analyzer.model;
 
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
+import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -92,5 +93,38 @@ public class Novel implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(url);
+  }
+
+  /**
+   * 去除首尾空白
+   */
+  public void trim() {
+    if (title != null) {
+      this.title = StringUtils.trim(title);
+    }
+    if (author != null) {
+      this.author = StringUtils.trim(author);
+    }
+    if (broadcast != null) {
+      this.broadcast = StringUtils.trim(broadcast);
+    }
+    if (category != null) {
+      this.category = StringUtils.trim(category);
+    }
+    if (wordCount != null) {
+      this.wordCount = StringUtils.trim(wordCount);
+    }
+    if (introduce != null) {
+      this.introduce = StringUtils.trim(introduce);
+    }
+    if (latestChapterName != null) {
+      this.latestChapterName = StringUtils.trim(latestChapterName);
+    }
+    if (state != null) {
+      this.state = StringUtils.trim(state);
+    }
+    if (updateTime != null) {
+      this.updateTime = StringUtils.trim(updateTime);
+    }
   }
 }

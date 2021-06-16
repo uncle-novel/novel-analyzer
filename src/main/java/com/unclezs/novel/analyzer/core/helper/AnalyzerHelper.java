@@ -63,7 +63,7 @@ public class AnalyzerHelper {
     String titleText = RegexMatcher.me().title(originalText);
     String title = RegexMatcher.me().match(titleText, "(.{1,10}?)最新##$1");
     // 获取不到精确标题
-    if (StringUtils.isEmpty(title)) {
+    if (StringUtils.isBlank(title)) {
       title = RegexUtils.removeNotChineseAndNotNumber(titleText);
     }
     return StringUtils.removeInvalidSymbol(title);

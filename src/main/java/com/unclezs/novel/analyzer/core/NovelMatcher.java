@@ -13,6 +13,7 @@ import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.RequestParams;
+import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.spider.helper.SearchHelper;
 import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.BeanUtils;
@@ -118,51 +119,57 @@ public class NovelMatcher {
       SearchHelper.pretreatmentSearchParam(params, page, keyword);
       // 请求网页
       String originalText = SpiderHelper.request(rule.getParams(), params);
-      // 列表规则
-      CommonRule listRule = searchRule.getList();
-      Map<String, CommonRule> childRuleMap = Matchers.getChildMap(listRule.getType(), searchRule.getDetail());
-      Matchers.matchList(originalText, listRule, element -> {
-        CommonRule detailPageRule = searchRule.getDetailPage();
-        try {
-          Novel novel;
-          // 如果自定义了详情页
-          if (CommonRule.hasRule(detailPageRule)) {
-            // 自动保持与list一致
-            detailPageRule.setType(listRule.getType());
-            String detailPageUrl = Matchers.match(element, detailPageRule);
-            // 拼接完整URL
-            detailPageUrl = UrlUtils.completeUrl(baseUrl, detailPageUrl);
-            params.setUrl(detailPageUrl);
-            Object detailElement = SpiderHelper.request(rule.getParams(), params);
-            // 通过指定 page= search | detail ，不填写默认为详情页
-            Map<String, CommonRule> detailPage = new HashMap<>(16);
-            Map<String, CommonRule> searchPage = new HashMap<>(16);
-            childRuleMap.forEach((k, v) -> {
-              if (RuleConstant.SEARCH_PAGE.equals(v.getPage())) {
-                searchPage.put(k, v);
-              } else {
-                detailPage.put(k, v);
-              }
-            });
-            // 详情页与搜索页混合匹配
-            novel = Matchers.matchMultiple(element, searchPage, Novel.class);
-            Novel detail = Matchers.matchMultiple(detailElement, detailPage, Novel.class);
-            BeanUtils.copy(detail, novel);
-          } else {
-            // 没有详情页
-            novel = Matchers.matchMultiple(element, childRuleMap, Novel.class);
+      try {
+        // 列表规则
+        CommonRule listRule = searchRule.getList();
+        Map<String, CommonRule> childRuleMap = Matchers.getChildMap(listRule.getType(), searchRule.getDetail());
+        Matchers.matchList(originalText, listRule, element -> {
+          CommonRule detailPageRule = searchRule.getDetailPage();
+          try {
+            Novel novel;
+            // 如果自定义了详情页
+            if (CommonRule.hasRule(detailPageRule)) {
+              // 自动保持与list一致
+              detailPageRule.setType(listRule.getType());
+              String detailPageUrl = Matchers.match(element, detailPageRule);
+              // 拼接完整URL
+              detailPageUrl = UrlUtils.completeUrl(baseUrl, detailPageUrl);
+              params.setUrl(detailPageUrl);
+              Object detailElement = SpiderHelper.request(rule.getParams(), params);
+              // 通过指定 page= search | detail ，不填写默认为详情页
+              Map<String, CommonRule> detailPage = new HashMap<>(16);
+              Map<String, CommonRule> searchPage = new HashMap<>(16);
+              childRuleMap.forEach((k, v) -> {
+                if (RuleConstant.SEARCH_PAGE.equals(v.getPage())) {
+                  searchPage.put(k, v);
+                } else {
+                  detailPage.put(k, v);
+                }
+              });
+              // 详情页与搜索页混合匹配
+              novel = Matchers.matchMultiple(element, searchPage, Novel.class);
+              Novel detail = Matchers.matchMultiple(detailElement, detailPage, Novel.class);
+              BeanUtils.copy(detail, novel);
+            } else {
+              // 没有详情页
+              novel = Matchers.matchMultiple(element, childRuleMap, Novel.class);
+            }
+            // 完整拼接URL
+            novel.competeUrl(baseUrl);
+            // 去除空白
+            novel.trim();
+            // 每个结果回调处理
+            if (itemHandler != null) {
+              itemHandler.accept(novel);
+            }
+            novels.add(novel);
+          } catch (IOException e) {
+            e.printStackTrace();
           }
-          // 完整拼接URL
-          novel.competeUrl(baseUrl);
-          // 每个结果处理
-          if (itemHandler != null) {
-            itemHandler.accept(novel);
-          }
-          novels.add(novel);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      });
+        });
+      } finally {
+        ScriptContext.remove();
+      }
     }
     return novels;
   }

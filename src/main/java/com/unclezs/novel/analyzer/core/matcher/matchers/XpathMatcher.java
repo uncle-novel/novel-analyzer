@@ -96,9 +96,20 @@ public class XpathMatcher extends Matcher {
    * @return 匹配结果
    */
   public String match(JXDocument src, String rule) {
-    JXNode ret = src.selNOne(rule);
-    if (ret != null) {
-      return Objects.toString(ret);
+    List<JXNode> results = src.selN(rule);
+    if (results != null) {
+      StringBuilder result = new StringBuilder();
+      for (JXNode node : results) {
+        if (node.isElement()) {
+          result.append(node.asElement().text());
+        } else {
+          result.append(node);
+        }
+        if (results.size() > 1) {
+          result.append(StringUtils.NEW_LINE);
+        }
+      }
+      return result.toString();
     }
     return StringUtils.EMPTY;
   }

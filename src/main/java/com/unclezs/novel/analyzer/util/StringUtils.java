@@ -38,6 +38,7 @@ public class StringUtils {
    * 反斜杠
    */
   public static final String BACKSLASH = "/";
+  public static final String NULL = "null";
   /**
    * HTML的空白标签
    */
@@ -132,42 +133,6 @@ public class StringUtils {
 
 
   /**
-   * 移除文本中的文本(去除空格)
-   *
-   * @param src    源文本
-   * @param target 要移除的文本
-   * @return /
-   */
-  public String removeText(String src, String target) {
-    return src.replace(remove(target, StringUtils.EMPTY), StringUtils.EMPTY);
-  }
-
-  /**
-   * 移除文本中的标题
-   *
-   * @param src    源文本
-   * @param target 要移除的文本
-   * @return /
-   */
-  public String removeTitle(String src, String target) {
-    if (!target.startsWith("第")) {
-      return src;
-    }
-    String[] lines = src.split("\n");
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < lines.length; i++) {
-      if (StringUtils.isNotBlank(lines[i])) {
-        if (i < 3) {
-          sb.append(lines[i].replace(remove(target, StringUtils.EMPTY), StringUtils.EMPTY)).append(StringUtils.LF);
-        } else {
-          sb.append(lines[i]).append(StringUtils.LF);
-        }
-      }
-    }
-    return sb.toString();
-  }
-
-  /**
    * 清楚字符串里面的指定元素
    *
    * @param src    源字符串
@@ -198,25 +163,6 @@ public class StringUtils {
   }
 
   /**
-   * 清楚字符串里面的指定元素
-   *
-   * @param src    源字符串
-   * @param target 目录字符串数组
-   * @return 清除后的
-   */
-  public String removePlain(String src, String... target) {
-    if (StringUtils.isBlank(src)) {
-      return src;
-    }
-    for (String s : target) {
-      if (s != null) {
-        src = src.replace(s, StringUtils.EMPTY);
-      }
-    }
-    return trim(src);
-  }
-
-  /**
    * 移除文件名称的非法字符
    *
    * @param str 文件名称
@@ -224,32 +170,6 @@ public class StringUtils {
    */
   public String removeInvalidSymbol(String str) {
     return str.replaceAll("[\\\\/:*?\"<>|]", StringUtils.EMPTY);
-  }
-
-  /**
-   * 获取添加范围后的html
-   *
-   * @param header 范围头
-   * @param tail   范围尾部
-   * @param src    源
-   * @return 删减后的html
-   */
-  public String getRange(String header, String tail, String src) {
-    int end = tail != null && tail.length() > 1 ? src.indexOf(tail) : src.length();
-    int st = header != null && header.length() > 1 ? src.indexOf(header) : 0;
-    if (st == -1) {
-      st = 0;
-    }
-    if (end == -1) {
-      end = src.length();
-    }
-    if (st != 0) {
-      st -= 5;
-    }
-    if (end != src.length()) {
-      end += 5;
-    }
-    return src.substring(st, end);
   }
 
   public String trim(String text) {
@@ -561,22 +481,4 @@ public class StringUtils {
     return obj.toString();
   }
 
-  /**
-   * 移除空行
-   *
-   * @param text 文本
-   * @return 处理后的
-   */
-  public static String removeBlankLines(String text) {
-    StringBuilder sb = new StringBuilder();
-    for (String p : text.split("\n")) {
-      if (!isBlank(p)) {
-        sb.append(p).append("\n");
-      }
-    }
-    if (sb.length() != 0) {
-      sb.deleteCharAt(sb.length() - 1);
-    }
-    return sb.toString();
-  }
 }

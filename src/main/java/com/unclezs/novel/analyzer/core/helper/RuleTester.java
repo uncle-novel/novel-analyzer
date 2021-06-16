@@ -9,6 +9,7 @@ import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.model.Verifiable;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.spider.SearchSpider;
+import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.RandomUtils;
@@ -158,6 +159,8 @@ public class RuleTester {
       printHeader(type, rule.getSearch());
       List<Novel> novelList = new ArrayList<>();
       SearchSpider searchSpider = new SearchSpider(Collections.singletonList(rule));
+      // 调试模式
+      searchSpider.setDebug(true);
       AtomicInteger page = new AtomicInteger(-1);
       searchSpider.setOnNewItemAddHandler(novel -> {
         if (page.get() != searchSpider.getPage()) {

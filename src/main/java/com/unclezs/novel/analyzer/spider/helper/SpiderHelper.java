@@ -5,6 +5,7 @@ import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.util.FileUtils;
+import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,5 +87,27 @@ public class SpiderHelper {
     if (delete) {
       FileUtils.deleteFile(dir);
     }
+  }
+
+  /**
+   * 移除文本中的标题
+   *
+   * @param src    源文本
+   * @param target 要移除的文本
+   * @return /
+   */
+  public static String removeTitle(String src, String target) {
+    String[] lines = src.split(StringUtils.LF);
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < lines.length; i++) {
+      if (StringUtils.isNotBlank(lines[i])) {
+        if (i < 3) {
+          lines[i] = lines[i].replace(target, StringUtils.EMPTY)
+            .replace(target.replace(StringUtils.BLANK, StringUtils.EMPTY), StringUtils.EMPTY);
+        }
+        sb.append(lines[i]).append(StringUtils.NEW_LINE);
+      }
+    }
+    return sb.toString();
   }
 }

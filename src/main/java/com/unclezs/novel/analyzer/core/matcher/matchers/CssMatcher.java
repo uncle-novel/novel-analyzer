@@ -114,37 +114,47 @@ public class CssMatcher extends Matcher {
   /**
    * 正则匹配
    *
-   * @param document 源
+   * @param element 源
    * @param cssQuery 正则
    * @return /
    */
-  public String match(Element document, String cssQuery, String attr) {
-    Element element = selectFirst(document, cssQuery);
-    if (element == null) {
-      return StringUtils.EMPTY;
-    }
+  public String match(Element element, String cssQuery, String attr) {
     // 判断是否有属性选择器，没有则默认返回text
     if (StringUtils.isEmpty(attr)) {
-      Element first = selectFirst(element, cssQuery);
-      if (first == null) {
-        return StringUtils.EMPTY;
-      } else {
-        return first.text();
-      }
+      return selectAllText(element, cssQuery, false);
     } else {
-      String attribute;
       switch (attr) {
         case "text":
-          attribute = element.text();
-          break;
+          return selectAllText(element, cssQuery, false);
         case "ownText":
-          attribute = element.ownText();
-          break;
+          return selectAllText(element, cssQuery, true);
         default:
-          attribute = element.attr(attr);
+          return element.select(cssQuery).attr(attr);
       }
-      return attribute;
     }
+  }
+
+  /**
+   * 选中全部标签文本
+   *
+   * @param element  元素
+   * @param cssQuery 选择器
+   * @param isOwn    是否只选择自己的文本
+   * @return 文本
+   */
+  private String selectAllText(Element element, String cssQuery, boolean isOwn) {
+    Elements elements = element.select(cssQuery);
+    if (CollectionUtils.isEmpty(elements)) {
+      return StringUtils.EMPTY;
+    }
+    StringBuilder result = new StringBuilder();
+    for (Element ele : elements) {
+      result.append(isOwn ? ele.ownText() : ele.text());
+      if (elements.size() > 1) {
+        result.append(StringUtils.NEW_LINE);
+      }
+    }
+    return result.toString();
   }
 
 

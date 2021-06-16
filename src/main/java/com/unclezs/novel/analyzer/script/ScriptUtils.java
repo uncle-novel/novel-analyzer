@@ -2,6 +2,7 @@ package com.unclezs.novel.analyzer.script;
 
 import com.unclezs.novel.analyzer.script.variables.Utils;
 import com.unclezs.novel.analyzer.util.StringUtils;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
@@ -22,6 +23,7 @@ public class ScriptUtils {
   /**
    * js引擎
    */
+  @Getter
   private static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("js");
 
   static {

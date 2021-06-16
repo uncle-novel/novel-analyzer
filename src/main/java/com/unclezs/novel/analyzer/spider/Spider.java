@@ -8,10 +8,12 @@ import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.ChapterState;
 import com.unclezs.novel.analyzer.model.Novel;
+import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.spider.pipline.BaseFilePipeline;
 import com.unclezs.novel.analyzer.spider.pipline.ConsolePipeline;
 import com.unclezs.novel.analyzer.spider.pipline.Pipeline;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
+import com.unclezs.novel.analyzer.util.RandomUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -233,6 +235,9 @@ public final class Spider implements Serializable {
       novel.setUrl(url);
       // 获取小说详情信息
       log.trace("抓取到小说详情信息：{}", novel);
+    }
+    if (StringUtils.isBlank(novel.getTitle())) {
+      novel.setTitle("未知标题" + RandomUtils.randomInt(1000));
     }
     // 章节抓取 兼容反序列化情况
     if (CollectionUtils.isEmpty(this.toc)) {
@@ -537,8 +542,12 @@ public final class Spider implements Serializable {
         assertNotCanceled();
         String content = novelSpider.content(chapter.getUrl());
         // 内容是空白也当做错误处理
-        if (StringUtils.isBlank(content)) {
+        if (StringUtils.isBlank(content.trim()) && !StringUtils.NULL.equals(content.trim())) {
           throw new SpiderRuntimeException("未知的，未抓取的章节内容");
+        }
+        // 移除标题
+        if (Boolean.TRUE.equals(analyzerRule.getContent().getRemoveTitle())) {
+          content = SpiderHelper.removeTitle(content, chapter.getName());
         }
         chapter.setContent(content);
         assertNotCanceled();

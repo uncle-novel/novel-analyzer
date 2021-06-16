@@ -4,7 +4,9 @@ import com.unclezs.novel.analyzer.common.page.AbstractPageable;
 import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.model.Novel;
+import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -21,6 +23,8 @@ public class SearchSpider extends AbstractPageable<Novel> {
    * 规则列表
    */
   private final List<AnalyzerRule> rules;
+  @Setter
+  private boolean debug;
   /**
    * 关键词
    */
@@ -67,8 +71,14 @@ public class SearchSpider extends AbstractPageable<Novel> {
           AtomicBoolean siteHasMore = new AtomicBoolean();
           List<Novel> novels = NovelMatcher.search(page, keyword, rule, novel -> {
             // 如果已经取消了则不再执行 并且如果有新的则认为还有下一页
-            if (!isCanceled() && addItem(novel)) {
-              siteHasMore.set(true);
+            if (!isCanceled()) {
+              // 调试模式不校验标题有效
+              if (!debug && StringUtils.isBlank(novel.getTitle())) {
+                return;
+              }
+              if (addItem(novel)) {
+                siteHasMore.set(true);
+              }
             }
           });
           // 如果已经取消了则不再执行

@@ -10,8 +10,10 @@ import com.unclezs.novel.analyzer.core.model.TocRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.RequestParams;
+import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
+import com.unclezs.novel.analyzer.util.RandomUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.Getter;
@@ -143,38 +145,46 @@ public class TocSpider extends AbstractPageable<Chapter> {
     TocRule tocRule = getRule().getToc();
     // 获取网页内容
     String originalText = SpiderHelper.request(rule.getParams(), params);
-    // 解析小说详情，从目录页
-    if (page == 1) {
-      this.novel = NovelMatcher.details(originalText, rule.getDetail());
-      this.novel.setUrl(params.getUrl());
-    }
-    List<Chapter> chapters = NovelMatcher.toc(originalText, tocRule);
-    // 预处理目录
-    chapters = pretreatmentToc(chapters, params.getUrl(), tocRule, this.order);
     boolean hasMore = false;
-    if (tocRule.isAllowNextPage()) {
-      // 获取网页唯一ID 为 网页标题只留下了中文（不包含零到十）
-      String pageUniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
-      String nextPageUrl = AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl());
-      // 下一页存在 条件：下一页不为空 并且 唯一ID相等或者是第一页 并且 允许翻页
-      hasMore = StringUtils.isNotBlank(nextPageUrl);
-      // 智能解析模式 强校验唯一ID
-      if (!tocRule.isEffective()) {
-        hasMore = Objects.equals(pageUniqueId, this.uniqueId) || page == 1;
+    try {
+      // 解析小说详情，从目录页
+      if (page == 1) {
+        this.novel = NovelMatcher.details(originalText, rule.getDetail());
+        this.novel.setUrl(params.getUrl());
       }
-      if (CollectionUtils.isNotEmpty(chapters)) {
-        hasMore = addItems(chapters) && hasMore;
-        log.trace("小说目录 第{}页 抓取完成，共{}章.", page, chapters.size());
-      }
-      if (hasMore) {
-        this.uniqueId = pageUniqueId;
-        this.params.setUrl(nextPageUrl);
+      List<Chapter> chapters = NovelMatcher.toc(originalText, tocRule);
+      // 预处理目录
+      chapters = pretreatmentToc(chapters, params.getUrl(), tocRule, this.order);
+      if (tocRule.isAllowNextPage()) {
+        // 获取网页唯一ID 为 网页标题只留下了中文（不包含零到十）
+        String pageUniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
+        String nextPageUrl = AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl());
+        // 下一页存在 条件：下一页不为空 并且 唯一ID相等或者是第一页 并且 允许翻页
+        hasMore = StringUtils.isNotBlank(nextPageUrl);
+        // 智能解析模式 强校验唯一ID
+        if (!tocRule.isEffective()) {
+          hasMore = Objects.equals(pageUniqueId, this.uniqueId) || page == 1;
+        }
+        if (CollectionUtils.isNotEmpty(chapters)) {
+          hasMore = addItems(chapters) && hasMore;
+          log.trace("小说目录 第{}页 抓取完成，共{}章.", page, chapters.size());
+        }
+        if (hasMore) {
+          this.uniqueId = pageUniqueId;
+          this.params.setUrl(nextPageUrl);
+        } else {
+          // 已经抓取完成
+          log.debug("小说目录:{} 抓取完成，共{}页.", params.getUrl(), page);
+        }
       } else {
-        // 已经抓取完成
-        log.debug("小说目录:{} 抓取完成，共{}页.", params.getUrl(), page);
+        addItems(chapters);
       }
-    } else {
-      addItems(chapters);
+    } finally {
+      // 抓取完成移除上下文数据
+      ScriptContext.remove();
+    }
+    if (StringUtils.isBlank(novel.getTitle())) {
+      novel.setTitle("未知标题" + RandomUtils.randomInt(1000));
     }
     return hasMore;
   }
