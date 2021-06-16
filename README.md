@@ -10,6 +10,14 @@
 
 > 欢迎关注公众号：【书虫无书荒】
 
+```xml
+<dependency>
+  <groupId>com.unclezs</groupId>
+  <artifactId>novel-analyzer</artifactId>
+  <version>1.0.4</version>
+</dependency>
+```
+
 ### 主要功能
 
 - 小说零规则目录解析及正文解析

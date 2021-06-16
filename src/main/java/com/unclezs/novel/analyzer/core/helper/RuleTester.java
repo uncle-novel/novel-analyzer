@@ -9,7 +9,6 @@ import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.model.Verifiable;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.spider.SearchSpider;
-import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.RandomUtils;

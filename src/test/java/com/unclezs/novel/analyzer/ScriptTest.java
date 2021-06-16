@@ -1,10 +1,8 @@
 package com.unclezs.novel.analyzer;
 
-import com.unclezs.novel.analyzer.core.matcher.Matchers;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.ContentRule;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
-import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.util.FileUtils;
 import org.junit.Test;
