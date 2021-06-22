@@ -1,3 +1,3 @@
 {
-  "script":"function getHtmlParas(str){var sid=str.split(\"-\");var n=sid.length;var vid=sid[n-1].split(\".\")[0];var pid=0;vid=vid-1;return[pid,vid]}var params=getHtmlParas(url);var jsUrl=utils.absUrl(url,result);var dataJs=utils.get(jsUrl);dataJs=dataJs.replaceAll(\",urlinfo.+?;\",\";result = VideoListJson;\");var VideoListJson=eval(dataJs);result=VideoListJson[params[0]][1][params[1]].split(\"$\")[1];"
+  "script":"(result == null || result.length === 0) ? result = utils.match(source, \"//@href\") : result;"
 }

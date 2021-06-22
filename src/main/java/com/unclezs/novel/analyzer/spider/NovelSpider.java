@@ -71,6 +71,7 @@ public class NovelSpider {
     // 记录已经访问过的页面
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
     String originalText = request(params);
+    log.trace("获取到网页{}源码：{}", params.getUrl(), originalText);
     try {
       String content = NovelMatcher.content(originalText, contentRule);
       contentBuilder.append(content);

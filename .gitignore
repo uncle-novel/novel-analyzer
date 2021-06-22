@@ -11,3 +11,4 @@ downloads/
 build/
 .gradle/
 out/
+rule.json

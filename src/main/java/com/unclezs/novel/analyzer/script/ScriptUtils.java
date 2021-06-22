@@ -41,7 +41,7 @@ public class ScriptUtils {
    */
   @SneakyThrows
   public static String execute(String js, Bindings runtimeVariables) {
-    Object result = SCRIPT_ENGINE.eval(js, runtimeVariables);
+    Object result = runtimeVariables == null ? SCRIPT_ENGINE.eval(js) : SCRIPT_ENGINE.eval(js, runtimeVariables);
     return StringUtils.toStringNullToEmpty(result);
   }
 
@@ -53,7 +53,6 @@ public class ScriptUtils {
    */
   @SneakyThrows
   public static String execute(String js) {
-    Object result = SCRIPT_ENGINE.eval(js);
-    return StringUtils.toStringNullToEmpty(result);
+    return execute(js, null);
   }
 }

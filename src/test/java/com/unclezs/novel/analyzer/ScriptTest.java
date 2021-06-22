@@ -25,7 +25,7 @@ public class ScriptTest {
     analyzerRule.setSite(url);
     ContentRule contentRule = new ContentRule();
     CommonRule rule = CommonRule.create("//div[4]/script[1]/@src");
-    rule.setScript(FileUtils.readUtf8String("G:\\coder\\self-coder\\novel-analyzer\\src\\test\\resources\\script\\ychy.js"));
+    rule.setScript(FileUtils.readUtf8String("G:\\coder\\self-coder\\novel-analyzer\\src\\test\\resources\\script\\test.js"));
     contentRule.setContent(rule);
     analyzerRule.setContent(contentRule);
     spider.setRule(analyzerRule);

@@ -1,11 +1,14 @@
 package com.unclezs.novel.analyzer.script;
 
 import com.unclezs.novel.analyzer.common.concurrent.ThreadContext;
+import com.unclezs.novel.analyzer.util.CollectionUtils;
 import lombok.experimental.UtilityClass;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * JS脚本 上下文
@@ -31,6 +34,7 @@ public class ScriptContext {
    * 当前页面解析后的结果 result
    */
   public static final String SCRIPT_CONTEXT_VAR_RESULT = "result";
+  private static final Set<String> VARIABLES = CollectionUtils.newSet("url", "source", "result");
 
   /**
    * 爬虫上下文
@@ -70,7 +74,13 @@ public class ScriptContext {
   public static Bindings current() {
     Map<String, Object> map = CONTEXT.get();
     if (map != null) {
-      return new SimpleBindings(CONTEXT.get());
+      Map<String, Object> vars = new HashMap<>(map);
+      for (String key : map.keySet()) {
+        if (!VARIABLES.contains(key)) {
+          vars.remove(key);
+        }
+      }
+      return new SimpleBindings(vars);
     }
     return new SimpleBindings();
   }
