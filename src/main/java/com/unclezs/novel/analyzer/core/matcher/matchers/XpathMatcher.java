@@ -97,6 +97,7 @@ public class XpathMatcher extends Matcher {
    */
   public String match(JXDocument src, String rule) {
     List<JXNode> results = src.selN(rule);
+    boolean selectText = rule.toLowerCase().endsWith("text");
     if (results != null) {
       StringBuilder result = new StringBuilder();
       for (JXNode node : results) {
@@ -104,6 +105,10 @@ public class XpathMatcher extends Matcher {
           result.append(node.asElement().text());
         } else {
           result.append(node);
+        }
+        // 不是选择文本则不进行追加
+        if (!selectText) {
+          break;
         }
         if (results.size() > 1) {
           result.append(StringUtils.NEW_LINE);

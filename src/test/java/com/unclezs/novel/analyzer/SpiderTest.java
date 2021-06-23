@@ -31,13 +31,14 @@ public class SpiderTest {
 
   @Test
   public void testContent() throws IOException {
-    String url = "";
+    String url = "https://www.7huan.org/book/136335/6113932.html";
     String cookie = "";
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
     AnalyzerRule rule = RuleHelper.getOrDefault(url);
     rule.getParams().setCookie(cookie);
+    rule.getContent().setEnableNext(true);
     NovelSpider spider = new NovelSpider(rule);
-    System.out.println(spider.content("http://my.jjwxc.net/onebook_vip.php?novelid=2771418&chapterid=76"));
+    System.out.println(spider.content(url));
   }
 
 }
