@@ -89,8 +89,6 @@ public class SearchHelper {
     } else {
       encodeKeyword = keyword;
     }
-    // 搜索的URL 不带参数
-    params.setBody(StringUtils.EMPTY);
     // 搜索参数封装
     Map<String, String> paramsMap = new HashMap<>(2);
     paramsMap.put(SEARCH_PAGE, String.valueOf(page));
