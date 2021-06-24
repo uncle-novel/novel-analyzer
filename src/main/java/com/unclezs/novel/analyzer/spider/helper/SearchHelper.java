@@ -1,12 +1,10 @@
 package com.unclezs.novel.analyzer.spider.helper;
 
-import com.unclezs.novel.analyzer.request.HttpMethod;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.regex.RegexUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlEncoder;
-import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,6 +61,9 @@ public class SearchHelper {
    * @return 参数处理后结果
    */
   public static String pretreatmentParams(String src, Map<String, String> params) {
+    if (StringUtils.isBlank(src)) {
+      return src;
+    }
     for (Map.Entry<String, String> param : params.entrySet()) {
       src = pretreatmentParam(src, param.getKey(), param.getValue());
     }
@@ -81,12 +82,6 @@ public class SearchHelper {
    * @param keyword 关键词
    */
   public static void pretreatmentSearchParam(RequestParams params, int page, String keyword) {
-    // 获取搜索参数 url、body   eg: page={{page}}&key={{keyword}}
-    String searchUrlParams = UrlUtils.getUrlParams(params.getUrl());
-    if (searchUrlParams.isEmpty()) {
-      searchUrlParams = params.getBody();
-    }
-    final String searchParams = searchUrlParams;
     // 参数编码
     String encodeKeyword;
     if (StringUtils.isNotBlank(params.getCharset())) {
@@ -95,21 +90,13 @@ public class SearchHelper {
       encodeKeyword = keyword;
     }
     // 搜索的URL 不带参数
-    String url = UrlUtils.getUrlNoParams(params.getUrl());
-    // 清空参数 重新编译参数
-    params.setUrl(url);
     params.setBody(StringUtils.EMPTY);
     // 搜索参数封装
     Map<String, String> paramsMap = new HashMap<>(2);
     paramsMap.put(SEARCH_PAGE, String.valueOf(page));
     paramsMap.put(SEARCH_KEYWORD, encodeKeyword);
-    // 编译参数
-    String formattedSearchParam = pretreatmentParams(searchParams, paramsMap);
-    url = pretreatmentParams(url, paramsMap);
-    if (HttpMethod.GET.name().equalsIgnoreCase(params.getMethod())) {
-      params.setUrl(String.format("%s?%s", url, formattedSearchParam));
-    } else {
-      params.setBody(formattedSearchParam);
-    }
+    // 编译参数 url、body
+    params.setUrl(pretreatmentParams(params.getUrl(), paramsMap));
+    params.setBody(pretreatmentParams(params.getBody(), paramsMap));
   }
 }

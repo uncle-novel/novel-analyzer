@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
+import com.unclezs.novel.analyzer.spider.SearchSpider;
 import com.unclezs.novel.analyzer.spider.TocSpider;
 import com.unclezs.novel.analyzer.util.FileUtils;
 import org.junit.Test;
@@ -41,4 +42,14 @@ public class SpiderTest {
     System.out.println(spider.content(url));
   }
 
+
+  @Test
+  public void testSearch() throws IOException {
+    RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
+    SearchSpider searchSpider = new SearchSpider(RuleHelper.rules());
+    searchSpider.setOnNewItemAddHandler(e -> {
+      System.out.println(e.getTitle() + "  -  " + e.getUrl());
+    });
+    searchSpider.search("完美世界");
+  }
 }

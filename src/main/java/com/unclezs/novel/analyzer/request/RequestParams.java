@@ -226,7 +226,7 @@ public class RequestParams implements Verifiable, Serializable {
    * 设置请求头字符串
    */
   public void setHeaderString(String headersString) {
-    if (StringUtils.isBlank(headersString)) {
+    if (StringUtils.isBlank(headersString) && headers != null) {
       headers.clear();
       return;
     }
