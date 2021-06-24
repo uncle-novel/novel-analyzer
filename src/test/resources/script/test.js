@@ -6,5 +6,5 @@ var reqParams = {
     },
     method: "GET"
 }
-var html = utils.request(JSON.stringify(reqParams));
+var html = utils.request(utils.toJson(reqParams));
 result = utils.match(html, "//p/allText()")

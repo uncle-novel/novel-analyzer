@@ -73,6 +73,18 @@ public class Utils implements ScriptGlobalVariables<Utils> {
   }
 
   /**
+   * 转化为json（rhino 在带有java对象的变量用JSON.stringify会出现Stackoverflow）
+   * <p>
+   * https://github.com/mozilla/rhino/issues/578
+   *
+   * @param obj 对象
+   * @return 结果
+   */
+  public String toJson(Object obj) {
+    return GsonUtils.toJson(obj);
+  }
+
+  /**
    * 匹配一个
    * eg: xpath://xxx
    *
