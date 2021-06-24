@@ -39,6 +39,7 @@ public class RuleHelper {
     .registerTypeAdapter(CommonRule.class, new CommonRule())
     .registerTypeAdapter(ReplaceRule.class, new ReplaceRule())
     .registerTypeAdapter(ContentRule.class, new ContentRule())
+    .disableHtmlEscaping()
     .create();
   /**
    * 所有规则

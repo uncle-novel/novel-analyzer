@@ -34,7 +34,11 @@ public class ScriptContext {
    * 当前页面解析后的结果 result
    */
   public static final String SCRIPT_CONTEXT_VAR_RESULT = "result";
-  private static final Set<String> VARIABLES = CollectionUtils.newSet("url", "source", "result");
+  /**
+   * 全局参数
+   */
+  public static final String SCRIPT_CONTEXT_VAR_PARAMS = "params";
+  private static final Set<String> VARIABLES = CollectionUtils.newSet(SCRIPT_CONTEXT_VAR_PARAMS, SCRIPT_CONTEXT_VAR_URL, SCRIPT_CONTEXT_VAR_SOURCE, SCRIPT_CONTEXT_VAR_RESULT);
 
   /**
    * 爬虫上下文

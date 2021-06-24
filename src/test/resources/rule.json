@@ -1,3 +1,3 @@
 {
-  "script":"(result == null || result.length === 0) ? result = utils.match(source, \"//@href\") : result;"
+  "script":"function getHtmlParas(str) {\n\tvar sid = str.split(\"-\");\n\tvar n = sid.length;\n\tvar vid = sid[n - 1].split(\".\")[0];\n\tvar pid = 0;\n\tvid = vid - 1;\n\treturn [pid, vid]\n}\nvar params = getHtmlParas(url);\nvar jsUrl = utils.absUrl(url, result);\nvar dataJs = utils.get(jsUrl);\ndataJs = dataJs.replaceAll(\",urlinfo.+?;\", \";result = VideoListJson;\");\nvar VideoListJson = eval(dataJs);\nresult = VideoListJson[params[0]][1][params[1]].split(\"$\")[1];"
 }

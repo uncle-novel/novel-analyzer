@@ -12,6 +12,7 @@ import com.unclezs.novel.analyzer.spider.SearchSpider;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.RandomUtils;
+import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -129,7 +130,9 @@ public class RuleTester {
           StringJoiner chapterJoiner = new StringJoiner(LF);
           chapters.forEach(chapter -> {
             // 生成完整URL
-            chapter.setUrl(UrlUtils.completeUrl(url, chapter.getUrl()));
+            if (StringUtils.isNotBlank(chapter.getUrl())) {
+              chapter.setUrl(UrlUtils.completeUrl(url, chapter.getUrl()));
+            }
             chapterJoiner
               .add("名称：" + chapter.getName())
               .add("链接：" + chapter.getUrl())

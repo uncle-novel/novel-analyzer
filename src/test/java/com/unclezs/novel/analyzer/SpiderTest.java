@@ -32,7 +32,7 @@ public class SpiderTest {
 
   @Test
   public void testContent() throws IOException {
-    String url = "https://www.7huan.org/book/136335/6113932.html";
+    String url = "";
     String cookie = "";
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
     AnalyzerRule rule = RuleHelper.getOrDefault(url);

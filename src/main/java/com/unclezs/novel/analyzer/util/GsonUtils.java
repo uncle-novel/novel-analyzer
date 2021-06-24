@@ -28,9 +28,11 @@ public class GsonUtils {
     NULL_PRETTY = new GsonBuilder()
       .serializeNulls()
       .setPrettyPrinting()
+      .disableHtmlEscaping()
       .create();
     PRETTY = new GsonBuilder()
       .setPrettyPrinting()
+      .disableHtmlEscaping()
       .create();
   }
 

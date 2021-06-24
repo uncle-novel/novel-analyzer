@@ -3,8 +3,8 @@ package com.unclezs.novel.analyzer.script;
 import com.unclezs.novel.analyzer.script.variables.Utils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
@@ -18,6 +18,7 @@ import static javax.script.ScriptContext.GLOBAL_SCOPE;
  * @author blog.unclezs.com
  * @date 2021/1/28 22:55
  */
+@Slf4j
 @UtilityClass
 public class ScriptUtils {
   /**
@@ -39,10 +40,15 @@ public class ScriptUtils {
    * @param runtimeVariables 运行时变量
    * @return 结果
    */
-  @SneakyThrows
   public static String execute(String js, Bindings runtimeVariables) {
-    Object result = runtimeVariables == null ? SCRIPT_ENGINE.eval(js) : SCRIPT_ENGINE.eval(js, runtimeVariables);
-    return StringUtils.toStringNullToEmpty(result);
+    try {
+      Object result = runtimeVariables == null ? SCRIPT_ENGINE.eval(js) : SCRIPT_ENGINE.eval(js, runtimeVariables);
+      return StringUtils.toStringNullToEmpty(result);
+    } catch (Throwable e) {
+      e.printStackTrace();
+      log.trace("执行脚本失败：js:{}，vars:{}", js, runtimeVariables, e);
+    }
+    return null;
   }
 
   /**
@@ -51,7 +57,6 @@ public class ScriptUtils {
    * @param js js脚本内容
    * @return 结果
    */
-  @SneakyThrows
   public static String execute(String js) {
     return execute(js, null);
   }

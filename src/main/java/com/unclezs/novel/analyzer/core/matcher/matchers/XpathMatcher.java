@@ -97,7 +97,7 @@ public class XpathMatcher extends Matcher {
    */
   public String match(JXDocument src, String rule) {
     List<JXNode> results = src.selN(rule);
-    boolean selectText = rule.toLowerCase().endsWith("text");
+    boolean selectText = rule.toLowerCase().endsWith("text()");
     if (results != null) {
       StringBuilder result = new StringBuilder();
       for (JXNode node : results) {

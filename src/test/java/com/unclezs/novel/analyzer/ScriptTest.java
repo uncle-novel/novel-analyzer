@@ -17,7 +17,7 @@ public class ScriptTest {
 
   @Test
   public void test() throws IOException {
-    String url = "";
+    String url = "https://www.po18.tw/books/742514/articles";
     NovelSpider spider = new NovelSpider();
     // 正文规则封装
     AnalyzerRule analyzerRule = new AnalyzerRule();
