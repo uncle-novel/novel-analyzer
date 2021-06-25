@@ -43,6 +43,10 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
    */
   private Boolean removeTitle;
   /**
+   * 繁体转简体
+   */
+  private Boolean traditionToSimple;
+  /**
    * 请求参数
    */
   private RequestParams params;

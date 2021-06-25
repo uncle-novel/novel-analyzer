@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.spider;
 
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
@@ -102,8 +103,13 @@ public class NovelSpider {
     } finally {
       ScriptContext.remove();
     }
+    String result = contentBuilder.toString();
+    // 繁体转简体
+    if (Boolean.TRUE.equals(contentRule.getTraditionToSimple())) {
+      result = ZhConverterUtil.toSimple(result);
+    }
     log.trace("小说章节内容:{} 抓取完成，共{}页，共{}字", params.getUrl(), visited.size(), contentBuilder.length());
-    return new Result<>(page, contentBuilder.toString());
+    return new Result<>(page, result);
   }
 
   /**

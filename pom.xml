@@ -6,7 +6,7 @@
     <name>novel-analyzer</name>
     <groupId>com.unclezs</groupId>
     <artifactId>novel-analyzer</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
 
     <url>http://github.com/unclezs/novel-analyzer</url>
     <description>Uncle小说解析 SDK</description>
@@ -72,6 +72,7 @@
         <gson.version>2.8.6</gson.version>
         <junit.version>4.13.1</junit.version>
         <lombok.version>1.18.16</lombok.version>
+        <opencc4j.version>1.6.1</opencc4j.version>
     </properties>
 
     <dependencies>
@@ -122,6 +123,11 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>opencc4j</artifactId>
+            <version>${opencc4j.version}</version>
         </dependency>
     </dependencies>
 

@@ -1,11 +1,13 @@
 package com.unclezs.novel.analyzer.spider.helper;
 
+import com.unclezs.novel.analyzer.core.matcher.matchers.XpathMatcher;
 import com.unclezs.novel.analyzer.core.model.Params;
 import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.util.FileUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
+import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,9 @@ import java.util.Arrays;
 @Slf4j
 @UtilityClass
 public class SpiderHelper {
+
+  public static final String COVER_PROVIDER_URL = "https://www.qidian.com/search?kw=";
+
   /**
    * 请求参数预处理
    * 1. 配置自定义的请求的参数
@@ -110,5 +115,19 @@ public class SpiderHelper {
       }
     }
     return sb.toString();
+  }
+
+  /**
+   * 获取封面
+   *
+   * @param title 小说名称
+   * @return cover url
+   */
+  public static String getCover(String title) throws IOException {
+    RequestParams params = RequestParams.create(COVER_PROVIDER_URL + UrlUtils.encode(title));
+    String html = Http.content(params);
+    String cover = XpathMatcher.me().match(html, "//*[@id=\"result-list\"]/div/ul/li[1]/div[1]/a/img/@src");
+    cover = UrlUtils.completeUrl(COVER_PROVIDER_URL, cover);
+    return cover;
   }
 }
