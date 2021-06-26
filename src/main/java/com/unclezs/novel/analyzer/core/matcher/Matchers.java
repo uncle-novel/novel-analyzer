@@ -9,6 +9,7 @@ import com.unclezs.novel.analyzer.util.CollectionUtils;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,20 @@ public class Matchers {
   public static void matchList(String src, CommonRule rule, Consumer<Object> itemHandler) {
     Matcher matcher = MatcherManager.getMatcher(rule.getType(), RegexMatcher.me());
     matcher.matchList(src, rule, itemHandler);
+  }
+
+  /**
+   * 匹配列表
+   *
+   * @param src  源
+   * @param rule 列表规则
+   * @return 匹配结果列表（可能是节点列表）
+   */
+  public static List<Object> matchList(String src, CommonRule rule) {
+    Matcher matcher = MatcherManager.getMatcher(rule.getType(), RegexMatcher.me());
+    List<Object> items = new ArrayList<>();
+    matcher.matchList(src, rule, items::add);
+    return items;
   }
 
   /**

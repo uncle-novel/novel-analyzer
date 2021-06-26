@@ -70,7 +70,8 @@ public abstract class Matcher {
       // 净化
       result = purify(rule.getReplace(), result);
       // 后置处理
-      result = handleScript(StringUtils.toStringNullToEmpty(source), result, rule.getScript());
+      Object scriptResult = handleScript(StringUtils.toStringNullToEmpty(source), result, rule.getScript());
+      result = StringUtils.toStringNullToEmpty(scriptResult);
       if (StringUtils.isBlank(result)) {
         return null;
       }
@@ -137,8 +138,17 @@ public abstract class Matcher {
    * @param listRule    列表规则
    * @param itemHandler 列表项目处理
    */
+  @SuppressWarnings("unchecked")
   public void matchList(String src, CommonRule listRule, Consumer<Object> itemHandler) {
-    List<Object> list = list(src, listRule);
+    List<Object> list = new ArrayList<>();
+    // 列表匹配
+    if (CommonRule.hasRule(listRule)) {
+      list = list(src, listRule);
+    }
+    // 处理脚本
+    if (StringUtils.isNotBlank(listRule.getScript())) {
+      list = (List<Object>) handleScript(src, null, listRule.getScript());
+    }
     // 处理每个子元素
     for (Object element : list) {
       itemHandler.accept(element);
@@ -176,11 +186,15 @@ public abstract class Matcher {
   private String purify(Set<ReplaceRule> rules, String src) {
     if (CollectionUtils.isNotEmpty(rules)) {
       for (ReplaceRule rule : rules) {
-        // 包含模板则进行模板替换
-        if (StringUtils.isNotBlank(rule.getTo()) && rule.getTo().contains("$")) {
-          src = RegexUtils.replaceAll(src, rule.getFrom(), rule.getTo());
+        if (rule.getFrom().startsWith(RegexMatcher.REGEX_PREFIX)) {
+          // 包含模板则进行模板替换
+          if (StringUtils.isNotBlank(rule.getTo()) && rule.getTo().contains("$")) {
+            src = RegexUtils.replaceAll(src, rule.getFrom(), rule.getTo());
+          } else {
+            src = src.replaceAll(rule.getFrom(), rule.getTo());
+          }
         } else {
-          src = src.replaceAll(rule.getFrom(), rule.getTo());
+          src = src.replace(rule.getFrom(), rule.getTo());
         }
       }
     }
@@ -195,17 +209,18 @@ public abstract class Matcher {
    * @param script 脚本
    * @return 处理后的结果
    */
-  private String handleScript(String source, String result, String script) {
+  private Object handleScript(String source, String result, String script) {
+    Object ret = result;
     // 脚本二次处理
     if (StringUtils.isNotBlank(script)) {
       // 脚本初始变量 添加 source 、result
       ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_SOURCE, source);
       ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_RESULT, result);
-      result = ScriptUtils.execute(script, ScriptContext.current());
+      ret = ScriptUtils.executeForResult(script, ScriptContext.current());
       // 如果没有数据 则移除上下文数据
       ScriptContext.remove(ScriptContext.SCRIPT_CONTEXT_VAR_RESULT, ScriptContext.SCRIPT_CONTEXT_VAR_SOURCE);
       ScriptContext.removeIfEmpty();
     }
-    return result;
+    return ret;
   }
 }

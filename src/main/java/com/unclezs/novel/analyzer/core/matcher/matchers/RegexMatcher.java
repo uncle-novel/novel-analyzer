@@ -24,6 +24,7 @@ public class RegexMatcher extends Matcher {
    * HTML中的title标签内容
    */
   private static final String TITLE_REGEX = "<title>([\\s\\S]+?)</title>##$1";
+  public static final String REGEX_PREFIX = "regex:";
 
   private RegexMatcher() {
   }
@@ -60,7 +61,7 @@ public class RegexMatcher extends Matcher {
    */
   @Override
   public MatcherAlias[] aliases() {
-    return new MatcherAlias[]{MatcherAlias.alias("regex:"), MatcherAlias.alias("regex")};
+    return new MatcherAlias[]{MatcherAlias.alias(REGEX_PREFIX), MatcherAlias.alias("regex")};
   }
 
   /**

@@ -40,15 +40,25 @@ public class ScriptUtils {
    * @param runtimeVariables 运行时变量
    * @return 结果
    */
-  public static String execute(String js, Bindings runtimeVariables) {
+  public static Object executeForResult(String js, Bindings runtimeVariables) {
     try {
-      Object result = runtimeVariables == null ? SCRIPT_ENGINE.eval(js) : SCRIPT_ENGINE.eval(js, runtimeVariables);
-      return StringUtils.toStringNullToEmpty(result);
+      return runtimeVariables == null ? SCRIPT_ENGINE.eval(js) : SCRIPT_ENGINE.eval(js, runtimeVariables);
     } catch (Throwable e) {
       e.printStackTrace();
       log.trace("执行脚本失败：js:{}，vars:{}", js, runtimeVariables, e);
     }
     return null;
+  }
+
+  /**
+   * 执行脚本获取返回值
+   *
+   * @param js               js脚本内容
+   * @param runtimeVariables 运行时变量
+   * @return 结果
+   */
+  public static String execute(String js, Bindings runtimeVariables) {
+    return StringUtils.toStringNullToEmpty(executeForResult(js, runtimeVariables));
   }
 
   /**

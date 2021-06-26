@@ -1,6 +1,7 @@
 package com.unclezs.novel.analyzer.script.variables;
 
 import com.unclezs.novel.analyzer.core.matcher.Matchers;
+import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.request.HttpMethod;
 import com.unclezs.novel.analyzer.request.MediaType;
@@ -11,6 +12,7 @@ import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 提供一些Js调用的java方法
@@ -96,6 +98,17 @@ public class Utils implements ScriptGlobalVariables<Utils> {
     return Matchers.match(src, withTypeRule);
   }
 
+  /**
+   * 匹配列表
+   * eg: xpath://xxx
+   *
+   * @param src          源
+   * @param withTypeRule 带类型的规则
+   * @return 匹配结果列表
+   */
+  public List<Object> matchList(String src, String withTypeRule) {
+    return Matchers.matchList(src, CommonRule.create(withTypeRule));
+  }
 
   /**
    * 获取完整URL
