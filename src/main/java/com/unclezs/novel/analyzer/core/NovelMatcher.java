@@ -154,6 +154,10 @@ public class NovelMatcher {
               // 没有详情页
               novel = Matchers.matchMultiple(element, childRuleMap, Novel.class);
             }
+            // 未匹配到小说则忽略
+            if (novel == null) {
+              return;
+            }
             // 完整拼接URL
             novel.competeUrl(baseUrl);
             // 去除空白

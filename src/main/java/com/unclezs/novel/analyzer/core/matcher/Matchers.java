@@ -65,7 +65,9 @@ public class Matchers {
    * @return 匹配结果
    */
   public <T> T matchMultiple(Object source, Map<String, CommonRule> ruleMap, Class<T> type) {
-    Optional<Map.Entry<String, CommonRule>> ruleEntry = ruleMap.entrySet().stream().findFirst();
+    Optional<Map.Entry<String, CommonRule>> ruleEntry = ruleMap.entrySet().stream()
+      .filter(rule -> MatcherManager.getMatcher(rule.getValue().getType()) != null)
+      .findFirst();
     if (ruleEntry.isPresent()) {
       Matcher matcher = MatcherManager.getMatcher(ruleEntry.get().getValue().getType(), RegexMatcher.me());
       return matcher.matchMultiple(source, ruleMap, type);

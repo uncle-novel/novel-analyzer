@@ -1,7 +1,10 @@
 package com.unclezs.novel.analyzer;
 
+import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
+import com.unclezs.novel.analyzer.model.Novel;
+import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.spider.SearchSpider;
 import com.unclezs.novel.analyzer.spider.TocSpider;
@@ -52,4 +55,13 @@ public class SpiderTest {
     });
     searchSpider.search("完美世界");
   }
+
+  @Test
+  public void testDetail() throws IOException {
+    RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
+    AnalyzerRule rule = RuleHelper.getRule("https://m.miaojiang8.net/3_3155/");
+    Novel novel = NovelMatcher.details(Http.get("https://m.miaojiang8.net/3_3155/"), rule.getDetail());
+    System.out.println(novel);
+  }
+
 }
