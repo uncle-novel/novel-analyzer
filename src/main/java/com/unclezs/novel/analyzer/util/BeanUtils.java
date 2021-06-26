@@ -26,6 +26,9 @@ public class BeanUtils {
    * @param <T>    类型
    */
   public static <T> void copy(T src, T target) {
+    if (src == null || target == null) {
+      return;
+    }
     Class<?> clazz = src.getClass();
     for (Field field : getFields(clazz)) {
       try {

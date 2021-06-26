@@ -149,7 +149,9 @@ public class NovelMatcher {
               // 详情页与搜索页混合匹配
               novel = Matchers.matchMultiple(element, searchPage, Novel.class);
               Novel detail = Matchers.matchMultiple(detailElement, detailPage, Novel.class);
-              BeanUtils.copy(detail, novel);
+              if (novel != null) {
+                BeanUtils.copy(detail, novel);
+              }
             } else {
               // 没有详情页
               novel = Matchers.matchMultiple(element, childRuleMap, Novel.class);

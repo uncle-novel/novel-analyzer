@@ -187,11 +187,12 @@ public abstract class Matcher {
     if (CollectionUtils.isNotEmpty(rules)) {
       for (ReplaceRule rule : rules) {
         if (rule.getFrom().startsWith(RegexMatcher.REGEX_PREFIX)) {
+          String from = rule.getFrom().substring(RegexMatcher.REGEX_PREFIX.length());
           // 包含模板则进行模板替换
           if (StringUtils.isNotBlank(rule.getTo()) && rule.getTo().contains("$")) {
-            src = RegexUtils.replaceAll(src, rule.getFrom(), rule.getTo());
+            src = RegexUtils.replaceAll(src, from, rule.getTo());
           } else {
-            src = src.replaceAll(rule.getFrom(), rule.getTo());
+            src = src.replaceAll(from, rule.getTo());
           }
         } else {
           src = src.replace(rule.getFrom(), rule.getTo());
