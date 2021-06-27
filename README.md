@@ -30,6 +30,10 @@
 - 动态脚本支持
 - 小说下载基础能力
 
-### 捐助作者
+## 书源制作教程
+
+[书源教程](https://app.unclezs.com/booksource/)
+
+### 支持一下
 
 [你的支持，将是我最大的动力](https://app.unclezs.com/sponsors/)
