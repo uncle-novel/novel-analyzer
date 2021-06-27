@@ -1,4 +1,7 @@
 <p align="center">
+    <a href="https://github.com/unclezs/novel-analyzer/actions/workflows/maven.yml">
+    <img src="https://img.shields.io/github/workflow/status/unclezs/novel-analyzer/Java%20CI%20with%20Maven" alt="maven build"/>
+    </a>
 	<img src="https://img.shields.io/github/v/release/unclezs/novel-analyzer"/>
 	<img src="https://img.shields.io/badge/jdk-8.221-green"/>
 	<img src="https://img.shields.io/badge/platform-win linux mac-green"/>
