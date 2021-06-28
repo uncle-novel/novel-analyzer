@@ -17,7 +17,7 @@
 <dependency>
   <groupId>com.unclezs</groupId>
   <artifactId>novel-analyzer</artifactId>
-  <version>1.0.13</version>
+  <version>1.0.14</version>
 </dependency>
 ```
 

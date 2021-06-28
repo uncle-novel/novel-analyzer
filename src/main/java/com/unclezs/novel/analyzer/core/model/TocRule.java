@@ -74,6 +74,10 @@ public class TocRule implements Verifiable, Serializable {
    */
   private Boolean sort;
   /**
+   * 章节逆序
+   */
+  private Boolean reverse = false;
+  /**
    * 自动翻页
    */
   private Boolean autoNext = true;
