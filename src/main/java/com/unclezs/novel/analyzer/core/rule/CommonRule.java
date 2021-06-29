@@ -252,10 +252,6 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
     // 规则是个对象
     if (json.isJsonObject()) {
       JsonObject ruleJson = json.getAsJsonObject();
-//      JsonElement paramsElement = ruleJson.get("params");
-//      if (paramsElement != null) {
-//        commonRule.setParams(context.deserialize(paramsElement, RequestParams.class));
-//      }
       // 规则类型
       commonRule.setPage(GsonUtils.getOrDefault(ruleJson, "page", null));
       // 规则类型
