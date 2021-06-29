@@ -2,6 +2,7 @@ package com.unclezs.novel.analyzer.core.matcher.matchers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -117,9 +118,13 @@ public class JsonMatcher extends Matcher {
    */
   public String match(String src, String rule) {
     try {
-      Object ret = JsonPath.read(src, rule);
+      Object ret = JsonPath.parse(src).read(rule);
       if (ret != null) {
-        return ret.toString();
+        String result = ret.toString();
+        if (result.startsWith(StringUtils.QUOT) && result.endsWith(StringUtils.QUOT)) {
+          result = result.substring(1, result.length() - 1);
+        }
+        return result;
       }
     } catch (PathNotFoundException e) {
       log.trace("JsonPath未匹配到：{}", e.getMessage());

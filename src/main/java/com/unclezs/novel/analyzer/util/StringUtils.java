@@ -39,6 +39,7 @@ public class StringUtils {
    */
   public static final String BACKSLASH = "/";
   public static final String NULL = "null";
+  public static final String QUOT = "\"";
   /**
    * HTML的空白标签
    */
