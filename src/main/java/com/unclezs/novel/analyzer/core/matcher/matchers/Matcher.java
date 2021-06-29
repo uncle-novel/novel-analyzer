@@ -215,11 +215,11 @@ public abstract class Matcher {
     // 脚本二次处理
     if (StringUtils.isNotBlank(script)) {
       // 脚本初始变量 添加 source 、result
-      ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_SOURCE, source);
-      ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_RESULT, result);
+      ScriptContext.put(ScriptContext.VAR_SOURCE, source);
+      ScriptContext.put(ScriptContext.VAR_RESULT, result);
       ret = ScriptUtils.executeForResult(script, ScriptContext.current());
       // 如果没有数据 则移除上下文数据
-      ScriptContext.remove(ScriptContext.SCRIPT_CONTEXT_VAR_RESULT, ScriptContext.SCRIPT_CONTEXT_VAR_SOURCE);
+      ScriptContext.remove(ScriptContext.VAR_RESULT, ScriptContext.VAR_SOURCE);
       ScriptContext.removeIfEmpty();
     }
     return ret;

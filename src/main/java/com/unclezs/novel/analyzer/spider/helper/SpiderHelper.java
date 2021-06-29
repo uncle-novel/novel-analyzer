@@ -38,8 +38,8 @@ public class SpiderHelper {
     String content;
     try {
       // 脚本初始变量添加 当前页面URL，当前的请求参数
-      ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_URL, params.getUrl());
-      ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_PARAMS, params);
+      ScriptContext.put(ScriptContext.VAR_URL, params.getUrl());
+      ScriptContext.put(ScriptContext.VAR_PARAMS, params);
       content = Http.content(params);
     } catch (Exception e) {
       // 请求失败则移除脚本上下文

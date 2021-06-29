@@ -37,11 +37,11 @@ public abstract class BaseFilePipeline extends BasePipeline {
    * @param path 路径
    */
   public void setPath(String path) {
-    path = path.replace(StringUtils.SLASH, StringUtils.BACKSLASH);
+    path = path.replace(StringUtils.SLASH, StringUtils.BACKSLASH).trim();
     if (!path.endsWith(StringUtils.BACKSLASH)) {
       path = path.concat(StringUtils.BACKSLASH);
     }
-    this.path = path;
+    this.path = path.trim();
   }
 
   /**
@@ -51,8 +51,8 @@ public abstract class BaseFilePipeline extends BasePipeline {
    */
   public String getFilePath() {
     if (getNovel() != null && StringUtils.isNotBlank(getNovel().getTitle())) {
-      return getPath() + StringUtils.removeInvalidSymbol(getNovel().getTitle());
+      return getPath() + StringUtils.removeInvalidSymbol(getNovel().getTitle()).trim();
     }
-    return getPath() + defaultFileName;
+    return getPath() + defaultFileName.trim();
   }
 }

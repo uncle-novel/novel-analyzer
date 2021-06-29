@@ -2,7 +2,6 @@ package com.unclezs.novel.analyzer.core.matcher.matchers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -13,6 +12,7 @@ import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import com.unclezs.novel.analyzer.core.matcher.MatcherAlias;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
+import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +75,7 @@ public class JsonMatcher extends Matcher {
    */
   @Override
   public MatcherAlias[] aliases() {
-    return new MatcherAlias[]{MatcherAlias.alias("json:"), MatcherAlias.alias("json"), MatcherAlias.defaultAlias("$.")};
+    return new MatcherAlias[]{MatcherAlias.alias(RuleConstant.TYPE_JSON), MatcherAlias.alias(RuleConstant.TYPE_JSON.concat(StringUtils.COLON)), MatcherAlias.defaultAlias("$.")};
   }
 
   /**
@@ -120,11 +120,7 @@ public class JsonMatcher extends Matcher {
     try {
       Object ret = JsonPath.parse(src).read(rule);
       if (ret != null) {
-        String result = ret.toString();
-        if (result.startsWith(StringUtils.QUOT) && result.endsWith(StringUtils.QUOT)) {
-          result = result.substring(1, result.length() - 1);
-        }
-        return result;
+        return StringUtils.removeQuote(ret.toString());
       }
     } catch (PathNotFoundException e) {
       log.trace("JsonPath未匹配到：{}", e.getMessage());

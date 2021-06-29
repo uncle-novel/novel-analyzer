@@ -23,8 +23,13 @@ public class RuleConstant {
    * 详情页
    */
   public static final String DETAIL_PAGE = "detail";
+
   /**
-   * 目录页
+   * 规则类型
    */
-  public static final String TOC_PAGE = "toc";
+  public static final String TYPE_XPATH = "xpath";
+  public static final String TYPE_JSON = "json";
+  public static final String TYPE_CSS = "css";
+  public static final String TYPE_REGEX = "regex";
+  public static final String TYPE_AUTO = "auto";
 }

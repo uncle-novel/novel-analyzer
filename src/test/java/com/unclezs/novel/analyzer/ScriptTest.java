@@ -46,10 +46,10 @@ public class ScriptTest {
     String scriptUrl = "/script/test.js";
     String script = FileUtils.readUtf8String(Objects.requireNonNull(ScriptTest.class.getResource(scriptUrl)).getFile());
 
-    ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_RESULT, result);
-    ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_SOURCE, source);
-    ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_PARAMS, params);
-    ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_URL, url);
+    ScriptContext.put(ScriptContext.VAR_RESULT, result);
+    ScriptContext.put(ScriptContext.VAR_SOURCE, source);
+    ScriptContext.put(ScriptContext.VAR_PARAMS, params);
+    ScriptContext.put(ScriptContext.VAR_URL, url);
 
 //    Object s = ScriptUtils.executeForResult(script, ScriptContext.current());
 //    System.out.println(s);
@@ -68,7 +68,7 @@ public class ScriptTest {
     String scriptUrl = "/script/test.js";
     String script = FileUtils.readUtf8String(Objects.requireNonNull(ScriptTest.class.getResource(scriptUrl)).getFile());
 
-    ScriptContext.put(ScriptContext.SCRIPT_CONTEXT_VAR_URL, url);
+    ScriptContext.put(ScriptContext.VAR_URL, url);
 
     CommonRule rule = new CommonRule();
     rule.setScript(script);

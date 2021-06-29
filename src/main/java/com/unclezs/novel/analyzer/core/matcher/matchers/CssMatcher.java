@@ -2,6 +2,7 @@ package com.unclezs.novel.analyzer.core.matcher.matchers;
 
 import com.unclezs.novel.analyzer.core.matcher.MatcherAlias;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
+import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Pair;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
@@ -51,7 +52,7 @@ public class CssMatcher extends Matcher {
    */
   @Override
   public MatcherAlias[] aliases() {
-    return new MatcherAlias[]{MatcherAlias.alias("css:"), MatcherAlias.alias("css")};
+    return new MatcherAlias[]{MatcherAlias.alias(RuleConstant.TYPE_CSS.concat(StringUtils.COLON)), MatcherAlias.alias(RuleConstant.TYPE_CSS)};
   }
 
   /**

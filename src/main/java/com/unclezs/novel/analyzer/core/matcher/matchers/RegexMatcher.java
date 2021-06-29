@@ -2,6 +2,7 @@ package com.unclezs.novel.analyzer.core.matcher.matchers;
 
 import com.unclezs.novel.analyzer.core.matcher.MatcherAlias;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
+import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Pair;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.regex.RegexUtils;
@@ -19,7 +20,7 @@ public class RegexMatcher extends Matcher {
    * 分组模板分隔符
    */
   public static final String REGEX_TEMPLATE_DELIMITER = "##";
-  public static final String REGEX_PREFIX = "regex:";
+  public static final String REGEX_PREFIX = RuleConstant.TYPE_REGEX.concat(StringUtils.COLON);
   private static final RegexMatcher ME = new RegexMatcher();
   /**
    * HTML中的title标签内容
@@ -61,7 +62,7 @@ public class RegexMatcher extends Matcher {
    */
   @Override
   public MatcherAlias[] aliases() {
-    return new MatcherAlias[]{MatcherAlias.alias(REGEX_PREFIX), MatcherAlias.alias("regex")};
+    return new MatcherAlias[]{MatcherAlias.alias(REGEX_PREFIX), MatcherAlias.alias(RuleConstant.TYPE_REGEX)};
   }
 
   /**

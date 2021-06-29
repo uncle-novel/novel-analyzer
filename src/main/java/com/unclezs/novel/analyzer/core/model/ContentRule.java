@@ -53,7 +53,7 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
   /**
    * 正文
    */
-  private CommonRule content = CommonRule.create(DefaultTextMatcher.DEFAULT_RULE_TYPE, DefaultTextMatcher.DEFAULT_ORDER);
+  private CommonRule content = CommonRule.create(RuleConstant.TYPE_AUTO, DefaultTextMatcher.DEFAULT_ORDER);
   /**
    * 正文下一页规则（存在则会匹配下一页）
    */

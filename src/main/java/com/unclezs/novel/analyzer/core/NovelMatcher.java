@@ -100,6 +100,7 @@ public class NovelMatcher {
     if (StringUtils.isBlank(novel.getTitle())) {
       novel.setTitle(AnalyzerHelper.siteTitle(originalText));
     }
+    novel.trim();
     return novel;
   }
 

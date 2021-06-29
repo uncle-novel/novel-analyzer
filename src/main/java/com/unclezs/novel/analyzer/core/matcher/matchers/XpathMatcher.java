@@ -2,6 +2,7 @@ package com.unclezs.novel.analyzer.core.matcher.matchers;
 
 import com.unclezs.novel.analyzer.core.matcher.MatcherAlias;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
+import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.seimicrawler.xpath.JXDocument;
@@ -40,7 +41,7 @@ public class XpathMatcher extends Matcher {
    */
   @Override
   public MatcherAlias[] aliases() {
-    return new MatcherAlias[]{MatcherAlias.alias("xpath:"), MatcherAlias.alias("xpath"), MatcherAlias.defaultAlias("//")};
+    return new MatcherAlias[]{MatcherAlias.alias(RuleConstant.TYPE_XPATH.concat(StringUtils.COLON)), MatcherAlias.alias(RuleConstant.TYPE_XPATH), MatcherAlias.defaultAlias("//")};
   }
 
   /**

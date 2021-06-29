@@ -96,9 +96,6 @@ public class RuleTester {
     try {
       ContentRule contentRule = rule.getContent();
       printHeader(type, contentRule);
-      if (contentRule == null || !CommonRule.isEffective(contentRule.getContent())) {
-        messageConsumer.accept("正文规则无效，采用自动解析模式!!");
-      }
       AtomicInteger page = new AtomicInteger(0);
       spider.content(url, str -> {
         printPage(type, page.incrementAndGet());

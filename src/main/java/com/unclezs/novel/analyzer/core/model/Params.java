@@ -28,4 +28,8 @@ public class Params implements Serializable {
    * 自定义UA
    */
   private String userAgent;
+  /**
+   * 自动添加防盗链
+   */
+  private Boolean autoReferer;
 }

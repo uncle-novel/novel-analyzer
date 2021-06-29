@@ -13,9 +13,6 @@ import java.util.Set;
 /**
  * JS脚本 上下文
  * 用于多个方法间的设置JS的默认化变量
- * 1. 当前页面的地址  url
- * 2. 当前页面源码 source
- * 3. 当前页面解析后的结果 result
  *
  * @author blog.unclezs.com
  * @date 2021/2/3 0:06
@@ -25,20 +22,23 @@ public class ScriptContext {
   /**
    * 当前页面的地址  url
    */
-  public static final String SCRIPT_CONTEXT_VAR_URL = "url";
+  public static final String VAR_URL = "url";
   /**
    * 当前页面源码 source
    */
-  public static final String SCRIPT_CONTEXT_VAR_SOURCE = "source";
+  public static final String VAR_SOURCE = "source";
   /**
    * 当前页面解析后的结果 result
    */
-  public static final String SCRIPT_CONTEXT_VAR_RESULT = "result";
+  public static final String VAR_RESULT = "result";
   /**
    * 全局参数
    */
-  public static final String SCRIPT_CONTEXT_VAR_PARAMS = "params";
-  private static final Set<String> VARIABLES = CollectionUtils.newSet(SCRIPT_CONTEXT_VAR_PARAMS, SCRIPT_CONTEXT_VAR_URL, SCRIPT_CONTEXT_VAR_SOURCE, SCRIPT_CONTEXT_VAR_RESULT);
+  public static final String VAR_PARAMS = "params";
+  /**
+   * webview时的窗口变量
+   */
+  private static final Set<String> VARIABLES = CollectionUtils.newSet(VAR_PARAMS, VAR_URL, VAR_SOURCE, VAR_RESULT);
 
   /**
    * 爬虫上下文

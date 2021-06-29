@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -65,21 +66,25 @@ public class NovelSpider {
    */
   public Result<String> content(String url, Consumer<String> pageConsumer) throws IOException {
     ContentRule contentRule = getRule().getContent();
+    boolean audio = Boolean.TRUE.equals(getRule().getAudio());
     // 如果为有声规则，且正文规则无效则直接返回URL（此处特殊逻辑处理了有声小说在目录解析时就获取到了真实音频地址的情况）
-    if (Boolean.TRUE.equals(getRule().getAudio()) && !CommonRule.isEffective(contentRule.getContent())) {
-      if (pageConsumer != null) {
-        pageConsumer.accept(url);
-      }
+    String preScript = Optional.of(contentRule).map(ContentRule::getParams).map(RequestParams::getScript).orElse(null);
+    if (audio && StringUtils.isBlank(preScript) && !CommonRule.isEffective(contentRule.getContent())) {
+      doConsumer(pageConsumer, url);
       return new Result<>(1, url);
     }
     // 请求参数
     RequestParams params = RequestParams.create(url, contentRule.getParams());
-
     StringBuilder contentBuilder = new StringBuilder();
     int page = 1;
     // 记录已经访问过的页面
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
     String originalText = request(params);
+    // 请求完成后，规则无效直接返回源码
+    if (!CommonRule.isEffective(contentRule.getContent())) {
+      doConsumer(pageConsumer, originalText);
+      return new Result<>(1, originalText);
+    }
     log.trace("获取到网页{}源码：{}", params.getUrl(), originalText);
     try {
       String content = NovelMatcher.content(originalText, contentRule);
@@ -100,9 +105,7 @@ public class NovelSpider {
           String pageContent = NovelMatcher.content(originalText, contentRule);
           contentBuilder.append(StringUtils.LF).append(pageContent);
           // 回调
-          if (pageConsumer != null) {
-            pageConsumer.accept(pageContent);
-          }
+          doConsumer(pageConsumer, pageContent);
           page++;
           // 下一页
           params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
@@ -146,9 +149,7 @@ public class NovelSpider {
     String originalText = request(params);
     try {
       toc = NovelMatcher.toc(originalText, tocRule);
-      if (pageConsumer != null) {
-        pageConsumer.accept(toc);
-      }
+      doConsumer(pageConsumer, toc);
       // 如果允许下一页
       if (tocRule.isAllowNextPage()) {
         String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
@@ -164,9 +165,7 @@ public class NovelSpider {
           List<Chapter> pageChapters = NovelMatcher.toc(originalText, tocRule);
           if (CollectionUtils.isNotEmpty(pageChapters)) {
             toc.addAll(pageChapters);
-            if (pageConsumer != null) {
-              pageConsumer.accept(pageChapters);
-            }
+            doConsumer(pageConsumer, pageChapters);
           }
           // 下一页
           params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
@@ -205,5 +204,11 @@ public class NovelSpider {
 
   private String request(RequestParams params) throws IOException {
     return SpiderHelper.request(rule.getParams(), params);
+  }
+
+  private <T> void doConsumer(Consumer<T> consumer, T param) {
+    if (consumer != null) {
+      consumer.accept(param);
+    }
   }
 }

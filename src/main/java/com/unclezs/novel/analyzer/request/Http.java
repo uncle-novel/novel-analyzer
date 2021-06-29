@@ -4,6 +4,8 @@ import com.unclezs.novel.analyzer.AnalyzerManager;
 import com.unclezs.novel.analyzer.request.proxy.DefaultProxyProvider;
 import com.unclezs.novel.analyzer.request.spi.HttpProvider;
 import com.unclezs.novel.analyzer.request.spi.ProxyProvider;
+import com.unclezs.novel.analyzer.script.ScriptContext;
+import com.unclezs.novel.analyzer.script.ScriptUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -84,7 +86,8 @@ public class Http {
   public static String content(RequestParams requestParams) throws IOException {
     initDefaultRequestParams(requestParams);
     try {
-      return client(requestParams).content(requestParams);
+      String content = client(requestParams).content(requestParams);
+      return scriptPreHandle(requestParams, content);
     } catch (IOException e) {
       proxyFailed(requestParams);
       throw new IOException(e);
@@ -190,7 +193,32 @@ public class Http {
       requestParams.setMediaType(MediaType.NONE.getMediaType());
     }
     // 初始化请求头
-    // requestParams.addHeader(RequestParams.REFERER, requestParams.getUrl());
+    if (RequestParams.AUTO_REFERER.equals(requestParams.getHeader(RequestParams.REFERER))) {
+      requestParams.setHeader(RequestParams.REFERER, requestParams.getUrl());
+    }
     requestParams.addHeader(RequestParams.USER_AGENT, RequestParams.USER_AGENT_DEFAULT_VALUE);
+  }
+
+  /**
+   * 脚本预处理
+   *
+   * @param params 请求参数
+   * @param source 源码
+   * @return 处理后的结果
+   */
+  private String scriptPreHandle(RequestParams params, String source) {
+    if (Boolean.FALSE.equals(params.getDynamic()) && StringUtils.isNotBlank(params.getScript())) {
+      try {
+        ScriptContext.put(ScriptContext.VAR_SOURCE, source);
+        ScriptContext.put(ScriptContext.VAR_URL, params.getUrl());
+        ScriptContext.put(ScriptContext.VAR_PARAMS, params);
+        return ScriptUtils.execute(params.getScript(), ScriptContext.current());
+      } catch (Throwable e) {
+        LOG.error("预处理脚本执行失败:{},url:{}", params.getScript(), params.getUrl(), e);
+      } finally {
+        ScriptContext.remove(ScriptContext.VAR_SOURCE, ScriptContext.VAR_URL, ScriptContext.VAR_PARAMS);
+      }
+    }
+    return source;
   }
 }

@@ -5,6 +5,8 @@ import com.unclezs.novel.analyzer.core.matcher.matchers.text.DefaultContentMatch
 import com.unclezs.novel.analyzer.core.matcher.matchers.text.FullTextContentMatcher;
 import com.unclezs.novel.analyzer.core.matcher.matchers.text.ParagraphContentMatcher;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
+import com.unclezs.novel.analyzer.core.rule.RuleConstant;
+import com.unclezs.novel.analyzer.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,10 +24,6 @@ import java.util.List;
  * @date 2021/2/4 21:52
  */
 public class DefaultTextMatcher extends Matcher {
-  /**
-   * 默认规则类型
-   */
-  public static final String DEFAULT_RULE_TYPE = "auto:";
   /**
    * 全文模式
    */
@@ -59,7 +57,7 @@ public class DefaultTextMatcher extends Matcher {
 
   @Override
   public MatcherAlias[] aliases() {
-    return new MatcherAlias[]{MatcherAlias.alias("auto:"), MatcherAlias.alias("auto")};
+    return new MatcherAlias[]{MatcherAlias.alias(RuleConstant.TYPE_AUTO.concat(StringUtils.COLON)), MatcherAlias.alias(RuleConstant.TYPE_AUTO)};
   }
 
   /**

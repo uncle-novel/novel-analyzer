@@ -144,15 +144,16 @@ public class OkHttpClient implements HttpProvider {
     try (Response response = request.execute()) {
       handleFailed(response);
       ResponseBody body = response.body();
-      if (body == null) {
-        return StringUtils.EMPTY;
-      } else {
+      String result = StringUtils.EMPTY;
+      if (body != null) {
         // 指定了编码则使用指定编码
         if (StringUtils.isNotBlank(requestParams.getCharset())) {
-          return body.source().readByteString().string(Charset.forName(requestParams.getCharset()));
+          result = body.source().readByteString().string(Charset.forName(requestParams.getCharset()));
+        } else {
+          result = getString(body.source(), body.contentType());
         }
-        return getString(body.source(), body.contentType());
       }
+      return result;
     }
   }
 

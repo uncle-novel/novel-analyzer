@@ -30,6 +30,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class RequestParams implements Verifiable, Serializable {
   public static final String REFERER = "Referer";
+  public static final String AUTO_REFERER = "auto";
   public static final String COOKIE = "Cookie";
   public static final String USER_AGENT = "User-Agent";
   public static final String USER_AGENT_DEFAULT_VALUE = "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
@@ -78,6 +79,14 @@ public class RequestParams implements Verifiable, Serializable {
    * 优先级 先判断此此字段为true 再判断全局AnalyzerManager.autoProxy是否开启
    */
   private Boolean autoProxy;
+  /**
+   * 处理脚本，在请求结束后（比如webview中执行）
+   */
+  private String script;
+  /**
+   * 动态网页延迟时间
+   */
+  private Long dynamicDelayTime = 500L;
 
   /**
    * 默认请求配置
@@ -264,6 +273,10 @@ public class RequestParams implements Verifiable, Serializable {
     // 动态网页
     if (Boolean.TRUE.equals(params.getDynamic())) {
       setDynamic(true);
+    }
+    // 代理
+    if (Boolean.TRUE.equals(params.getAutoReferer())) {
+      addHeader(RequestParams.REFERER, AUTO_REFERER);
     }
     // 代理
     if (Boolean.TRUE.equals(params.getEnabledProxy())) {

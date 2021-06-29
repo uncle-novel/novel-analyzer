@@ -40,6 +40,7 @@ public class StringUtils {
   public static final String BACKSLASH = "/";
   public static final String NULL = "null";
   public static final String QUOT = "\"";
+  public static final String COLON = ":";
   /**
    * HTML的空白标签
    */
@@ -82,6 +83,19 @@ public class StringUtils {
       }
     }
     return true;
+  }
+
+  /**
+   * 移除双引号 “xx” -》 xx
+   *
+   * @param str /
+   * @return /
+   */
+  public String removeQuote(String str) {
+    if (str.startsWith(StringUtils.QUOT) && str.endsWith(StringUtils.QUOT)) {
+      str = str.substring(1, str.length() - 1);
+    }
+    return str;
   }
 
   /**
