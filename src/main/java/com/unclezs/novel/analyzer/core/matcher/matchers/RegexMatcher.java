@@ -51,9 +51,6 @@ public class RegexMatcher extends Matcher {
     if (ret.length > 1) {
       pair.setRight(ret[1]);
     }
-    // 处理Java字符串中 \ 的转义
-    String rule = pair.getLeft().replace("\\\\", "\\").replace("\\", "\\\\");
-    pair.setLeft(rule);
     return pair;
   }
 

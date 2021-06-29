@@ -115,6 +115,16 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
       if (enableNextElement != null) {
         contentRule.setEnableNext(enableNextElement.getAsBoolean());
       }
+      // 繁体转简体
+      JsonElement traditionToSimpleElement = jsonObject.get("traditionToSimple");
+      if (traditionToSimpleElement != null) {
+        contentRule.setTraditionToSimple(traditionToSimpleElement.getAsBoolean());
+      }
+      // 移除标题
+      JsonElement removeTitleElement = jsonObject.get("removeTitle");
+      if (removeTitleElement != null) {
+        contentRule.setRemoveTitle(removeTitleElement.getAsBoolean());
+      }
       // 内容规则
       JsonElement contentElement = jsonObject.get("content");
       if (contentElement != null) {
@@ -124,6 +134,11 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
       JsonElement nextElement = jsonObject.get("next");
       if (nextElement != null) {
         contentRule.setNext(context.deserialize(nextElement, CommonRule.class));
+      }
+      // 请求参数
+      JsonElement paramsElement = jsonObject.get("params");
+      if (paramsElement != null) {
+        contentRule.setParams(context.deserialize(paramsElement, RequestParams.class));
       }
     } else {
       // 直接填写正文规则

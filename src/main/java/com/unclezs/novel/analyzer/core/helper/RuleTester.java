@@ -35,6 +35,7 @@ import static com.unclezs.novel.analyzer.util.StringUtils.LF;
 @Slf4j
 public class RuleTester {
   public static final String LINE = "============================";
+  private static final String NEW_LINE = LINE.concat(LF).concat(LINE).concat(LF);
   private final AnalyzerRule rule;
   private final NovelSpider spider;
   private Consumer<String> messageConsumer = System.out::print;
@@ -63,7 +64,7 @@ public class RuleTester {
       // 取中间的一本小说测试
       Novel novel = RandomUtils.randomEle(novels);
       String tocUrl = novel.getUrl();
-      messageConsumer.accept(LINE.concat(LF).concat(LINE).concat(LF));
+      messageConsumer.accept(NEW_LINE);
       messageConsumer.accept(String.format("选择第%d本小说测试目录解析:", novels.indexOf(novel) + 1).concat(LF));
       printNovel(novel);
       if (UrlUtils.isHttpUrl(tocUrl)) {
@@ -72,7 +73,7 @@ public class RuleTester {
         if (!toc.isEmpty()) {
           // 去第一章节测试
           Chapter chapter = RandomUtils.randomEle(toc);
-          messageConsumer.accept(LINE.concat(LF).concat(LINE).concat(LF));
+          messageConsumer.accept(NEW_LINE);
           messageConsumer.accept(String.format("选择第%d章测试正文及详情解析:", toc.indexOf(chapter) + 1).concat(LF));
           String url = chapter.getUrl();
           // 测试正文
@@ -101,7 +102,7 @@ public class RuleTester {
       AtomicInteger page = new AtomicInteger(0);
       spider.content(url, str -> {
         printPage(type, page.incrementAndGet());
-        messageConsumer.accept(str.concat(LF));
+        messageConsumer.accept(str + LF);
       });
       printFooter(type, page.get());
     } catch (Exception e) {
@@ -246,9 +247,9 @@ public class RuleTester {
    * @param type 类型
    */
   private void printFooter(String type, int page) {
-    String message = type.concat("测试已经完成！！");
+    String message = type + "测试已经完成！！";
     if (page > 0) {
-      message = message.concat(String.format(", 共%s页", page));
+      message = message + String.format(", 共%s页", page);
     }
     StringJoiner recorder = new StringJoiner(LF)
       .add(LINE)

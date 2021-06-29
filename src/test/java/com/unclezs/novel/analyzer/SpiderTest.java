@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer;
 import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
+import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
@@ -35,14 +36,15 @@ public class SpiderTest {
 
   @Test
   public void testContent() throws IOException {
-    String url = "";
+    String url = "https://m.miaojiang8.net/0_687/63971.html";
     String cookie = "";
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
     AnalyzerRule rule = RuleHelper.getOrDefault(url);
+    rule.getContent().setNext(CommonRule.create("xpath://a[text()~='.*?下[一]{0,1}[页节章].*']/@href"));
     rule.getParams().setCookie(cookie);
     rule.getContent().setEnableNext(true);
     NovelSpider spider = new NovelSpider(rule);
-    System.out.println(spider.content(url));
+    System.out.println(spider.content(url, System.out::println));
   }
 
 
