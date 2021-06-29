@@ -15,6 +15,10 @@ import java.util.Objects;
 @Data
 public class Novel implements Serializable {
   /**
+   * 小说所属站点
+   */
+  private String site;
+  /**
    * 目录链接
    */
   private String url;

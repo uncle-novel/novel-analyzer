@@ -168,6 +168,8 @@ public class NovelMatcher {
             if (itemHandler != null) {
               itemHandler.accept(novel);
             }
+            // 小说所属站点
+            novel.setSite(rule.getSite());
             novels.add(novel);
           } catch (IOException e) {
             e.printStackTrace();
