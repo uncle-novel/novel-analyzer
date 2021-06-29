@@ -8,6 +8,7 @@ import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.ContentRule;
 import com.unclezs.novel.analyzer.core.model.DetailRule;
 import com.unclezs.novel.analyzer.core.model.TocRule;
+import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.RequestParams;
@@ -64,6 +65,13 @@ public class NovelSpider {
    */
   public Result<String> content(String url, Consumer<String> pageConsumer) throws IOException {
     ContentRule contentRule = getRule().getContent();
+    // 如果为有声规则，且正文规则无效则直接返回URL（此处特殊逻辑处理了有声小说在目录解析时就获取到了真实音频地址的情况）
+    if (Boolean.TRUE.equals(getRule().getAudio()) && !CommonRule.isEffective(contentRule.getContent())) {
+      if (pageConsumer != null) {
+        pageConsumer.accept(url);
+      }
+      return new Result<>(1, url);
+    }
     // 请求参数
     RequestParams params = RequestParams.create(url, contentRule.getParams());
 
