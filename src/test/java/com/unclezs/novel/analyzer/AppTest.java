@@ -1,6 +1,11 @@
 package com.unclezs.novel.analyzer;
 
+import com.unclezs.novel.analyzer.core.helper.RuleHelper;
+import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
+import com.unclezs.novel.analyzer.util.FileUtils;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author blog.unclezs.com
@@ -9,6 +14,8 @@ import org.junit.Test;
 public class AppTest {
 
   @Test
-  public void test() {
+  public void test() throws IOException {
+    RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
+    System.out.println(RuleHelper.GSON.toJson(RuleHelper.rules()));
   }
 }

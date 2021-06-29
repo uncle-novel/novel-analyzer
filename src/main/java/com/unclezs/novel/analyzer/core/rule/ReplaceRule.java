@@ -5,6 +5,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
 import com.unclezs.novel.analyzer.model.Pair;
 import com.unclezs.novel.analyzer.util.GsonUtils;
@@ -22,7 +25,7 @@ import java.util.Objects;
  * 净化规则
  * <pre>
  *     # 最小规则
- *     replace: "正则##模块"
+ *     replace: "正则##模版"
  *     # 完整规则
  *     replace: {
  *          "from":"正则匹配"
@@ -37,7 +40,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReplaceRule implements Serializable, JsonDeserializer<ReplaceRule> {
+public class ReplaceRule implements Serializable, JsonDeserializer<ReplaceRule>, JsonSerializer<ReplaceRule> {
   private static final long serialVersionUID = 830391532687585985L;
   /**
    * 广告匹配正则
@@ -100,6 +103,14 @@ public class ReplaceRule implements Serializable, JsonDeserializer<ReplaceRule> 
       return replaceRule;
     }
     return null;
+  }
+
+  @Override
+  public JsonElement serialize(ReplaceRule rule, Type type, JsonSerializationContext jsonSerializationContext) {
+    if (StringUtils.isBlank(rule.getFrom())) {
+      return null;
+    }
+    return new JsonPrimitive(rule.getFrom() + RegexMatcher.REGEX_TEMPLATE_DELIMITER + rule.getTo());
   }
 
   @Override

@@ -12,6 +12,7 @@ import com.google.gson.JsonSerializer;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.matcher.MatcherManager;
 import com.unclezs.novel.analyzer.model.Pair;
+import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Data;
@@ -334,9 +335,32 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
 
   @Override
   public JsonElement serialize(CommonRule commonRule, Type type, JsonSerializationContext jsonSerializationContext) {
-    if (commonRule.replace == null || commonRule.replace.size() <= 1) {
+    boolean hasReplace = CollectionUtils.isNotEmpty(commonRule.replace);
+    boolean hasScript = StringUtils.isNotBlank(commonRule.script);
+    boolean hasPage = StringUtils.isNotBlank(commonRule.page);
+    JsonObject jsonObject = new JsonObject();
+    // 只有规则
+    if (!hasPage && !hasReplace && !hasScript) {
+      String ruleString = commonRule.ruleString();
+      if (ruleString == null) {
+        return null;
+      }
       return new JsonPrimitive(commonRule.ruleString());
     }
-    return GsonUtils.me().toJsonTree(commonRule);
+    if (StringUtils.isNotBlank(commonRule.ruleString())) {
+      jsonObject.addProperty("rule", commonRule.ruleString());
+    }
+    if (hasReplace && commonRule.replace.size() == 1) {
+      jsonObject.addProperty("replace", RuleHelper.GSON.toJson(commonRule.replace.iterator().next()));
+    } else if (hasReplace) {
+      jsonObject.add("replace", RuleHelper.GSON.toJsonTree(commonRule.replace));
+    }
+    if (hasPage) {
+      jsonObject.addProperty("page", commonRule.page);
+    }
+    if (hasScript) {
+      jsonObject.addProperty("script", commonRule.script);
+    }
+    return jsonObject;
   }
 }

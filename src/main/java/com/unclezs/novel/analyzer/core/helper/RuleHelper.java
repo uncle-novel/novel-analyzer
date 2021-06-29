@@ -40,6 +40,7 @@ public class RuleHelper {
     .registerTypeAdapter(ReplaceRule.class, new ReplaceRule())
     .registerTypeAdapter(ContentRule.class, new ContentRule())
     .disableHtmlEscaping()
+    .setPrettyPrinting()
     .create();
   /**
    * 所有规则
