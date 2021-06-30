@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.spider.pipline;
 
+import com.unclezs.novel.analyzer.common.exception.SpiderRuntimeException;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.request.RequestParams;
@@ -23,6 +24,7 @@ public class MediaFilePipeline extends BaseFilePipeline {
   public static final String MEDIA_TYPE_M4A = "m4a";
   private static final String DOWNLOAD_FILE_FORMAT = "%s/%s.%s";
   private static final String MEDIA_TYPE_MP3 = "mp3";
+  public static final int KB_5 = 5 * 1024;
 
   @Override
   public void process(Chapter chapter) {
@@ -31,10 +33,13 @@ public class MediaFilePipeline extends BaseFilePipeline {
       RequestParams requestParams = RequestParams.create(chapter.getContent());
       requestParams.addHeader(RequestParams.REFERER, chapter.getUrl());
       byte[] bytes = Http.bytes(requestParams);
+      if (bytes.length < KB_5) {
+        throw new SpiderRuntimeException("音频大小太小，认定为失败");
+      }
       FileUtils.writeBytes(downloadFile, bytes);
     } catch (IOException e) {
       log.error("保存章节内容到：{} 失败.", downloadFile, e);
-      e.printStackTrace();
+      throw new SpiderRuntimeException("音频抓取失败");
     }
   }
 
