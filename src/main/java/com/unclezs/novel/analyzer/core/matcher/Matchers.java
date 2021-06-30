@@ -137,8 +137,11 @@ public class Matchers {
           // 选出类型为CommonRule且不为空的
           Object srcValue = field.get(obj);
           if (srcValue instanceof CommonRule) {
-            Alias alias = field.getAnnotation(Alias.class);
             CommonRule value = (CommonRule) srcValue;
+            if (!CommonRule.isEffective(value)) {
+              return;
+            }
+            Alias alias = field.getAnnotation(Alias.class);
             if (type != null) {
               // 设置默认类型 此处应该与list规则类型一样
               value.setType(type);

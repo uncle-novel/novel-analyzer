@@ -195,7 +195,7 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
    * 是否为有效的规则
    */
   public boolean isEffective() {
-    return StringUtils.isNotBlank(type) && StringUtils.isNotBlank(rule);
+    return StringUtils.isNotBlank(type) && StringUtils.isNotBlank(rule) && MatcherManager.getMatcher(rule) == null;
   }
 
   /**
@@ -286,6 +286,13 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
           commonRule.setRule(rulePair.getRight());
         }
       }
+    } else {
+      commonRule.setType(null);
+      commonRule.setRule(null);
+    }
+    if (StringUtils.isNotBlank(commonRule.rule) && MatcherManager.getMatcher(commonRule.rule) != null) {
+      commonRule.setRule(null);
+      commonRule.setType(null);
     }
     return commonRule;
   }
