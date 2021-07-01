@@ -6,7 +6,7 @@
     <name>novel-analyzer</name>
     <groupId>com.unclezs</groupId>
     <artifactId>novel-analyzer</artifactId>
-    <version>1.0.18</version>
+    <version>1.0.19</version>
 
     <url>https://github.com/unclezs/novel-analyzer</url>
     <description>Uncle小说解析 SDK</description>

@@ -152,6 +152,8 @@ public class NovelMatcher {
               Novel detail = Matchers.matchMultiple(detailElement, detailPage, Novel.class);
               if (novel != null) {
                 BeanUtils.copy(detail, novel);
+              } else if (detail != null) {
+                novel = detail;
               }
             } else {
               // 没有详情页
