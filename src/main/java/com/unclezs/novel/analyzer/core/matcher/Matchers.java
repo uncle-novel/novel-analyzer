@@ -138,7 +138,7 @@ public class Matchers {
           Object srcValue = field.get(obj);
           if (srcValue instanceof CommonRule) {
             CommonRule value = (CommonRule) srcValue;
-            if (!CommonRule.isEffective(value)) {
+            if (!CommonRule.hasRule(value)) {
               return;
             }
             Alias alias = field.getAnnotation(Alias.class);

@@ -12,6 +12,7 @@ import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.core.rule.RuleConstant;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
+import com.unclezs.novel.analyzer.request.HttpMethod;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.spider.helper.SearchHelper;
@@ -20,6 +21,7 @@ import com.unclezs.novel.analyzer.util.BeanUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
  * @author blog.unclezs.com
  * @date 2021/2/14 14:02
  */
+@Slf4j
 @UtilityClass
 public class NovelMatcher {
   /**
@@ -112,75 +115,80 @@ public class NovelMatcher {
   public static List<Novel> search(int page, String keyword, AnalyzerRule rule, Consumer<Novel> itemHandler) throws IOException {
     SearchRule searchRule = rule.getSearch();
     List<Novel> novels = new ArrayList<>();
-    // 搜索规则有效
-    if (searchRule != null && searchRule.isEffective()) {
-      RequestParams params = searchRule.getParams().copy();
-      String baseUrl = params.getUrl();
-      // 预处理请求参数
-      SearchHelper.pretreatmentSearchParam(params, page, keyword);
-      // 请求网页
-      String originalText = SpiderHelper.request(rule.getParams(), params);
-      try {
-        // 列表规则
-        CommonRule listRule = searchRule.getList();
-        Map<String, CommonRule> childRuleMap = Matchers.getChildMap(listRule.getType(), searchRule.getDetail());
-        Matchers.matchList(originalText, listRule, element -> {
-          CommonRule detailPageRule = searchRule.getDetailPage();
-          try {
-            Novel novel;
-            // 如果自定义了详情页
-            if (CommonRule.hasRule(detailPageRule)) {
-              // 自动保持与list一致
-              detailPageRule.setType(listRule.getType());
-              String detailPageUrl = Matchers.match(element, detailPageRule);
-              // 拼接完整URL
-              detailPageUrl = UrlUtils.completeUrl(baseUrl, detailPageUrl);
-              params.setUrl(detailPageUrl);
-              Object detailElement = SpiderHelper.request(rule.getParams(), params);
-              // 通过指定 page= search | detail ，不填写默认为详情页
-              Map<String, CommonRule> detailPage = new HashMap<>(16);
-              Map<String, CommonRule> searchPage = new HashMap<>(16);
-              childRuleMap.forEach((k, v) -> {
-                if (RuleConstant.SEARCH_PAGE.equals(v.getPage())) {
-                  searchPage.put(k, v);
-                } else {
-                  detailPage.put(k, v);
-                }
-              });
-              // 详情页与搜索页混合匹配
-              novel = Matchers.matchMultiple(element, searchPage, Novel.class);
-              Novel detail = Matchers.matchMultiple(detailElement, detailPage, Novel.class);
-              if (novel != null) {
-                BeanUtils.copy(detail, novel);
-              } else if (detail != null) {
-                novel = detail;
+    // 搜索规则无效
+    if (searchRule == null || !searchRule.isEffective()) {
+      return novels;
+    }
+    RequestParams params = searchRule.getParams().copy();
+    String baseUrl = params.getUrl();
+    // 预处理请求参数
+    SearchHelper.pretreatmentSearchParam(params, page, keyword);
+    // 请求网页
+    String originalText = SpiderHelper.request(rule.getParams(), params);
+    try {
+      // 列表规则
+      CommonRule listRule = searchRule.getList();
+      Map<String, CommonRule> childRuleMap = Matchers.getChildMap(listRule.getType(), searchRule.getDetail());
+      Matchers.matchList(originalText, listRule, element -> {
+        CommonRule detailPageRule = searchRule.getDetailPage();
+        try {
+          Novel novel;
+          // 如果自定义了详情页
+          if (CommonRule.hasRule(detailPageRule)) {
+            // 自动保持与list一致
+            detailPageRule.setType(listRule.getType());
+            String detailPageUrl = Matchers.match(element, detailPageRule);
+            // 拼接完整URL
+            detailPageUrl = UrlUtils.completeUrl(baseUrl, detailPageUrl);
+            params.setUrl(detailPageUrl);
+            // 详情页默认采用GET
+            params.setMethod(HttpMethod.GET.name());
+            String detailOriginalText = SpiderHelper.request(rule.getParams(), params);
+            // 通过指定 page = search | detail ，不填写默认为详情页
+            Map<String, CommonRule> detailPage = new HashMap<>(16);
+            Map<String, CommonRule> searchPage = new HashMap<>(16);
+            childRuleMap.forEach((k, v) -> {
+              if (RuleConstant.SEARCH_PAGE.equals(v.getPage())) {
+                searchPage.put(k, v);
+              } else {
+                detailPage.put(k, v);
               }
-            } else {
-              // 没有详情页
-              novel = Matchers.matchMultiple(element, childRuleMap, Novel.class);
+            });
+            // 详情页与搜索页混合匹配
+            novel = Matchers.matchMultiple(element, searchPage, Novel.class);
+            Novel detail = Matchers.matchMultiple(detailOriginalText, detailPage, Novel.class);
+            if (novel != null) {
+              BeanUtils.copy(detail, novel);
+            } else if (detail != null) {
+              novel = detail;
             }
-            // 未匹配到小说则忽略
-            if (novel == null) {
-              return;
-            }
-            // 完整拼接URL
-            novel.competeUrl(baseUrl);
-            // 去除空白
-            novel.trim();
-            // 每个结果回调处理
-            if (itemHandler != null) {
-              itemHandler.accept(novel);
-            }
-            // 小说所属站点
-            novel.setSite(rule.getSite());
-            novels.add(novel);
-          } catch (IOException e) {
-            e.printStackTrace();
+          } else {
+            // 没有详情页
+            novel = Matchers.matchMultiple(element, childRuleMap, Novel.class);
           }
-        });
-      } finally {
-        ScriptContext.remove();
-      }
+          // 未匹配到小说则忽略
+          if (novel == null) {
+            return;
+          }
+          // 完整拼接URL
+          novel.competeUrl(baseUrl);
+          // 去除空白
+          novel.trim();
+          // 每个结果回调处理
+          if (itemHandler != null) {
+            itemHandler.accept(novel);
+          }
+          // 小说所属站点
+          novel.setSite(rule.getSite());
+          novels.add(novel);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      });
+    } catch (Exception e) {
+      log.error("小说搜索出现异常：{}", keyword, e);
+    } finally {
+      ScriptContext.remove();
     }
     return novels;
   }

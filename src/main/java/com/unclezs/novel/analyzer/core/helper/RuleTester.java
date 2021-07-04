@@ -3,7 +3,6 @@ package com.unclezs.novel.analyzer.core.helper;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.ContentRule;
 import com.unclezs.novel.analyzer.core.model.TocRule;
-import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.model.Verifiable;
@@ -140,6 +139,7 @@ public class RuleTester {
         }
         toc.addAll(chapters);
       });
+      messageConsumer.accept(LF + "章节抓取完成，共：" + toc.size() + "章" + LF);
       printFooter(type, page.get());
       return toc;
     } catch (Exception e) {
@@ -172,6 +172,7 @@ public class RuleTester {
       });
       searchSpider.search(keyword);
       searchSpider.loadAll();
+      messageConsumer.accept(LF + "搜索完成，共：" + novelList.size() + "本" + LF);
       printFooter(type, page.get());
       return novelList;
     } catch (Exception e) {

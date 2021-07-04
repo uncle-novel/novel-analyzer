@@ -120,7 +120,7 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
    * 是否包含Rule规则
    */
   public static boolean hasRule(CommonRule commonRule) {
-    return commonRule != null && StringUtils.isNotBlank(commonRule.getRule());
+    return commonRule != null && StringUtils.isNotBlank(commonRule.getRule()) && MatcherManager.getMatcher(commonRule.getRule()) == null;
   }
 
   /**

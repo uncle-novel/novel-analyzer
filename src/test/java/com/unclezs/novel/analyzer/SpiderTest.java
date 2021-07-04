@@ -55,7 +55,7 @@ public class SpiderTest {
     searchSpider.setOnNewItemAddHandler(e -> {
       System.out.println(e.getTitle() + "  -  " + e.getUrl());
     });
-    searchSpider.search("完美世界");
+    searchSpider.search("完美");
   }
 
   @Test
