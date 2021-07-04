@@ -585,6 +585,11 @@ public final class Spider implements Serializable {
         if (progressChangeHandler != null) {
           progressChangeHandler.accept(progress(), progressText());
         }
+        // 下载延迟
+        Long delayTime = analyzerRule.getContent().getDelayTime();
+        if (!isCanceled() && delayTime != null && delayTime > 0) {
+          ThreadUtils.sleep(delayTime);
+        }
       }
     }
 

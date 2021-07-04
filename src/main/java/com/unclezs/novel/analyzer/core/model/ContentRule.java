@@ -43,6 +43,10 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
    */
   private Boolean removeTitle;
   /**
+   * 下载延迟
+   */
+  private Long delayTime;
+  /**
    * 繁体转简体
    */
   private Boolean traditionToSimple;
@@ -124,6 +128,11 @@ public class ContentRule implements Verifiable, Serializable, JsonDeserializer<C
       JsonElement removeTitleElement = jsonObject.get("removeTitle");
       if (removeTitleElement != null) {
         contentRule.setRemoveTitle(removeTitleElement.getAsBoolean());
+      }
+      // 下载延迟
+      JsonElement delayTimeElement = jsonObject.get("delayTime");
+      if (delayTimeElement != null) {
+        contentRule.setDelayTime(delayTimeElement.getAsLong());
       }
       // 内容规则
       JsonElement contentElement = jsonObject.get("content");
