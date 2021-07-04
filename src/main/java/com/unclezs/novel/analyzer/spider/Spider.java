@@ -587,7 +587,7 @@ public final class Spider implements Serializable {
         }
         // 下载延迟
         Long delayTime = analyzerRule.getContent().getDelayTime();
-        if (!isCanceled() && delayTime != null && delayTime > 0) {
+        if (!canceled && delayTime != null && delayTime > 0) {
           ThreadUtils.sleep(delayTime);
         }
       }
