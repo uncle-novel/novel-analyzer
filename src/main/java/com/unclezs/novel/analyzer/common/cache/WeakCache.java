@@ -1,8 +1,6 @@
 package com.unclezs.novel.analyzer.common.cache;
 
 
-import org.antlr.v4.runtime.misc.NotNull;
-
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
@@ -143,7 +141,6 @@ public class WeakCache<K, V> implements Iterable<Map.Entry<K, V>>, Cache<K, V>, 
     }
   }
 
-  @NotNull
   @Override
   public Iterator<Map.Entry<K, V>> iterator() {
     return this.cache.entrySet().iterator();
