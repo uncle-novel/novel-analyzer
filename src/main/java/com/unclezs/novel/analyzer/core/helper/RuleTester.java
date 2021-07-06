@@ -13,6 +13,8 @@ import com.unclezs.novel.analyzer.util.GsonUtils;
 import com.unclezs.novel.analyzer.util.RandomUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import com.unclezs.novel.analyzer.util.uri.UrlUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -32,12 +34,16 @@ import static com.unclezs.novel.analyzer.util.StringUtils.LF;
  * @date 2021/4/23 1:49
  */
 @Slf4j
+@Setter
+@Getter
 public class RuleTester {
   public static final String LINE = "============================";
   private static final String NEW_LINE = LINE.concat(LF).concat(LINE).concat(LF);
   private final AnalyzerRule rule;
   private final NovelSpider spider;
   private Consumer<String> messageConsumer = System.out::print;
+  private boolean showAllData;
+  private boolean showRule;
 
   public RuleTester(AnalyzerRule rule) {
     this(rule, null);
@@ -93,16 +99,28 @@ public class RuleTester {
   public void content(String url) {
     String type = "正文解析";
     try {
+      DebugHelper.subscribe(messageConsumer);
       ContentRule contentRule = rule.getContent();
       printHeader(type, contentRule);
       AtomicInteger page = new AtomicInteger(0);
       spider.content(url, str -> {
         printPage(type, page.incrementAndGet());
-        messageConsumer.accept(str + LF);
+        // 显示章节内容
+        if (showAllData) {
+          messageConsumer.accept(str + LF);
+        } else {
+          String[] split = StringUtils.nullToEmpty(str).split(LF);
+          if (split.length > 0) {
+            messageConsumer.accept(split[0] + LF);
+            messageConsumer.accept(split[split.length - 1] + LF);
+          }
+        }
       });
       printFooter(type, page.get());
     } catch (Exception e) {
       printError(type, e);
+    } finally {
+      DebugHelper.unsubscribe(messageConsumer);
     }
   }
 
@@ -114,6 +132,7 @@ public class RuleTester {
   public List<Chapter> toc(String url) {
     String type = "目录解析";
     try {
+      DebugHelper.subscribe(messageConsumer);
       TocRule tocRule = rule.getToc();
       printHeader(type, tocRule);
       if (tocRule == null || !tocRule.isEffective()) {
@@ -125,16 +144,14 @@ public class RuleTester {
         if (CollectionUtils.isNotEmpty(chapters)) {
           printPage(type, page.incrementAndGet());
           StringJoiner chapterJoiner = new StringJoiner(LF);
-          chapters.forEach(chapter -> {
-            // 生成完整URL
-            if (StringUtils.isNotBlank(chapter.getUrl())) {
-              chapter.setUrl(UrlUtils.completeUrl(url, chapter.getUrl()));
-            }
-            chapterJoiner
-              .add("名称：" + chapter.getName())
-              .add("链接：" + chapter.getUrl())
-              .add(LINE);
-          });
+          // 是否显示全部章节， 否则显示首尾章节
+          if (!showAllData && chapters.size() > 2) {
+            ArrayList<Chapter> list = new ArrayList<>();
+            list.add(chapters.get(0));
+            list.add(chapters.get(chapters.size() - 1));
+            chapters = list;
+          }
+          chapters.forEach(chapter -> printChapter(chapterJoiner, url, chapter));
           messageConsumer.accept(chapterJoiner.toString().concat(LF));
         }
         toc.addAll(chapters);
@@ -144,6 +161,8 @@ public class RuleTester {
       return toc;
     } catch (Exception e) {
       printError(type, e);
+    } finally {
+      DebugHelper.unsubscribe(messageConsumer);
     }
     return Collections.emptyList();
   }
@@ -156,19 +175,30 @@ public class RuleTester {
   public List<Novel> search(String keyword) {
     String type = "搜索";
     try {
+      DebugHelper.subscribe(messageConsumer);
       printHeader(type, rule.getSearch());
       List<Novel> novelList = new ArrayList<>();
       SearchSpider searchSpider = new SearchSpider(Collections.singletonList(rule));
       // 调试模式
       searchSpider.setDebug(true);
       AtomicInteger page = new AtomicInteger(-1);
+      final List<Novel> novels = new ArrayList<>();
       searchSpider.setOnNewItemAddHandler(novel -> {
         if (page.get() != searchSpider.getPage()) {
           page.set(searchSpider.getPage());
+          if (!showAllData && novels.size() > 2) {
+            ArrayList<Novel> list = new ArrayList<>();
+            list.add(novels.get(0));
+            list.add(novels.get(novels.size() - 1));
+            novels.clear();
+            novels.addAll(list);
+          }
+          novels.forEach(this::printNovel);
+          novels.clear();
           printPage(type, page.get());
         }
-        printNovel(novel);
         novelList.add(novel);
+        novels.add(novel);
       });
       searchSpider.search(keyword);
       searchSpider.loadAll();
@@ -177,6 +207,8 @@ public class RuleTester {
       return novelList;
     } catch (Exception e) {
       printError(type, e);
+    } finally {
+      DebugHelper.unsubscribe(messageConsumer);
     }
     return Collections.emptyList();
   }
@@ -189,12 +221,15 @@ public class RuleTester {
   public void detail(String url) {
     String type = "详情解析";
     try {
+      DebugHelper.subscribe(messageConsumer);
       printHeader(type, rule.getDetail());
       Novel novel = spider.details(url);
       printNovel(novel);
       printFooter(type);
     } catch (Exception e) {
       printError(type, e);
+    } finally {
+      DebugHelper.unsubscribe(messageConsumer);
     }
   }
 
@@ -215,6 +250,24 @@ public class RuleTester {
   }
 
   /**
+   * 打印章节信息
+   *
+   * @param chapterJoiner joiner
+   * @param url           url
+   * @param chapter       章节
+   */
+  private void printChapter(StringJoiner chapterJoiner, String url, Chapter chapter) {
+    // 生成完整URL
+    if (StringUtils.isNotBlank(chapter.getUrl())) {
+      chapter.setUrl(UrlUtils.completeUrl(url, chapter.getUrl()));
+    }
+    chapterJoiner
+      .add("名称：" + chapter.getName())
+      .add("链接：" + chapter.getUrl())
+      .add(LINE);
+  }
+
+  /**
    * 输出头部信息
    *
    * @param type 类型
@@ -223,10 +276,12 @@ public class RuleTester {
   private void printHeader(String type, Verifiable rule) {
     StringJoiner recorder = new StringJoiner(LF)
       .add(LINE)
-      .add(String.format("%s测试开始：", type))
-      .add("规则：")
-      .add(GsonUtils.PRETTY.toJson(rule))
-      .add(LF);
+      .add(String.format("%s测试开始：", type));
+    if (showRule) {
+      recorder.add("规则：")
+        .add(GsonUtils.PRETTY.toJson(rule))
+        .add(LF);
+    }
     messageConsumer.accept(recorder.toString());
   }
 
@@ -295,5 +350,13 @@ public class RuleTester {
       .add("更新时间：" + novel.getUpdateTime())
       .add(LINE.concat(LF));
     messageConsumer.accept(novelJoiner.toString());
+  }
+
+  public void setShowSource(boolean showSource) {
+    DebugHelper.showSource = showSource;
+  }
+
+  public boolean isShowSource() {
+    return DebugHelper.showSource;
   }
 }

@@ -1,6 +1,7 @@
 package com.unclezs.novel.analyzer.core;
 
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.matcher.Matchers;
 import com.unclezs.novel.analyzer.core.matcher.matchers.text.DefaultContentMatcher;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
@@ -101,6 +102,7 @@ public class NovelMatcher {
     }
     // 标题自动抓取
     if (StringUtils.isBlank(novel.getTitle())) {
+
       novel.setTitle(AnalyzerHelper.siteTitle(originalText));
     }
     novel.trim();
@@ -117,12 +119,14 @@ public class NovelMatcher {
     List<Novel> novels = new ArrayList<>();
     // 搜索规则无效
     if (searchRule == null || !searchRule.isEffective()) {
+      DebugHelper.debug("【搜索】：搜索规则无效，停止搜索");
       return novels;
     }
     RequestParams params = searchRule.getParams().copy();
     String baseUrl = params.getUrl();
     // 预处理请求参数
     SearchHelper.pretreatmentSearchParam(params, page, keyword);
+    DebugHelper.debug("【搜索】：请求参数预处理完成：{}", params);
     // 请求网页
     String originalText = SpiderHelper.request(rule.getParams(), params);
     try {
@@ -135,12 +139,14 @@ public class NovelMatcher {
           Novel novel;
           // 如果自定义了详情页
           if (CommonRule.hasRule(detailPageRule)) {
+            DebugHelper.debug("【搜索】：已启用自定义详情页");
             // 自动保持与list一致
             detailPageRule.setType(listRule.getType());
             String detailPageUrl = Matchers.match(element, detailPageRule);
             // 拼接完整URL
             detailPageUrl = UrlUtils.completeUrl(baseUrl, detailPageUrl);
             params.setUrl(detailPageUrl);
+            DebugHelper.debug("【搜索】：自定义详情页地址：{}, 采用GET请求获取详情页", detailPageUrl);
             // 详情页默认采用GET
             params.setMethod(HttpMethod.GET.name());
             String detailOriginalText = SpiderHelper.request(rule.getParams(), params);

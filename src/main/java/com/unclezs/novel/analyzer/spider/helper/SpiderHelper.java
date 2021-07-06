@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.spider.helper;
 
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.matcher.matchers.XpathMatcher;
 import com.unclezs.novel.analyzer.core.model.Params;
 import com.unclezs.novel.analyzer.request.Http;
@@ -40,10 +41,17 @@ public class SpiderHelper {
       // 脚本初始变量添加 当前页面URL，当前的请求参数
       ScriptContext.put(ScriptContext.VAR_URL, params.getUrl());
       ScriptContext.put(ScriptContext.VAR_PARAMS, params);
+      DebugHelper.debug("访问网页 {}...", params.getUrl());
       content = Http.content(params);
+      if (DebugHelper.showSource) {
+        DebugHelper.debug("访问成功 {}，源码：{}", params.getUrl(), content);
+      } else {
+        DebugHelper.debug("访问成功 {}", params.getUrl());
+      }
     } catch (Exception e) {
       // 请求失败则移除脚本上下文
       ScriptContext.remove();
+      DebugHelper.debug("访问失败 {}...，原因：{}", params.getUrl(), e.getMessage());
       throw new IOException(e);
     }
     return content;

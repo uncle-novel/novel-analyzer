@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.spider.helper;
 
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
@@ -86,7 +87,9 @@ public class SearchHelper {
     String encodeKeyword;
     if (StringUtils.isNotBlank(params.getCharset())) {
       encodeKeyword = UrlEncoder.encode(keyword, params.getCharset());
+      DebugHelper.debug("【搜索】：请求参数指定{}编码，关键词：【{}】编码后：【{}】", params.getCharset(), keyword, encodeKeyword);
     } else {
+      DebugHelper.debug("【搜索】：请求参数未指定编码，不编码关键词: 【{}】", keyword);
       encodeKeyword = keyword;
     }
     // 搜索参数封装
@@ -96,5 +99,6 @@ public class SearchHelper {
     // 编译参数 url、body
     params.setUrl(pretreatmentParams(params.getUrl(), paramsMap));
     params.setBody(pretreatmentParams(params.getBody(), paramsMap));
+    DebugHelper.debug("【搜索】：请求参数编码后: url = {} ， body = {} ", params.getUrl(), params.getBody());
   }
 }

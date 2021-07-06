@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer.spider;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.ContentRule;
@@ -70,6 +71,7 @@ public class NovelSpider {
     // 如果为有声规则，且正文规则无效则直接返回URL（此处特殊逻辑处理了有声小说在目录解析时就获取到了真实音频地址的情况）
     String preScript = Optional.of(contentRule).map(ContentRule::getParams).map(RequestParams::getScript).orElse(null);
     if (audio && StringUtils.isBlank(preScript) && !CommonRule.isEffective(contentRule.getContent())) {
+      DebugHelper.debug("【正文】：有声小说规则 并且 预处理脚本为空 并且 规则无效，不再请求正文链接：{}，匹配结果为正文链接", url);
       doConsumer(pageConsumer, url);
       return new Result<>(1, url);
     }
@@ -82,10 +84,10 @@ public class NovelSpider {
     String originalText = request(params);
     // 请求完成后，规则无效直接返回源码
     if (!CommonRule.isEffective(contentRule.getContent())) {
+      DebugHelper.debug("【正文】：正文规则无效，匹配结果直接为 {} 的源码", url);
       doConsumer(pageConsumer, originalText);
       return new Result<>(1, originalText);
     }
-    log.trace("获取到网页{}源码：{}", params.getUrl(), originalText);
     try {
       String content = NovelMatcher.content(originalText, contentRule);
       contentBuilder.append(content);
@@ -94,12 +96,15 @@ public class NovelSpider {
       }
       // 文本小说进行翻页
       if (Boolean.FALSE.equals(rule.getAudio()) && contentRule.isAllowNextPage()) {
+        DebugHelper.debug("【正文】：正文翻页已启用");
         String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
         params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
         while (visited.add(params.getUrl())) {
           originalText = request(params);
           // 判断是否符合本页为同一
-          if (!uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
+          String currentUniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
+          if (!uniqueId.equals(currentUniqueId)) {
+            DebugHelper.debug("【正文】：网页标题不匹配，停止翻页：正确的：{} , 不匹配的：{}", uniqueId, currentUniqueId);
             break;
           }
           String pageContent = NovelMatcher.content(originalText, contentRule);
@@ -109,6 +114,7 @@ public class NovelSpider {
           page++;
           // 下一页
           params.setUrl(AnalyzerHelper.nextPage(originalText, contentRule.getNext(), params.getUrl()));
+          DebugHelper.debug("【正文】：获取到下一页链接：{}，当前页码：{}", params.getUrl(), page);
         }
       }
     } finally {
@@ -151,6 +157,8 @@ public class NovelSpider {
       toc = NovelMatcher.toc(originalText, tocRule);
       doConsumer(pageConsumer, toc);
       // 如果允许下一页
+      boolean forceNext = Boolean.TRUE.equals(tocRule.getForceNext());
+      DebugHelper.debug("【目录】：启用目录翻页：{}，强制翻页：{}", tocRule.isAllowNextPage(), forceNext);
       if (tocRule.isAllowNextPage()) {
         String uniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
         params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
@@ -158,7 +166,9 @@ public class NovelSpider {
         while (visited.add(params.getUrl())) {
           originalText = request(params);
           // 判断是否符合本页为同一
-          if (Boolean.FALSE.equals(tocRule.getForceNext()) && !uniqueId.equals(RegexMatcher.me().titleWithoutNumber(originalText))) {
+          String currentUniqueId = RegexMatcher.me().titleWithoutNumber(originalText);
+          if (!forceNext && !uniqueId.equals(currentUniqueId)) {
+            DebugHelper.debug("【目录】：网页标题不匹配，且未开启强制翻页，停止翻页：正确的：{} , 不匹配的：{}", uniqueId, currentUniqueId);
             break;
           }
           // 页面章节列表
@@ -169,6 +179,7 @@ public class NovelSpider {
           }
           // 下一页
           params.setUrl(AnalyzerHelper.nextPage(originalText, tocRule.getNext(), params.getUrl()));
+          DebugHelper.debug("【目录】：获取到下一页链接：{}，当前页码：{}", params.getUrl(), visited.size());
         }
       }
       toc = TocSpider.pretreatmentToc(toc, params.getUrl(), tocRule, 1);
