@@ -23,7 +23,7 @@ import java.util.List;
  * @author blog.unclezs.com
  * @date 2021/2/4 21:52
  */
-public class DefaultTextMatcher extends Matcher {
+public class DefaultTextMatcher implements Matcher {
   /**
    * 全文模式
    */

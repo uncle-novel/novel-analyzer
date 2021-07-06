@@ -19,7 +19,7 @@ import java.util.Objects;
  * @date 2020/12/21 16:20
  */
 @Slf4j
-public class XpathMatcher extends Matcher {
+public class XpathMatcher implements Matcher {
   private static final XpathMatcher ME = new XpathMatcher();
 
   private XpathMatcher() {
@@ -55,6 +55,9 @@ public class XpathMatcher extends Matcher {
   @Override
   @SuppressWarnings("unchecked")
   public <E> List<E> list(String src, CommonRule listRule) {
+    if (StringUtils.isBlank(src)) {
+      return null;
+    }
     List<JXNode> nodes = JXDocument.create(src).selN(listRule.getRule());
     return (List<E>) nodes;
   }
@@ -68,14 +71,15 @@ public class XpathMatcher extends Matcher {
    */
   @Override
   public <E> String one(E element, String rule) {
-    if (element instanceof String) {
-      return match(element.toString(), rule);
-    } else if (element instanceof JXDocument) {
+    if (element == null) {
+      return null;
+    }
+    if (element instanceof JXDocument) {
       return match((JXDocument) element, rule);
     } else if (element instanceof JXNode) {
       return match((JXNode) element, rule);
     }
-    return StringUtils.EMPTY;
+    return match(element.toString(), rule);
   }
 
   /**

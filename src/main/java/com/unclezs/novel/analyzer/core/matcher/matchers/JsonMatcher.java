@@ -31,7 +31,7 @@ import java.util.Set;
  * @date 2020/12/21 16:20
  */
 @Slf4j
-public class JsonMatcher extends Matcher {
+public class JsonMatcher implements Matcher {
   private static final JsonMatcher ME = new JsonMatcher();
 
   static {
@@ -89,6 +89,9 @@ public class JsonMatcher extends Matcher {
   @Override
   @SuppressWarnings("unchecked")
   public <E> List<E> list(String src, CommonRule listRule) {
+    if (StringUtils.isBlank(src)) {
+      return null;
+    }
     JsonArray matchedList = JsonPath.parse(src).read(listRule.getRule());
     List<JsonElement> items = new ArrayList<>();
     for (JsonElement element : matchedList) {
@@ -106,6 +109,9 @@ public class JsonMatcher extends Matcher {
    */
   @Override
   public <E> String one(E element, String rule) {
+    if (element == null) {
+      return null;
+    }
     return match(GsonUtils.toJson(element), rule);
   }
 

@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ import java.util.Set;
  * @date 2020/12/21 14:08
  */
 @Slf4j
-public class CssMatcher extends Matcher {
+public class CssMatcher implements Matcher {
   private static final CssMatcher ME = new CssMatcher();
   /**
    * 绝对路径  eg. abs:href   abs:src
@@ -66,6 +67,9 @@ public class CssMatcher extends Matcher {
   @Override
   @SuppressWarnings("unchecked")
   public <E> List<E> list(String src, CommonRule listRule) {
+    if (StringUtils.isBlank(src)) {
+      return new ArrayList<>();
+    }
     Pair<String, String> css = getCss(listRule.getRule());
     return (List<E>) Jsoup.parse(src).select(css.getLeft());
   }
@@ -79,13 +83,13 @@ public class CssMatcher extends Matcher {
    */
   @Override
   public <E> String one(E element, String rule) {
-    if (element instanceof String) {
-      return match(StringUtils.toStringNullToEmpty(element), rule);
+    if (element == null) {
+      return null;
     }
     if (element instanceof Element) {
       return match((Element) element, rule);
     }
-    return StringUtils.EMPTY;
+    return match(element.toString(), rule);
   }
 
   /**
@@ -96,6 +100,9 @@ public class CssMatcher extends Matcher {
    * @return 匹配结果
    */
   public String match(String src, String rule) {
+    if (StringUtils.isBlank(src)) {
+      return null;
+    }
     return match(Jsoup.parse(src), rule);
   }
 

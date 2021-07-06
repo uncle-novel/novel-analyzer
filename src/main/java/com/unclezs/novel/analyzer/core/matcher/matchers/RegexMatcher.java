@@ -15,7 +15,7 @@ import java.util.List;
  * @author blog.unclezs.com
  * @date 2020/12/21 11:39
  */
-public class RegexMatcher extends Matcher {
+public class RegexMatcher implements Matcher {
   /**
    * 分组模板分隔符
    */
@@ -76,6 +76,9 @@ public class RegexMatcher extends Matcher {
   @Override
   @SuppressWarnings("unchecked")
   public <E> List<E> list(String src, CommonRule listRule) {
+    if (StringUtils.isBlank(src)) {
+      return null;
+    }
     Pair<String, String> rulePair = getTemplate(listRule.getRule());
     // 通过模板匹配列表
     return (List<E>) RegexUtils.findAllByTemplate(rulePair.getLeft(), src, rulePair.getRight());
@@ -95,6 +98,9 @@ public class RegexMatcher extends Matcher {
    */
   @Override
   public <E> String one(E element, String rule) {
+    if (element == null) {
+      return null;
+    }
     String source = StringUtils.toStringNullToEmpty(element);
     return match(source, rule);
   }
