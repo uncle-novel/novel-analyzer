@@ -41,17 +41,18 @@ public class SpiderHelper {
       // 脚本初始变量添加 当前页面URL，当前的请求参数
       ScriptContext.put(ScriptContext.VAR_URL, params.getUrl());
       ScriptContext.put(ScriptContext.VAR_PARAMS, params);
-      DebugHelper.debug("访问网页 {}...", params.getUrl());
+      DebugHelper.debug("【请求】：访问网页 {}", params.getUrl());
       content = Http.content(params);
+      DebugHelper.debug("【请求】：访问成功");
       if (DebugHelper.showSource) {
-        DebugHelper.debug("访问成功 {}，源码：{}", params.getUrl(), content);
-      } else {
-        DebugHelper.debug("访问成功 {}", params.getUrl());
+        DebugHelper.debug("【请求】：源码如下：");
+        DebugHelper.debug(content);
       }
     } catch (Exception e) {
       // 请求失败则移除脚本上下文
       ScriptContext.remove();
-      DebugHelper.debug("访问失败 {}...，原因：{}", params.getUrl(), e.getMessage());
+      DebugHelper.debug("【请求】：访问失败");
+      DebugHelper.debug("【请求】：原因：{} ", e.getMessage());
       throw new IOException(e);
     }
     return content;
@@ -117,7 +118,7 @@ public class SpiderHelper {
       if (StringUtils.isNotBlank(lines[i])) {
         if (i < 3) {
           lines[i] = lines[i].replace(target, StringUtils.EMPTY)
-            .replace(target.replace(StringUtils.BLANK, StringUtils.EMPTY), StringUtils.EMPTY);
+                  .replace(target.replace(StringUtils.BLANK, StringUtils.EMPTY), StringUtils.EMPTY);
         }
         sb.append(lines[i]).append(StringUtils.NEW_LINE);
       }

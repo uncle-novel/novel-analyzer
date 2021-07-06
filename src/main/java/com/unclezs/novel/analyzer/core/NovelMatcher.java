@@ -126,7 +126,6 @@ public class NovelMatcher {
     String baseUrl = params.getUrl();
     // 预处理请求参数
     SearchHelper.pretreatmentSearchParam(params, page, keyword);
-    DebugHelper.debug("【搜索】：请求参数预处理完成：{}", params);
     // 请求网页
     String originalText = SpiderHelper.request(rule.getParams(), params);
     try {

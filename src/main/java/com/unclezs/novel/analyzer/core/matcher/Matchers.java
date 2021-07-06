@@ -58,7 +58,7 @@ public class Matchers {
   public String match(Object source, CommonRule rule) {
     String result = null;
     if (CommonRule.isEffective(rule)) {
-      Matcher matcher = MatcherManager.getMatcher(rule.getType(), RegexMatcher.me());
+      Matcher matcher = MatcherManager.getMatcher(rule.getType());
       if (matcher == null) {
         result = StringUtils.toStringNullToEmpty(source);
       } else {

@@ -39,8 +39,8 @@ import static com.unclezs.novel.analyzer.util.StringUtils.LF;
 public class RuleTester {
   public static final String LINE = "============================";
   private static final String NEW_LINE = LINE.concat(LF).concat(LINE).concat(LF);
-  private final AnalyzerRule rule;
-  private final NovelSpider spider;
+  private AnalyzerRule rule;
+  private NovelSpider spider;
   private Consumer<String> messageConsumer = System.out::print;
   private boolean showAllData;
   private boolean showRule;
@@ -50,6 +50,10 @@ public class RuleTester {
   }
 
   public RuleTester(AnalyzerRule rule, Consumer<String> messageConsumer) {
+    init(rule, messageConsumer);
+  }
+
+  public void init(AnalyzerRule rule, Consumer<String> messageConsumer) {
     this.rule = rule;
     this.spider = new NovelSpider(rule);
     if (messageConsumer != null) {
@@ -104,12 +108,14 @@ public class RuleTester {
       printHeader(type, contentRule);
       AtomicInteger page = new AtomicInteger(0);
       spider.content(url, str -> {
-        printPage(type, page.incrementAndGet());
+        str = StringUtils.nullToEmpty(str);
+        messageConsumer.accept(String.format("【正文】：第%d页解析完成，共%d字，结果如下：", page.incrementAndGet(), str.trim().length()));
+        messageConsumer.accept(LF + LINE + LF);
         // 显示章节内容
         if (showAllData) {
           messageConsumer.accept(str + LF);
         } else {
-          String[] split = StringUtils.nullToEmpty(str).split(LF);
+          String[] split = str.trim().split(LF);
           if (split.length > 0) {
             messageConsumer.accept(split[0] + LF);
             messageConsumer.accept(split[split.length - 1] + LF);
@@ -142,16 +148,16 @@ public class RuleTester {
       List<Chapter> toc = new ArrayList<>();
       spider.toc(url, chapters -> {
         if (CollectionUtils.isNotEmpty(chapters)) {
-          printPage(type, page.incrementAndGet());
+          messageConsumer.accept(String.format("【目录】：第%d页解析完成，共%d章，结果如下：", page.incrementAndGet(), chapters.size()));
+          messageConsumer.accept(LF + LINE + LF);
           StringJoiner chapterJoiner = new StringJoiner(LF);
           // 是否显示全部章节， 否则显示首尾章节
           if (!showAllData && chapters.size() > 2) {
-            ArrayList<Chapter> list = new ArrayList<>();
-            list.add(chapters.get(0));
-            list.add(chapters.get(chapters.size() - 1));
-            chapters = list;
+            printChapter(chapterJoiner, url, chapters.get(0));
+            printChapter(chapterJoiner, url, chapters.get(chapters.size() - 1));
+          } else {
+            chapters.forEach(chapter -> printChapter(chapterJoiner, url, chapter));
           }
-          chapters.forEach(chapter -> printChapter(chapterJoiner, url, chapter));
           messageConsumer.accept(chapterJoiner.toString().concat(LF));
         }
         toc.addAll(chapters);
@@ -179,31 +185,22 @@ public class RuleTester {
       printHeader(type, rule.getSearch());
       List<Novel> novelList = new ArrayList<>();
       SearchSpider searchSpider = new SearchSpider(Collections.singletonList(rule));
-      // 调试模式
-      searchSpider.setDebug(true);
-      AtomicInteger page = new AtomicInteger(-1);
-      final List<Novel> novels = new ArrayList<>();
-      searchSpider.setOnNewItemAddHandler(novel -> {
-        if (page.get() != searchSpider.getPage()) {
-          page.set(searchSpider.getPage());
-          if (!showAllData && novels.size() > 2) {
-            ArrayList<Novel> list = new ArrayList<>();
-            list.add(novels.get(0));
-            list.add(novels.get(novels.size() - 1));
-            novels.clear();
-            novels.addAll(list);
-          }
-          novels.forEach(this::printNovel);
-          novels.clear();
-          printPage(type, page.get());
+      searchSpider.setPageConsumer(pageNovels -> {
+        messageConsumer.accept(String.format("【搜索】：第%d页搜索完成，共%d本，结果如下：", searchSpider.getPage(), pageNovels.size()));
+        messageConsumer.accept(LF + LINE + LF);
+        if (!showAllData && pageNovels.size() > 2) {
+          printNovel(pageNovels.get(0));
+          printNovel(pageNovels.get(pageNovels.size() - 1));
+        } else {
+          pageNovels.forEach(this::printNovel);
         }
-        novelList.add(novel);
-        novels.add(novel);
+        printPage(type, searchSpider.getPage());
+        novelList.addAll(pageNovels);
       });
       searchSpider.search(keyword);
       searchSpider.loadAll();
-      messageConsumer.accept(LF + "搜索完成，共：" + novelList.size() + "本" + LF);
-      printFooter(type, page.get());
+      messageConsumer.accept(LF + "全部搜索完成，共：" + novelList.size() + "本" + LF);
+      printFooter(type, searchSpider.getPage() - 1);
       return novelList;
     } catch (Exception e) {
       printError(type, e);
@@ -241,11 +238,11 @@ public class RuleTester {
    */
   private void printPage(String type, int page) {
     StringJoiner pageRecorder = new StringJoiner(LF)
-      .add(LF)
-      .add(LINE)
-      .add(String.format("%s第%d页完成", type, page))
-      .add(LINE)
-      .add(LF);
+            .add(LF)
+            .add(LINE)
+            .add(String.format("%s第%d页完成", type, page))
+            .add(LINE)
+            .add(LF);
     messageConsumer.accept(pageRecorder.toString());
   }
 
@@ -262,9 +259,9 @@ public class RuleTester {
       chapter.setUrl(UrlUtils.completeUrl(url, chapter.getUrl()));
     }
     chapterJoiner
-      .add("名称：" + chapter.getName())
-      .add("链接：" + chapter.getUrl())
-      .add(LINE);
+            .add("名称：" + chapter.getName())
+            .add("链接：" + chapter.getUrl())
+            .add(LINE);
   }
 
   /**
@@ -275,13 +272,13 @@ public class RuleTester {
    */
   private void printHeader(String type, Verifiable rule) {
     StringJoiner recorder = new StringJoiner(LF)
-      .add(LINE)
-      .add(String.format("%s测试开始：", type));
+            .add(LINE)
+            .add(String.format("%s测试开始：", type));
     if (showRule) {
       recorder.add("规则：")
-        .add(GsonUtils.PRETTY.toJson(rule))
-        .add(LF);
+              .add(GsonUtils.PRETTY.toJson(rule));
     }
+    recorder.add(LF);
     messageConsumer.accept(recorder.toString());
   }
 
@@ -305,10 +302,10 @@ public class RuleTester {
       message = message + String.format(", 共%s页", page);
     }
     StringJoiner recorder = new StringJoiner(LF)
-      .add(LINE)
-      .add(message)
-      .add(LINE)
-      .add(LF);
+            .add(LINE)
+            .add(message)
+            .add(LINE)
+            .add(LF);
     messageConsumer.accept(recorder.toString());
   }
 
@@ -319,11 +316,11 @@ public class RuleTester {
    */
   private void printError(String type, Exception error) {
     StringJoiner recorder = new StringJoiner(LF)
-      .add(LINE)
-      .add(String.format("%s测试出现错误：", type))
-      .add(ExceptionUtils.getStackTrace(error))
-      .add(LINE)
-      .add(LF);
+            .add(LINE)
+            .add(String.format("%s测试出现错误：", type))
+            .add(ExceptionUtils.getStackTrace(error))
+            .add(LINE)
+            .add(LF);
     error.printStackTrace();
     messageConsumer.accept(recorder.toString());
   }
@@ -337,26 +334,26 @@ public class RuleTester {
       return;
     }
     StringJoiner novelJoiner = new StringJoiner(LF)
-      .add("书名：" + novel.getTitle())
-      .add("作者：" + novel.getAuthor())
-      .add("播音：" + novel.getBroadcast())
-      .add("链接：" + novel.getUrl())
-      .add("分类：" + novel.getCategory())
-      .add("封面：" + novel.getCoverUrl())
-      .add("介绍：" + novel.getIntroduce())
-      .add("最新章节名称：" + novel.getLatestChapterName())
-      .add("字数：" + novel.getWordCount())
-      .add("更新状态：" + novel.getState())
-      .add("更新时间：" + novel.getUpdateTime())
-      .add(LINE.concat(LF));
+            .add("书名：" + novel.getTitle())
+            .add("作者：" + novel.getAuthor())
+            .add("播音：" + novel.getBroadcast())
+            .add("链接：" + novel.getUrl())
+            .add("分类：" + novel.getCategory())
+            .add("封面：" + novel.getCoverUrl())
+            .add("介绍：" + novel.getIntroduce())
+            .add("最新章节名称：" + novel.getLatestChapterName())
+            .add("字数：" + novel.getWordCount())
+            .add("更新状态：" + novel.getState())
+            .add("更新时间：" + novel.getUpdateTime())
+            .add(LINE.concat(LF));
     messageConsumer.accept(novelJoiner.toString());
-  }
-
-  public void setShowSource(boolean showSource) {
-    DebugHelper.showSource = showSource;
   }
 
   public boolean isShowSource() {
     return DebugHelper.showSource;
+  }
+
+  public void setShowSource(boolean showSource) {
+    DebugHelper.showSource = showSource;
   }
 }
