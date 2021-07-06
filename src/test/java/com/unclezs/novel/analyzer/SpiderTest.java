@@ -6,10 +6,13 @@ import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.Http;
+import com.unclezs.novel.analyzer.request.MediaType;
+import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.spider.SearchSpider;
 import com.unclezs.novel.analyzer.spider.TocSpider;
 import com.unclezs.novel.analyzer.util.FileUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,8 +23,17 @@ import java.io.IOException;
  */
 public class SpiderTest {
 
+  @Before
+  public void init() {
+    System.setProperty("http.proxyHost", "127.0.0.1");
+    System.setProperty("http.proxyPort", "1081");
+    System.setProperty("https.proxyHost", "127.0.0.1");
+    System.setProperty("https.proxyPort", "1081");
+  }
+
   @Test
   public void testToc() throws IOException {
+    System.setProperty("java.net.useSystemProxies", "true");
     String url = "";
     String cookie = "";
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
@@ -36,7 +48,7 @@ public class SpiderTest {
 
   @Test
   public void testContent() throws IOException {
-    String url = "https://m.miaojiang8.net/0_687/63971.html";
+    String url = "";
     String cookie = "";
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
     AnalyzerRule rule = RuleHelper.getOrDefault(url);
@@ -61,9 +73,21 @@ public class SpiderTest {
   @Test
   public void testDetail() throws IOException {
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
-    AnalyzerRule rule = RuleHelper.getRule("https://m.miaojiang8.net/3_3155/");
-    Novel novel = NovelMatcher.details(Http.get("https://m.miaojiang8.net/3_3155/"), rule.getDetail());
+    AnalyzerRule rule = RuleHelper.getRule("");
+    Novel novel = NovelMatcher.details(Http.get(""), rule.getDetail());
     System.out.println(novel);
   }
 
+
+  @Test
+  public void testHttp() throws IOException {
+    RequestParams params = new RequestParams();
+    params.setBody("paperid=6481697&vercodechk=666dc3c01658b4f71fb9bbff22298b71");
+    params.setUrl("https://www.xx.com/showpapercolor.php");
+    params.setMethod("POST");
+    params.addHeader(RequestParams.REFERER, "https://www.xx.com/?act=showpaper&paperid=6481697");
+    params.setMediaType(MediaType.FORM.getMediaType());
+    String content = Http.content(params);
+    System.out.println(content);
+  }
 }

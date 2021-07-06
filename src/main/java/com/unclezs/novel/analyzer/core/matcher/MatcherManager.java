@@ -6,6 +6,7 @@ import com.unclezs.novel.analyzer.core.matcher.matchers.JsonMatcher;
 import com.unclezs.novel.analyzer.core.matcher.matchers.Matcher;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
 import com.unclezs.novel.analyzer.core.matcher.matchers.XpathMatcher;
+import com.unclezs.novel.analyzer.util.StringUtils;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -88,6 +89,9 @@ public class MatcherManager {
    * @param alias 别名
    */
   public static Matcher getMatcher(String alias) {
+    if (StringUtils.isBlank(alias)) {
+      return null;
+    }
     return SUPPORT_MATCHER.get(alias);
   }
 

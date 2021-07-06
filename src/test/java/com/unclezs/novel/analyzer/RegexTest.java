@@ -1,14 +1,11 @@
 package com.unclezs.novel.analyzer;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.unclezs.novel.analyzer.util.FileUtils;
-import com.unclezs.novel.analyzer.util.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * @author blog.unclezs.com

@@ -150,7 +150,6 @@ public class TocSpider extends AbstractPageable<Chapter> {
     TocRule tocRule = getRule().getToc();
     // 获取网页内容
     String originalText = SpiderHelper.request(rule.getParams(), params);
-    log.trace("获取到网页{}源码：{}", params.getUrl(), originalText);
     boolean hasMore = false;
     try {
       // 解析小说详情，从目录页

@@ -55,7 +55,7 @@ public class ScriptTest {
 //    System.out.println(s);
     CommonRule rule = new CommonRule();
     rule.setScript(script);
-    Matchers.matchList(Http.get("https://m.biqugeu.net/123_123101/"), rule, ret -> {
+    Matchers.matchList(Http.get("https://m.xx.net/123_123101/"), rule, ret -> {
       System.out.println(ret);
     });
 
@@ -64,7 +64,7 @@ public class ScriptTest {
 
   @Test
   public void runList() throws IOException {
-    String url = "https://m.biqugeu.net/123_123101/";
+    String url = "https://m.xx.net/123_123101/";
     String scriptUrl = "/script/test.js";
     String script = FileUtils.readUtf8String(Objects.requireNonNull(ScriptTest.class.getResource(scriptUrl)).getFile());
 
@@ -72,7 +72,7 @@ public class ScriptTest {
 
     CommonRule rule = new CommonRule();
     rule.setScript(script);
-    Matchers.matchList(Http.get("https://m.biqugeu.net/123_123101/"), rule, ret -> {
+    Matchers.matchList(Http.get("https://m.xx.net/123_123101/"), rule, ret -> {
       System.out.println(ret);
     });
   }
