@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * 匹配器  正则,xpath,jsonpath,css
@@ -85,15 +84,15 @@ public class Matchers {
     // 设定了规则的则不改变，否则则使用map中第一个带规则type的type
     String ruleType = ruleMap.entrySet().stream()
       .filter(rule -> MatcherManager.getMatcher(rule.getValue().getType()) != null)
-      .findFirst().map(entry -> entry.getValue().getType()).orElse(null);
-    List<Map.Entry<String, CommonRule>> nullTypeRule = ruleMap.entrySet().stream()
-      .filter(rule -> MatcherManager.getMatcher(rule.getValue().getType()) != null)
-      .collect(Collectors.toList());
+      .findFirst()
+      .map(entry -> entry.getValue().getType())
+      .orElse(null);
+    // 默认规则类型
     if (StringUtils.isNotBlank(ruleType)) {
-      // 默认规则类型
-      nullTypeRule.forEach(entry -> entry.getValue().setType(ruleType));
+      ruleMap.entrySet().stream()
+        .filter(rule -> MatcherManager.getMatcher(rule.getValue().getType()) == null)
+        .forEach(entry -> entry.getValue().setType(ruleType));
     }
-
     // 获取要匹配的字段，放入Map key:字段名 value:Field
     Map<String, String> resultMap = new HashMap<>(ruleMap.size() * 2);
     for (Map.Entry<String, CommonRule> ruleEntry : ruleMap.entrySet()) {
@@ -226,7 +225,7 @@ public class Matchers {
               value.setType(defaultType);
             }
             // 拼接完成后的完整规则，如果还无效则舍弃
-            if (CommonRule.isEffective(value)) {
+            if (!CommonRule.isEffective(value)) {
               log.debug("无效规则：{}", value);
               return;
             }

@@ -65,7 +65,7 @@ public class CssMatcher extends Matcher {
    */
   @Override
   @SuppressWarnings("unchecked")
-  protected <E> List<E> list(String src, CommonRule listRule) {
+  public <E> List<E> list(String src, CommonRule listRule) {
     Pair<String, String> css = getCss(listRule.getRule());
     return (List<E>) Jsoup.parse(src).select(css.getLeft());
   }
@@ -78,7 +78,7 @@ public class CssMatcher extends Matcher {
    * @return 匹配结果
    */
   @Override
-  protected <E> String one(E element, String rule) {
+  public <E> String one(E element, String rule) {
     if (element instanceof String) {
       return match(StringUtils.toStringNullToEmpty(element), rule);
     }

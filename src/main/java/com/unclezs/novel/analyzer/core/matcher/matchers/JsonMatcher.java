@@ -88,7 +88,7 @@ public class JsonMatcher extends Matcher {
    */
   @Override
   @SuppressWarnings("unchecked")
-  protected <E> List<E> list(String src, CommonRule listRule) {
+  public <E> List<E> list(String src, CommonRule listRule) {
     JsonArray matchedList = JsonPath.parse(src).read(listRule.getRule());
     List<JsonElement> items = new ArrayList<>();
     for (JsonElement element : matchedList) {
@@ -105,7 +105,7 @@ public class JsonMatcher extends Matcher {
    * @return 匹配结果
    */
   @Override
-  protected <E> String one(E element, String rule) {
+  public <E> String one(E element, String rule) {
     return match(GsonUtils.toJson(element), rule);
   }
 

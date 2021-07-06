@@ -75,7 +75,7 @@ public class RegexMatcher extends Matcher {
    */
   @Override
   @SuppressWarnings("unchecked")
-  protected <E> List<E> list(String src, CommonRule listRule) {
+  public <E> List<E> list(String src, CommonRule listRule) {
     Pair<String, String> rulePair = getTemplate(listRule.getRule());
     // 通过模板匹配列表
     return (List<E>) RegexUtils.findAllByTemplate(rulePair.getLeft(), src, rulePair.getRight());
@@ -94,7 +94,7 @@ public class RegexMatcher extends Matcher {
    * @return /
    */
   @Override
-  protected <E> String one(E element, String rule) {
+  public <E> String one(E element, String rule) {
     String source = StringUtils.toStringNullToEmpty(element);
     return match(source, rule);
   }

@@ -69,7 +69,7 @@ public class DefaultTextMatcher extends Matcher {
    * @return 列表
    */
   @Override
-  protected <E> List<E> list(String src, CommonRule listRule) {
+  public <E> List<E> list(String src, CommonRule listRule) {
     return Collections.emptyList();
   }
 
@@ -82,7 +82,7 @@ public class DefaultTextMatcher extends Matcher {
    * @return 解析结果
    */
   @Override
-  protected <E> String one(E element, String rule) {
+  public <E> String one(E element, String rule) {
     // 字符串直接匹配
     String originalText = element.toString();
     switch (rule) {

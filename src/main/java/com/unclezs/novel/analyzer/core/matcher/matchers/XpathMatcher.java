@@ -54,7 +54,7 @@ public class XpathMatcher extends Matcher {
    */
   @Override
   @SuppressWarnings("unchecked")
-  protected <E> List<E> list(String src, CommonRule listRule) {
+  public <E> List<E> list(String src, CommonRule listRule) {
     List<JXNode> nodes = JXDocument.create(src).selN(listRule.getRule());
     return (List<E>) nodes;
   }
