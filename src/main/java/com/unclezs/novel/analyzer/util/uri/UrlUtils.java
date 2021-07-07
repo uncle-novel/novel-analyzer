@@ -122,6 +122,9 @@ public class UrlUtils {
    */
   public static String getUrlLastPathNotSuffix(String url) {
     String str = url.replaceAll("\\.htm.*", StringUtils.EMPTY);
+    if (str.endsWith(StringUtils.BACKSLASH)) {
+      str = str.substring(0, str.length() - 1);
+    }
     int i = str.lastIndexOf(StringUtils.BACKSLASH);
     return str.substring(i + 1);
   }
