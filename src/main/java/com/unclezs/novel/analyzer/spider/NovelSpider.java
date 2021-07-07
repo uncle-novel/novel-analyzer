@@ -153,8 +153,11 @@ public class NovelSpider {
     Set<String> visited = CollectionUtils.set(false, params.getUrl());
     List<Chapter> toc;
     String originalText = request(params);
+    int order = 1;
     try {
       toc = NovelMatcher.toc(originalText, tocRule);
+      toc = TocSpider.pretreatmentToc(toc, params.getUrl(), tocRule, order);
+      order = toc.size();
       doConsumer(pageConsumer, toc);
       // 如果允许下一页
       boolean forceNext = Boolean.TRUE.equals(tocRule.getForceNext());
@@ -175,6 +178,8 @@ public class NovelSpider {
           List<Chapter> pageChapters = NovelMatcher.toc(originalText, tocRule);
           if (CollectionUtils.isNotEmpty(pageChapters)) {
             toc.addAll(pageChapters);
+            toc = TocSpider.pretreatmentToc(pageChapters, params.getUrl(), tocRule, order);
+            order = toc.size();
             doConsumer(pageConsumer, pageChapters);
           }
           // 下一页
@@ -182,7 +187,6 @@ public class NovelSpider {
           DebugHelper.debug("【目录】：获取到下一页链接：{}，当前页码：{}", params.getUrl(), visited.size());
         }
       }
-      toc = TocSpider.pretreatmentToc(toc, params.getUrl(), tocRule, 1);
     } finally {
       ScriptContext.remove();
     }

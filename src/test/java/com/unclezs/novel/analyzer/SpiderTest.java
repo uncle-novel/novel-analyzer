@@ -1,6 +1,7 @@
 package com.unclezs.novel.analyzer;
 
 import com.unclezs.novel.analyzer.core.NovelMatcher;
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.helper.RuleHelper;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
@@ -12,7 +13,6 @@ import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.spider.SearchSpider;
 import com.unclezs.novel.analyzer.spider.TocSpider;
 import com.unclezs.novel.analyzer.util.FileUtils;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -23,7 +23,6 @@ import java.io.IOException;
  */
 public class SpiderTest {
 
-  @Before
   public void init() {
     System.setProperty("http.proxyHost", "127.0.0.1");
     System.setProperty("http.proxyPort", "1087");
@@ -33,14 +32,16 @@ public class SpiderTest {
 
   @Test
   public void testToc() throws IOException {
-    String url = "https://www.myhtebooks.com/?act=showinfo&bookwritercode=EB20210411061357986926&bookid=64463&pavilionid=c";
+    String url = "https://www.haitangshuwu.me/read/5822/";
     String cookie = "";
+    DebugHelper.subscribe(System.out::println);
     RuleHelper.loadRules(FileUtils.readUtf8String("rule.json"));
     AnalyzerRule rule = RuleHelper.getOrDefault(url);
 //    rule.getToc().getUrl().setScript(FileUtils.readUtf8String("G:\\coder\\self-coder\\novel-analyzer\\src\\test\\resources\\script\\test.js"));
     rule.getParams().setCookie(cookie);
     TocSpider spider = new TocSpider();
     spider.setRule(rule);
+    spider.setIgnoreError(false);
     spider.setOnNewItemAddHandler(System.out::println);
     spider.toc(url);
   }

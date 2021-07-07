@@ -4,6 +4,7 @@ import com.unclezs.novel.analyzer.common.page.AbstractPageable;
 import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.comparator.ChapterComparator;
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.TocRule;
@@ -11,6 +12,7 @@ import com.unclezs.novel.analyzer.model.Chapter;
 import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
+import com.unclezs.novel.analyzer.script.ScriptUtils;
 import com.unclezs.novel.analyzer.spider.helper.SpiderHelper;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
 import com.unclezs.novel.analyzer.util.RandomUtils;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +45,11 @@ public class TocSpider extends AbstractPageable<Chapter> {
    * 章节顺序比较器
    */
   public static final ChapterComparator CHAPTER_COMPARATOR = new ChapterComparator();
+  /**
+   * 章节排序脚本的内置变量
+   */
+  public static final String COMPARATOR_A = "a";
+  public static final String COMPARATOR_B = "b";
   /**
    * 规则
    */
@@ -100,10 +108,9 @@ public class TocSpider extends AbstractPageable<Chapter> {
       toc.stream()
         .filter(chapter -> !UrlUtils.isHttpUrl(chapter.getUrl()))
         .forEach(chapter -> chapter.setUrl(UrlUtils.completeUrl(baseUrl, chapter.getUrl())));
-      // 重排与逆序
-      if (tocRule != null && Boolean.TRUE.equals(tocRule.getSort())) {
-        toc.sort(CHAPTER_COMPARATOR);
-      }
+      // 重排
+      sortToc(tocRule, toc);
+      // 逆序
       if (tocRule != null && Boolean.TRUE.equals(tocRule.getReverse())) {
         Collections.reverse(toc);
       }
@@ -113,6 +120,35 @@ public class TocSpider extends AbstractPageable<Chapter> {
       }
     }
     return toc;
+  }
+
+  /**
+   * 章节排序
+   *
+   * @param tocRule 目录规则
+   * @param toc     目录
+   */
+  public static void sortToc(TocRule tocRule, List<Chapter> toc) {
+    if (tocRule == null || Boolean.FALSE.equals(tocRule.getSort())) {
+      return;
+    }
+    // 脚本排序
+    if (StringUtils.isNotBlank(tocRule.getSortScript())) {
+      try {
+        toc.sort((o1, o2) -> {
+          SimpleBindings bindings = new SimpleBindings();
+          bindings.put(COMPARATOR_A, o1);
+          bindings.put(COMPARATOR_B, o2);
+          return (int) Double.parseDouble(ScriptUtils.execute(tocRule.getSortScript(), bindings));
+        });
+      } catch (Exception e) {
+        DebugHelper.debug("【章节】：排序失败");
+        DebugHelper.debug("【章节】：失败原因：{}", e.getMessage());
+      }
+    } else {
+      // 默认排序
+      toc.sort(CHAPTER_COMPARATOR);
+    }
   }
 
   /**
