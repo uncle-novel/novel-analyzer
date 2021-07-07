@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.script.variables;
 
+import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.matcher.Matchers;
 import com.unclezs.novel.analyzer.core.rule.CommonRule;
 import com.unclezs.novel.analyzer.request.Http;
@@ -29,8 +30,13 @@ public class Utils implements ScriptGlobalVariables<Utils> {
     return NAME;
   }
 
+  /**
+   * 输出调试日志
+   *
+   * @param msg 日志信息
+   */
   public void log(String msg) {
-    System.out.println(msg);
+    DebugHelper.debug(msg);
   }
 
   /**
