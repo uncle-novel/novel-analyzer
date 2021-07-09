@@ -90,7 +90,7 @@ public class JsonMatcher implements Matcher {
   @SuppressWarnings("unchecked")
   public <E> List<E> list(String src, CommonRule listRule) {
     if (StringUtils.isBlank(src)) {
-      return null;
+      return new ArrayList<>();
     }
     JsonArray matchedList = JsonPath.parse(src).read(listRule.getRule());
     List<JsonElement> items = new ArrayList<>();
@@ -112,6 +112,9 @@ public class JsonMatcher implements Matcher {
     if (element == null) {
       return null;
     }
+    if (element instanceof String) {
+      return match((String) element, rule);
+    }
     return match(GsonUtils.toJson(element), rule);
   }
 
@@ -124,6 +127,7 @@ public class JsonMatcher implements Matcher {
    */
   public String match(String src, String rule) {
     try {
+      src = StringUtils.removeQuote(src);
       Object ret = JsonPath.parse(src).read(rule);
       if (ret != null) {
         return StringUtils.removeQuote(ret.toString());
