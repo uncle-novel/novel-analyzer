@@ -5,6 +5,7 @@ import com.unclezs.novel.analyzer.core.helper.RuleTester;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.util.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.IOException;
  * @author blog.unclezs.com
  * @date 2021/07/06
  */
+@Ignore
 public class RuleTest {
 
   @Before
@@ -41,7 +43,7 @@ public class RuleTest {
     tester.setShowRule(false);
     tester.setShowSource(false);
     tester.setShowAllData(true);
-    tester.toc("https://www.myhtebooks.com/?act=showinfo&bookwritercode=EB20150423223134241467&bookid=2834&pavilionid=a");
+    tester.toc("https://www.xxxx.com/?act=showinfo&bookwritercode=EB20150423223134241467&bookid=2834&pavilionid=a");
   }
 
   @Test
@@ -51,6 +53,6 @@ public class RuleTest {
     tester.setShowRule(true);
     tester.setShowSource(false);
     tester.setShowAllData(false);
-    tester.content("https://www.myhtebooks.com/?act=showpaper&paperid=54165");
+    tester.content("https://www.xxxx.com/?act=showpaper&paperid=54165");
   }
 }

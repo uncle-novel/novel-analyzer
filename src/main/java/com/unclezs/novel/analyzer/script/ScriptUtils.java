@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.script;
 
+import com.unclezs.novel.analyzer.common.exception.UtilException;
 import com.unclezs.novel.analyzer.script.variables.Utils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
@@ -44,10 +45,11 @@ public class ScriptUtils {
     try {
       return runtimeVariables == null ? SCRIPT_ENGINE.eval(js) : SCRIPT_ENGINE.eval(js, runtimeVariables);
     } catch (Throwable e) {
-      e.printStackTrace();
-      log.trace("执行脚本失败：js:{}，vars:{}", js, runtimeVariables, e);
+      if (log.isTraceEnabled()) {
+        log.trace("执行脚本失败：js:{}，vars:{}", js, runtimeVariables, e);
+      }
+      throw new UtilException(e);
     }
-    return null;
   }
 
   /**

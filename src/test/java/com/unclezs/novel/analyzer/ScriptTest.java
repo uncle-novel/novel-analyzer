@@ -9,6 +9,7 @@ import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
 import com.unclezs.novel.analyzer.spider.NovelSpider;
 import com.unclezs.novel.analyzer.util.FileUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,11 +19,12 @@ import java.util.Objects;
  * @author blog.unclezs.com
  * @date 2021/01/29 10:38
  */
+@Ignore
 public class ScriptTest {
 
   @Test
   public void test() throws IOException {
-    String url = "https://www.po18.tw/books/742514/articles";
+    String url = "https://www.xxxx.tw/books/742514/articles";
     NovelSpider spider = new NovelSpider();
     // 正文规则封装
     AnalyzerRule analyzerRule = new AnalyzerRule();
