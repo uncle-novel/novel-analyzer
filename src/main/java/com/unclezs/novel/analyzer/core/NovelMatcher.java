@@ -102,7 +102,6 @@ public class NovelMatcher {
     }
     // 标题自动抓取
     if (StringUtils.isBlank(novel.getTitle())) {
-
       novel.setTitle(AnalyzerHelper.siteTitle(originalText));
     }
     novel.trim();

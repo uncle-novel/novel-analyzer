@@ -42,6 +42,8 @@ public class UrlUtils {
 
   /**
    * 获取URL的域名
+   * <p>
+   * https://www.unclezs.com/xx/xx?q=x  得到  www.unclezs.com
    *
    * @param url /
    * @return 域名
@@ -52,6 +54,8 @@ public class UrlUtils {
 
   /**
    * 获取URL的不带Path的
+   * <p>
+   * https://www.unclezs.com/xx/xx?q=x  得到  https://www.unclezs.com/
    *
    * @param url /
    * @return 域名

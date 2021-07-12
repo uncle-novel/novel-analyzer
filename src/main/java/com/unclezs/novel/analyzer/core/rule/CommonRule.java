@@ -358,7 +358,9 @@ public class CommonRule implements Serializable, JsonDeserializer<CommonRule>, J
       jsonObject.addProperty("rule", commonRule.ruleString());
     }
     if (hasReplace && commonRule.replace.size() == 1) {
-      jsonObject.addProperty("replace", RuleHelper.GSON.toJson(commonRule.replace.iterator().next()));
+      String value = StringUtils.removeQuote(RuleHelper.GSON.toJson(commonRule.replace.iterator().next()));
+      value = value.replace("\\\\", "\\");
+      jsonObject.addProperty("replace", value);
     } else if (hasReplace) {
       jsonObject.add("replace", RuleHelper.GSON.toJsonTree(commonRule.replace));
     }
