@@ -11,8 +11,6 @@
 
 对小说解析下载功能的封装。
 
-> 欢迎关注公众号：【书虫无书荒】
-
 ```xml
 <dependency>
   <groupId>com.unclezs</groupId>
@@ -29,10 +27,6 @@
 - SPI自定义HTTP客户端（动 / 静态）
 - 动态脚本支持
 - 小说下载基础能力
-
-## 书源制作教程
-
-[书源教程](https://app.unclezs.com/booksource/)
 
 ### 支持一下
 
