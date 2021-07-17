@@ -11,6 +11,8 @@
 
 对小说解析下载功能的封装。
 
+[规则编写教程](https://github.com/unclezs/uncle-novel-official-site/tree/main/docs/booksource)
+
 ```xml
 <dependency>
   <groupId>com.unclezs</groupId>
