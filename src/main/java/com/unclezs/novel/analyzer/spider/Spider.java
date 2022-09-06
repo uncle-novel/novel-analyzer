@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.spider;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.unclezs.novel.analyzer.AnalyzerManager;
 import com.unclezs.novel.analyzer.common.concurrent.ThreadUtils;
 import com.unclezs.novel.analyzer.common.exception.SpiderRuntimeException;
@@ -13,12 +14,14 @@ import com.unclezs.novel.analyzer.spider.pipline.BaseFilePipeline;
 import com.unclezs.novel.analyzer.spider.pipline.ConsolePipeline;
 import com.unclezs.novel.analyzer.spider.pipline.Pipeline;
 import com.unclezs.novel.analyzer.util.CollectionUtils;
+import com.unclezs.novel.analyzer.util.FileUtils;
 import com.unclezs.novel.analyzer.util.RandomUtils;
 import com.unclezs.novel.analyzer.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -223,6 +226,32 @@ public final class Spider implements Serializable {
   }
 
   /**
+   * 确定novel序号
+   *
+   * @param pipeline 管道:获取novel地址
+   */
+
+  private void setChapterOrder(Pipeline pipeline) {
+    String novelSavePath = ((BaseFilePipeline) pipeline).getFilePath();
+    // 编序号
+    int order = 1;
+    if (FileUtils.exist(novelSavePath)) {
+      File novelDir = new File(novelSavePath);
+      if (novelDir.isDirectory()) {
+        File[] files = novelDir.listFiles((dir1, name) -> name.endsWith(".txt"));
+        order = files.length + 1;
+      }
+    }
+    for (Chapter chapter : toc) {
+      chapter.setOrder(order++);
+    }
+    // 兼容反序列化
+    novel.setChapters(toc);
+    // 记录总数
+    this.totalCount = toc.size();
+  }
+
+  /**
    * 初始化爬虫，兼容从备份导入方式
    */
   private void init() throws IOException {
@@ -247,15 +276,7 @@ public final class Spider implements Serializable {
         throw new SpiderRuntimeException("章节数据抓取失败或未获取到章节:" + url);
       }
     }
-    // 编序号
-    int order = 1;
-    for (Chapter chapter : toc) {
-      chapter.setOrder(order++);
-    }
-    // 兼容反序列化
-    novel.setChapters(toc);
-    // 记录总数
-    this.totalCount = toc.size();
+
     // 没有提供管道则使用控制台打印
     if (pipelines.isEmpty()) {
       pipelines.add(new ConsolePipeline());
@@ -267,6 +288,7 @@ public final class Spider implements Serializable {
       }
       // 小说详情注入到管道
       pipeline.injectNovel(novel);
+      setChapterOrder(pipeline);
     });
     // 初始化任务监控集合
     tasks = new CopyOnWriteArraySet<>();
