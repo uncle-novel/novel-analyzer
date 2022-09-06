@@ -79,7 +79,20 @@ public class Utils implements ScriptGlobalVariables<Utils> {
     }
     return Http.content(params);
   }
-
+  /**
+   * HTTP请求 支持各种请求方法
+   *
+   * @param paramsJson 请求数据
+   * @return 返回byte[] 数据
+   */
+  public byte[] bytes(String paramsJson) throws IOException {
+    RequestParams params = GsonUtils.parse(paramsJson, RequestParams.class);
+    if (params == null || StringUtils.isEmpty(params.getUrl())) {
+      log.trace("请求解析失败, 参数不合法: {}.", params);
+      return null;
+    }
+    return Http.bytes(params);
+  }
   /**
    * 转化为json（rhino 在带有java对象的变量用JSON.stringify会出现Stackoverflow）
    * <p>
