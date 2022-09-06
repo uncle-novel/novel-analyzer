@@ -89,7 +89,7 @@ public class SpiderHelper {
     FileUtils.deleteFile(saveFile);
 
     // 添加书名、作者、简介在开头
-    String backgroundInfo = String.format("%s\n作者：%s\n简介：\n%s\n",novel.getTitle(),novel.getAuthor(),novel.getIntroduce());
+    String backgroundInfo = String.format("%s\n作者：%s\n简介：\n%s\n", novel.getTitle() != null ? novel.getTitle() : "", novel.getAuthor() != null ? novel.getAuthor() : "", novel.getIntroduce() != null ? novel.getIntroduce() : "");
     FileUtils.appendUtf8String(saveFile,backgroundInfo);
 
     File[] txtFiles = dir.listFiles((dir1, name) -> name.endsWith(".txt"));
