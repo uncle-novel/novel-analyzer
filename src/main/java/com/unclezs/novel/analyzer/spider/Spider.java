@@ -1,5 +1,6 @@
 package com.unclezs.novel.analyzer.spider;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.unclezs.novel.analyzer.AnalyzerManager;
 import com.unclezs.novel.analyzer.common.concurrent.ThreadUtils;
 import com.unclezs.novel.analyzer.common.exception.SpiderRuntimeException;
@@ -230,15 +231,15 @@ public final class Spider implements Serializable {
    * @param pipeline 管道:获取novel地址
    */
 
-  private void setChapterOrder(Pipeline pipeline){
-    String novelSavePath = ((BaseFilePipeline)pipeline).getFilePath();
+  private void setChapterOrder(Pipeline pipeline) {
+    String novelSavePath = ((BaseFilePipeline) pipeline).getFilePath();
     // 编序号
     int order = 1;
-    if(FileUtils.exist(novelSavePath)){
+    if (FileUtils.exist(novelSavePath)) {
       File novelDir = new File(novelSavePath);
-      if(novelDir.isDirectory()){
-        File[] files=novelDir.listFiles((dir1,name)->name.endsWith(".txt"));
-        order=files.length+1;
+      if (novelDir.isDirectory()) {
+        File[] files = novelDir.listFiles((dir1, name) -> name.endsWith(".txt"));
+        order = files.length + 1;
       }
     }
     for (Chapter chapter : toc) {
@@ -275,6 +276,7 @@ public final class Spider implements Serializable {
         throw new SpiderRuntimeException("章节数据抓取失败或未获取到章节:" + url);
       }
     }
+
     // 没有提供管道则使用控制台打印
     if (pipelines.isEmpty()) {
       pipelines.add(new ConsolePipeline());
@@ -286,7 +288,6 @@ public final class Spider implements Serializable {
       }
       // 小说详情注入到管道
       pipeline.injectNovel(novel);
-      // 编辑novel章节序号
       setChapterOrder(pipeline);
     });
     // 初始化任务监控集合
