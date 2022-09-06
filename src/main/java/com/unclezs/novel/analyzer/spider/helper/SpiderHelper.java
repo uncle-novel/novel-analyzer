@@ -3,6 +3,7 @@ package com.unclezs.novel.analyzer.spider.helper;
 import com.unclezs.novel.analyzer.core.helper.DebugHelper;
 import com.unclezs.novel.analyzer.core.matcher.matchers.XpathMatcher;
 import com.unclezs.novel.analyzer.core.model.Params;
+import com.unclezs.novel.analyzer.model.Novel;
 import com.unclezs.novel.analyzer.request.Http;
 import com.unclezs.novel.analyzer.request.RequestParams;
 import com.unclezs.novel.analyzer.script.ScriptContext;
@@ -72,14 +73,25 @@ public class SpiderHelper {
   /**
    * 合并文件
    *
+   * 2022/9/6 Curious 合并时添加书名、作者、简介在文章开头
+   *
    * @param dir      小说目录
-   * @param filename 文件
+   * @param novel 小说
    * @param delete   合并后删除
    */
-  public static void mergeNovel(File dir, String filename, boolean delete) throws IOException {
+  public static void mergeNovel(File dir,Novel novel, boolean delete) throws IOException {
+    // 书籍名
+    String filename = novel.getTitle().concat(".txt");
     // 保存到父目录下
     String saveFile = new File(dir.getParent(), filename).getAbsolutePath();
+
+    // 书籍若存在，则删除
     FileUtils.deleteFile(saveFile);
+
+    // 添加书名、作者、简介在开头
+    String backgroundInfo = String.format("%s\n作者：%s\n简介：\n%s\n",novel.getTitle(),novel.getAuthor(),novel.getIntroduce());
+    FileUtils.appendUtf8String(saveFile,backgroundInfo);
+
     File[] txtFiles = dir.listFiles((dir1, name) -> name.endsWith(".txt"));
     if (txtFiles != null) {
       Arrays.stream(txtFiles).sorted((o1, o2) -> {
