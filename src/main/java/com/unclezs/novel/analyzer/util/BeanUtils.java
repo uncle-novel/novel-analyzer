@@ -13,7 +13,7 @@ import java.util.Map;
  * Bean工具
  *
  * @author blog.unclezs.com
- * @date 2021/1/30 21:08
+ * @since 2021/1/30 21:08
  */
 @Slf4j
 @UtilityClass

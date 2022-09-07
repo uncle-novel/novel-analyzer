@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author blog.unclezs.com
- * @date 2021/1/17 8:23
+ * @since 2021/1/17 8:23
  */
 @UtilityClass
 public class GsonUtils {

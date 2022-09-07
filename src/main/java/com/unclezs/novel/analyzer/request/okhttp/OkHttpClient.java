@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * okHttp请求工具
  *
  * @author blog.unclezs.com
- * @date 2020/12/21 12:31 上午
+ * @since 2020/12/21 12:31 上午
  */
 @Slf4j
 public class OkHttpClient implements HttpProvider {

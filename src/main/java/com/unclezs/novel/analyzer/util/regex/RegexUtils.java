@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * @author xiaoleilu
  * @author blog.unclezs.com
- * @date 2020/12/20 7:24 下午
+ * @since 2020/12/20 7:24 下午
  */
 @UtilityClass
 public class RegexUtils {
@@ -154,7 +154,7 @@ public class RegexUtils {
    * @param content    被匹配的内容
    * @param withGroup0 是否包括分组0，此分组表示全匹配的信息
    * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
-   * @date 4.0.13
+   * @since 4.0.13
    */
   public static List<String> getAllGroups(Pattern pattern, CharSequence content, boolean withGroup0) {
     if (null == content || null == pattern) {
@@ -374,7 +374,7 @@ public class RegexUtils {
    * @param pattern             {@link java.util.regex.Pattern}
    * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
    * @return 处理后的文本
-   * @date 3.0.4
+   * @since 3.0.4
    */
   public static String replaceAll(CharSequence content, Pattern pattern, String replacementTemplate) {
     if (StringUtils.isEmpty(content)) {
@@ -410,7 +410,7 @@ public class RegexUtils {
    * @param regex      用于匹配的正则式
    * @param replaceFun 决定如何替换的函数
    * @return 替换后的文本
-   * @date 4.2.2
+   * @since 4.2.2
    */
   public static String replaceAll(CharSequence str, String regex, Function<Matcher, String> replaceFun) {
     return replaceAll(str, Pattern.compile(regex), replaceFun);
@@ -423,7 +423,7 @@ public class RegexUtils {
    * @param pattern    用于匹配的正则式
    * @param replaceFun 决定如何替换的函数,可能被多次调用（当有多个匹配时）
    * @return 替换后的字符串
-   * @date 4.2.2
+   * @since 4.2.2
    */
   public static String replaceAll(CharSequence str, Pattern pattern, Function<Matcher, String> replaceFun) {
     if (StringUtils.isEmpty(str)) {

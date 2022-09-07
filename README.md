@@ -2,9 +2,9 @@
     <a href="https://github.com/unclezs/novel-analyzer/actions/workflows/maven.yml">
     <img src="https://img.shields.io/github/workflow/status/unclezs/novel-analyzer/Java%20CI%20with%20Maven" alt="maven build"/>
     </a>
-	<img src="https://img.shields.io/github/v/release/unclezs/novel-analyzer"/>
-	<img src="https://img.shields.io/badge/jdk-8.221-green"/>
-	<img src="https://img.shields.io/badge/platform-win linux mac-green"/>
+	<img src="https://img.shields.io/github/v/release/unclezs/novel-analyzer" alt="release"/>
+	<img src="https://img.shields.io/badge/jdk-8.221-green" alt="jdk"/>
+	<img src="https://img.shields.io/badge/platform-win linux mac-green" alt="platform"/>
 </p>
 
 ### 🌡️小说解析SDK
@@ -17,7 +17,7 @@
 <dependency>
   <groupId>com.unclezs</groupId>
   <artifactId>novel-analyzer</artifactId>
-  <version>1.0.25</version>
+  <version>1.0.26</version>
 </dependency>
 ```
 
@@ -29,7 +29,3 @@
 - SPI自定义HTTP客户端（动 / 静态）
 - 动态脚本支持
 - 小说下载基础能力
-
-### 支持一下
-
-[你的支持，将是我最大的动力](https://app.unclezs.com/sponsors/)

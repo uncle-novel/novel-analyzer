@@ -14,7 +14,7 @@ import java.io.Serializable;
  * Object工具类
  *
  * @author blog.unclezs.com
- * @date 2021/2/15 11:01
+ * @since 2021/2/15 11:01
  */
 @UtilityClass
 public class SerializationUtils {

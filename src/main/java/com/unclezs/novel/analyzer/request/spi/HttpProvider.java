@@ -6,7 +6,7 @@ import java.io.IOException;
 
 /**
  * @author blog.unclezs.com
- * @date 2020/12/24 11:09
+ * @since 2020/12/24 11:09
  */
 public interface HttpProvider {
   /**

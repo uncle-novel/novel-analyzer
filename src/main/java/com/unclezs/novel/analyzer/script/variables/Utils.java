@@ -19,7 +19,7 @@ import java.util.List;
  * 提供一些Js调用的java方法
  *
  * @author blog.unclezs.com
- * @date 2021/1/28 22:29
+ * @since 2021/1/28 22:29
  */
 @Slf4j
 public class Utils implements ScriptGlobalVariables<Utils> {
@@ -79,6 +79,7 @@ public class Utils implements ScriptGlobalVariables<Utils> {
     }
     return Http.content(params);
   }
+
   /**
    * HTTP请求 支持各种请求方法
    *
@@ -93,6 +94,7 @@ public class Utils implements ScriptGlobalVariables<Utils> {
     }
     return Http.bytes(params);
   }
+
   /**
    * 转化为json（rhino 在带有java对象的变量用JSON.stringify会出现Stackoverflow）
    * <p>

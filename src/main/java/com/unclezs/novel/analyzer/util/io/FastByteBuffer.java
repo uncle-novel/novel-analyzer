@@ -5,7 +5,7 @@ package com.unclezs.novel.analyzer.util.io;
  * 快速缓冲，将数据存放在缓冲集中，取代以往的单一数组
  *
  * @author biezhi, looly
- * @date 1.0
+ * @since 1.0
  */
 public class FastByteBuffer {
 

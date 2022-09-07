@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  * @author blog.unclezs.com
- * @date 2021/07/12 19:28
+ * @since 2021/07/12 19:28
  */
 public class RegexHashMap<V> implements Map<String, V> {
     private final Map<String, V> values = new HashMap<>(16);

@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * 小说爬虫
  *
  * @author blog.unclezs.com
- * @date 2020/12/20 6:15 下午
+ * @since 2020/12/20 6:15 下午
  */
 @Slf4j
 @Getter

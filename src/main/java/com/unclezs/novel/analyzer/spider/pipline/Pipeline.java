@@ -7,7 +7,7 @@ import com.unclezs.novel.analyzer.model.Novel;
  * 数据处理管道 用户爬取完成之后的数据处理
  *
  * @author blog.unclezs.com
- * @date 2020/12/23 15:51
+ * @since 2020/12/23 15:51
  * @see com.unclezs.novel.analyzer.spider.Spider
  */
 public interface Pipeline {

@@ -15,7 +15,7 @@ import java.util.Set;
  * 用于多个方法间的设置JS的默认化变量
  *
  * @author blog.unclezs.com
- * @date 2021/2/3 0:06
+ * @since 2021/2/3 0:06
  */
 @UtilityClass
 public class ScriptContext {

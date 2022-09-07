@@ -6,7 +6,7 @@ import java.security.cert.X509Certificate;
 
 /**
  * @author blog.unclezs.com
- * @date 2020/12/21 1:02 上午
+ * @since 2020/12/21 1:02 上午
  */
 public class SslTrustAllCerts implements X509TrustManager {
   @Override

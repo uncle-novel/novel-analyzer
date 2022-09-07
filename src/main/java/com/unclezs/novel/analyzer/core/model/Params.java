@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 全局默认参数
  *
  * @author blog.unclezs.com
- * @date 2021/4/26 17:40
+ * @since 2021/4/26 17:40
  */
 @Data
 public class Params implements Serializable {

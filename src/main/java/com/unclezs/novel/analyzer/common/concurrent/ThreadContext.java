@@ -7,7 +7,7 @@ import java.util.Map;
  * 线程上下文 封装为Map
  *
  * @author blog.unclezs.com
- * @date 2021/2/2 23:00
+ * @since 2021/2/2 23:00
  */
 public class ThreadContext {
   private final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<>();

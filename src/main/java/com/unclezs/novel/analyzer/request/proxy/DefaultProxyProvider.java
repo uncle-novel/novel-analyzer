@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * https://github.com/jiangxianli/ProxyIpLib#%E5%85%8D%E8%B4%B9%E4%BB%A3%E7%90%86ip%E5%BA%93
  *
  * @author blog.unclezs.com
- * @date 2020/12/27 6:01 下午
+ * @since 2020/12/27 6:01 下午
  */
 @Slf4j
 public class DefaultProxyProvider extends AbstractProxyProvider {

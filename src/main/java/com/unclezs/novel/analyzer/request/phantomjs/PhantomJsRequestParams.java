@@ -9,7 +9,7 @@ import lombok.Data;
  * PhantomJs请求参数
  *
  * @author blog.unclezs.com
- * @date 2020/12/25 11:17
+ * @since 2020/12/25 11:17
  */
 @Data
 public class PhantomJsRequestParams {

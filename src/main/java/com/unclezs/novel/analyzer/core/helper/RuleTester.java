@@ -31,7 +31,7 @@ import static com.unclezs.novel.analyzer.util.StringUtils.LF;
  * 规则测试器
  *
  * @author blog.unclezs.com
- * @date 2021/4/23 1:49
+ * @since 2021/4/23 1:49
  */
 @Slf4j
 @Setter

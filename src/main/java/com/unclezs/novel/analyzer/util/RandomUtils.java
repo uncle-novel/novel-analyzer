@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author blog.unclezs.com
- * @date 2020/12/27 2:04 下午
+ * @since 2020/12/27 2:04 下午
  */
 @UtilityClass
 public class RandomUtils {
@@ -21,7 +21,7 @@ public class RandomUtils {
    * </p>
    *
    * @return {@link java.util.concurrent.ThreadLocalRandom}
-   * @date 3.1.2
+   * @since 3.1.2
    */
   public static ThreadLocalRandom getRandom() {
     return ThreadLocalRandom.current();

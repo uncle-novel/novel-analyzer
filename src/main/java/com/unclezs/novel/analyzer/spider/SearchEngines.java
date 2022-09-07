@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * @author blog.unclezs.com
- * @date 2021/4/16 12:26
+ * @since 2021/4/16 12:26
  */
 public class SearchEngines {
   public static final String BAIDU_SEARCH = "https://www.baidu.com/s?wd=";
