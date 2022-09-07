@@ -45,7 +45,7 @@ public class TxtPipeline extends AbstractTextPipeline {
   public void onComplete() {
     if (merge) {
       try {
-        SpiderHelper.mergeNovel(new File(getFilePath()), getNovel().getTitle().concat(".txt"), deleteVolume);
+        SpiderHelper.mergeNovel(new File(getFilePath()), getNovel(), deleteVolume);
       } catch (Exception e) {
         log.error("文件合并失败：{}", getFilePath(), e);
       }
