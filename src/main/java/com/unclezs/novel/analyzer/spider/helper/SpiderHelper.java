@@ -79,7 +79,7 @@ public class SpiderHelper {
    * @param novel 小说
    * @param delete   合并后删除
    */
-  public static void mergeNovel(File dir,Novel novel, boolean delete) throws IOException {
+  public static void mergeNovel(File dir, Novel novel, boolean delete) throws IOException {
     // 书籍名
     String filename = novel.getTitle().concat(".txt");
     // 保存到父目录下
