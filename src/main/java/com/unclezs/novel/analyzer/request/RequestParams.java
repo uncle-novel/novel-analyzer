@@ -60,6 +60,11 @@ public class RequestParams implements Verifiable, Serializable {
    * 请求体
    */
   private String body;
+
+  /**
+   * URL参数(查询字符串)
+   */
+  private String urlParams;
   /**
    * 是否为动态网页
    */
@@ -110,6 +115,10 @@ public class RequestParams implements Verifiable, Serializable {
       params = new RequestParams();
     } else {
       params = params.copy();
+    }
+    // 添加URL参数
+    if (StringUtils.isNotBlank(params.getUrlParams())) {
+      url = url+ (url.contains("?") ? "&" : "?") + params.getUrlParams();
     }
     params.setUrl(url);
     return params;
@@ -196,6 +205,8 @@ public class RequestParams implements Verifiable, Serializable {
     }
     headers.put(headerName, headerValue);
   }
+
+
 
   /**
    * 设置请求头 如果不存在则设置 存在则忽略
