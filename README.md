@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://github.com/unclezs/novel-analyzer/actions/workflows/maven.yml">
-    <img src="https://img.shields.io/github/workflow/status/unclezs/novel-analyzer/Java%20CI%20with%20Maven" alt="maven build"/>
+    <a href="https://github.com/uncle-novel/novel-analyzer/actions/workflows/maven.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/uncle-novel/novel-analyzer/maven.yml" alt="maven build"/>
     </a>
 	<img src="https://img.shields.io/github/v/release/unclezs/novel-analyzer" alt="release"/>
 	<img src="https://img.shields.io/badge/jdk-8.221-green" alt="jdk"/>
