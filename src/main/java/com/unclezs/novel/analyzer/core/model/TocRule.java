@@ -54,6 +54,10 @@ public class TocRule implements Verifiable, Serializable {
    */
   private CommonRule url;
   /**
+   * 章节详情页规则
+   */
+  private CommonRule detailPage;
+  /**
    * 章节下一页规则（存在则会匹配下一页）
    */
   private CommonRule next = CommonRule.create("xpath", RuleConstant.NEXT_PAGE_RULE);
