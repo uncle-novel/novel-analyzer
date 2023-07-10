@@ -5,6 +5,7 @@ import com.unclezs.novel.analyzer.core.NovelMatcher;
 import com.unclezs.novel.analyzer.core.comparator.ChapterComparator;
 import com.unclezs.novel.analyzer.core.helper.AnalyzerHelper;
 import com.unclezs.novel.analyzer.core.helper.DebugHelper;
+import com.unclezs.novel.analyzer.core.matcher.Matchers;
 import com.unclezs.novel.analyzer.core.matcher.matchers.RegexMatcher;
 import com.unclezs.novel.analyzer.core.model.AnalyzerRule;
 import com.unclezs.novel.analyzer.core.model.TocRule;
@@ -190,7 +191,17 @@ public class TocSpider extends AbstractPageable<Chapter> {
     try {
       // 解析小说详情，从目录页
       if (page == 1) {
-        this.novel = NovelMatcher.details(originalText, rule.getDetail());
+        String detailPageUrl = Matchers.match(originalText, tocRule.getDetailPage());
+        // 如果详情页不为空，则请求详情页
+        if (StringUtils.isNotBlank(detailPageUrl) && !detailPageUrl.equals(params.getUrl())) {
+          // 默认使用目录页的请求参数
+          RequestParams detailParams = RequestParams.create(detailPageUrl, rule.getToc().getParams());
+          String detailText = SpiderHelper.request(rule.getParams(), detailParams);
+          this.novel = NovelMatcher.details(detailText, rule.getDetail());
+        } else {
+          // 否则，从目录页解析详情
+          this.novel = NovelMatcher.details(originalText, rule.getDetail());
+        }
         this.novel.setUrl(params.getUrl());
       }
       List<Chapter> chapters = NovelMatcher.toc(originalText, tocRule);
